@@ -1,0 +1,44 @@
+﻿/*
+ * colors must contain color variable and general site wide
+ * color configurations
+ */
+
+$yellow: #edcf2e;
+$blue: #64b9ee;
+$dark-color: #bd3230;
+$medium-color: #fdbe14;
+$light-gray: #f1f1f1;
+$dark-gray: #484848;
+$light-color: white;
+$facebook-color: #3b579d;
+$amin: #8e2de2, #4a00e0;
+
+body{
+    background-color: $light-gray;
+    color: $dark-gray;
+}
+
+h1, h2, h3,
+.h1, .h2, .h3{
+    color: $dark-gray;
+}
+
+// $color : (#264556, #524548);
+@mixin linear-gradient($direction,$gradients-colorset-name) {
+    /* fallback for old browsers */
+    background: nth($gradients-colorset-name, 1);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to $direction, $gradients-colorset-name);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to $direction, $gradients-colorset-name);
+}
+
+@mixin border-color-gradient($direction,$gradients-colorset-name) {
+    /* fallback for old browsers */
+    border-color: nth($gradients-colorset-name, 1);
+    /* Chrome 10-25, Safari 5.1-6 */
+    border-color: -webkit-linear-gradient(to $direction, $gradients-colorset-name);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-color: linear-gradient(to $direction, $gradients-colorset-name);
+}
+

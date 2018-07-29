@@ -1,0 +1,66 @@
+﻿@import "colors";
+
+@mixin card-common() {
+    background-color: white;
+    padding: 18px;
+    margin: 9px 2px;
+    min-height: 250px;
+    /*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+}
+
+.card {
+    @include card-common();
+    border-radius: 3px;
+}
+
+.card-sq {
+    @include card-common();
+    border-radius: 0;
+}
+
+@media (min-width: 768px) {
+    .container-fluid {
+        max-width: 760px;
+    }
+}
+@media (min-width: 992px) {
+    .container-fluid {
+        max-width: 980px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container-fluid {
+        max-width: 1190px;
+    }
+}
+
+
+@media (min-width: 1201px) {
+    .container-fluid {
+        max-width: 98%;
+    }
+}
+
+.the-famous-or {
+    font-size: 12vh;
+    color: #bb97ef;
+    font-style:italic;
+    user-select:none;
+}
+
+.col-md-1pt5{
+    max-width:16%;
+}
+
+.button {
+    @include border-color-gradient(right, $amin);
+    background-color: white;
+    border-radius: 31px;
+    color: #8e2de2;
+    padding: 10px 14px;
+
+    &:hover {
+        background-color: white;
+    }
+}

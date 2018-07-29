@@ -1,0 +1,15 @@
+[
+  {
+    "outputFileName": "js/bundle-js.js",
+    "inputFiles": [
+      "js/vendor/jquery-1.10.2.min.js",
+      "js/vendor/bootstrap.min.js",
+      "js/vendor/mustache.js",
+      "js/modules/globalSettings.js",
+      "js/modules/templates.js",
+      "js/modules/fileUpload.js",
+      "js/modules/urlHandler.js",
+      "js/app.js"
+    ]
+  }
+]

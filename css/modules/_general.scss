@@ -1,0 +1,20 @@
+﻿@import "colors";
+@import "fonts";
+
+/*
+ *************
+ ** General **
+ *************
+ */
+
+
+
+body {
+    @include linear-gradient(right, $amin);
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
