@@ -2,4 +2,11 @@
     padding: 8px 27px;
     margin-bottom: 18px;
     background-color: white;
+    div {
+        display:inline-block;
+        vertical-align:middle;
+        img {
+            margin-right: 9px;
+        }
+    }
 }
