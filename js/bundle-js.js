@@ -633,27 +633,34 @@ var RELEASEJSONURL_QUERYSTRING = "releasejson";
 
 var BUILDJSON_CONST = "build";
 var RELEASEJSON_CONST = "release";
+//////////////////////////////////////////
+/////////    Template update starters
+//////////////////////////////////////////
+
 function uploadScreenView() {
-    switchTemplate(templateNames.UPLOAD, {});
+    _switchTemplate(templateNames.UPLOAD, {});
 }
 
 function visualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.VISUALIZE, visualizeJson);
+    _switchTemplate(templateNames.VISUALIZE, visualizeJson);
 }
 
 function buildVisualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
+    _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
 function releaseVisualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
+    _switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
 }
 
+//////////////////////////////////////
+/////////    Template changer
+/////////////////////////////////////
 
-function switchTemplate(templateName, jsonData) {
+function _switchTemplate(templateName, jsonData) {
     if (templateName === templateNames.UPLOAD) {
         $("#viewTemplateHolder").load("html-partials/upload.html #uploadPartial", function () {
             var contents = document.getElementById('uploadPartial').innerHTML;
@@ -692,9 +699,9 @@ function switchTemplate(templateName, jsonData) {
     
 }
 
-//////////////////////////////////
-/////////    View loads
-//////////////////////////////////
+///////////////////////////////////////////////
+/////////    View loads (like page loads)
+//////////////////////////////////////////////
 
 function visualization_ViewLoad(combinedJson) {
     if (combinedJson.buildDef != null) {
@@ -705,9 +712,9 @@ function visualization_ViewLoad(combinedJson) {
     }
 }
 
-//////////////////////////////////
-/////////    Navigation buttons
-//////////////////////////////////
+//////////////////////////////////////////////
+/////////    Navigation buttons actions
+/////////////////////////////////////////////
 
 function goToVisualization(e) {
     visualizeScreenView();
@@ -721,17 +728,9 @@ function goToRelease(e) {
     releaseVisualizeScreenView();
 }
 
-//////////////////////////////////
-/////////    Viz
-//////////////////////////////////
 
-function processJson() {
-    var combinedJson = {
-        buildDef: buildJson, //TODO: process build here
-        releaseDef: releaseJson
-    }
-    return combinedJson;
-}
+
+
 
 function handleBuildFileUpload(e) {
     try {
@@ -813,6 +812,79 @@ function getUrlVars() {
     }
     return vars;
 }
+//////////////////////////////////
+/////////    Process
+//////////////////////////////////
+
+
+function processJson() {
+
+    var combinedJson = {
+        buildDef: getBuildJson(buildJson), //TODO: process build here
+        releaseDef: releaseJson
+    }
+    return combinedJson;
+}
+//////////////////////////////////
+/////////    Build process
+//////////////////////////////////
+function getBuildJson(buildJsonInput) {
+
+    var _buildDef = {
+        name: getBuildDefinitionName(buildJsonInput),
+        url: getBuildDefinitionUrl(buildJsonInput),
+        buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+        repository: getBuildDefinitionRepository(buildJsonInput)
+    };
+    return buildJsonInput;
+}
+
+////////////////////////////////////////////////
+/////////    Build process detailed methods
+///////////////////////////////////////////////
+
+function getBuildDefinitionName(buildJsonInput) {
+    return buildJsonInput.name;
+}
+
+function getBuildDefinitionUrl(buildJsonInput) {
+    return buildJsonInput.url;
+}
+
+function getBuildDefinitionRepository(buildJsonInput) {
+    var _isTfsGit = (buildJsonInput.repository.type === "TfsGit");
+    var _isGitHub = (buildJsonInput.repository.type === "GitHub");
+    var _isTfvc = (buildJsonInput.repository.type === "TfsVersionControl");
+    var _isBitbucket = (buildJsonInput.repository.type === "Bitbucket");
+    var _isOther = (!_isTfsGit && !_isGitHub && !_isTfvc && !_isBitbucket);
+
+    var _repository = {
+        name: buildJsonInput.repository.name,
+        url: buildJsonInput.repository.url,
+        isTfsGit: _isTfsGit,
+        isGitHub: _isGitHub,
+        isTfvc: _isTfvc,
+        isBitbucket: _isBitbucket,
+        isOther: _isOther,
+    }
+    return _repository;
+}
+
+function getBuildDefinitionBadge(buildJsonInput) {
+    return buildJsonInput._links.badge.href;
+}
+
+
+/*
+ * QUEUE
+ * *****
+ * Hosted Linux Preview & isHosted id=3
+ * Hosted VS2017 id=4
+ * Hosted macOS Preview id=5
+ * Hosted id=2
+ * Default id=1
+ */
+
 $(document).ready(function () {
     var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
     console.log(buildJsonUrl);

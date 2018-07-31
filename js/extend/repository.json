@@ -1,0 +1,32 @@
+﻿[
+  {
+    "id": 1,
+    "name": "VSTS Git",
+    "type": "TfsGit",
+    "imageUrl": ""
+  },
+  {
+    "id": 2,
+    "name": "GitHub",
+    "type": "GitHub",
+    "imageUrl": ""
+  },
+  {
+    "id": 3,
+    "name": "TFVC",
+    "type": "TfsVersionControl",
+    "imageUrl": ""
+  },
+  {
+    "id": 4,
+    "name": "Bitbucket",
+    "type": "Bitbucket",
+    "imageUrl": ""
+  },
+  {
+    "id": 5,
+    "name": "Other",
+    "type": "Other",
+    "imageUrl": ""
+  }
+]

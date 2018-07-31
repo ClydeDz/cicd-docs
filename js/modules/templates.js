@@ -1,24 +1,31 @@
-﻿function uploadScreenView() {
-    switchTemplate(templateNames.UPLOAD, {});
+﻿//////////////////////////////////////////
+/////////    Template update starters
+//////////////////////////////////////////
+
+function uploadScreenView() {
+    _switchTemplate(templateNames.UPLOAD, {});
 }
 
 function visualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.VISUALIZE, visualizeJson);
+    _switchTemplate(templateNames.VISUALIZE, visualizeJson);
 }
 
 function buildVisualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
+    _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
 function releaseVisualizeScreenView() {
     var visualizeJson = processJson();
-    switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
+    _switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
 }
 
+//////////////////////////////////////
+/////////    Template changer
+/////////////////////////////////////
 
-function switchTemplate(templateName, jsonData) {
+function _switchTemplate(templateName, jsonData) {
     if (templateName === templateNames.UPLOAD) {
         $("#viewTemplateHolder").load("html-partials/upload.html #uploadPartial", function () {
             var contents = document.getElementById('uploadPartial').innerHTML;
@@ -57,9 +64,9 @@ function switchTemplate(templateName, jsonData) {
     
 }
 
-//////////////////////////////////
-/////////    View loads
-//////////////////////////////////
+///////////////////////////////////////////////
+/////////    View loads (like page loads)
+//////////////////////////////////////////////
 
 function visualization_ViewLoad(combinedJson) {
     if (combinedJson.buildDef != null) {
@@ -70,9 +77,9 @@ function visualization_ViewLoad(combinedJson) {
     }
 }
 
-//////////////////////////////////
-/////////    Navigation buttons
-//////////////////////////////////
+//////////////////////////////////////////////
+/////////    Navigation buttons actions
+/////////////////////////////////////////////
 
 function goToVisualization(e) {
     visualizeScreenView();
@@ -86,14 +93,5 @@ function goToRelease(e) {
     releaseVisualizeScreenView();
 }
 
-//////////////////////////////////
-/////////    Viz
-//////////////////////////////////
 
-function processJson() {
-    var combinedJson = {
-        buildDef: buildJson, //TODO: process build here
-        releaseDef: releaseJson
-    }
-    return combinedJson;
-}
+

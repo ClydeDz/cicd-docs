@@ -9,6 +9,9 @@
       "js/modules/templates.js",
       "js/modules/fileUpload.js",
       "js/modules/urlHandler.js",
+      "js/modules/buildReleaseProcessor.js",
+      "js/modules/buildProcessor.js",
+      "js/modules/releaseProcessor.js",
       "js/app.js"
     ]
   }
