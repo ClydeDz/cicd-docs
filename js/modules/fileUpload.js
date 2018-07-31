@@ -1,43 +1,71 @@
 ﻿
-function handleUploadedImage(e) {
+function handleBuildFileUpload(e) {
     try {
-        _handleImage(e);
+        _handleJsonFile(e, BUILDJSON_CONST);
     }
     catch (err) {
-        console.log("Error: handleUploadedImage" + err.message);
+        console.error("Error: handleBuildFileUpload " + err.message);
     }
 }
 
-function _handleImage(e) {
-    var reader = new FileReader();
-    var url = document.getElementById('buildJsonUploadControl').value;
-    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-
-    if (!e.target.files) {
-        console.log("no image selected");
+function handleReleaseFileUpload(e) {
+    try {
+        _handleJsonFile(e, RELEASEJSON_CONST);
     }
-    console.log(e.target.files.length);
-    // If target control has files
-    if (e.target.files[0]) {
-        if (e.target.files[0].size > 5242880) {
-            //showErrorToast(errorCodes.fileSizeLimit, [""]);
+    catch (err) {
+        console.error("Error: handleReleaseFileUpload " + err.message);
+    }
+}
+
+function _handleJsonFile(e, type) {
+    var isBuildType = (type === BUILDJSON_CONST);    
+    var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
+        : document.getElementById('buildJsonUploadControl').value;
+    var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+    
+    if (!e.target.files[0]) {
+        console.log("No file uploaded");   
+        //TODO: showErrorToast(errorCodes.noFileUploaded, ["" + ext]);
+    }
+
+    if (e.target.files[0].size > 5242880) {
+        console.log("File size exceeded");        
+        //TODO: showErrorToast(errorCodes.fileSizeLimit, [""]);
+    }
+    
+    if (fileExtension !== "json") {
+        console.log("File extension not supported"); 
+        //TODO: showErrorToast(errorCodes.extNotSupported, ["" + ext]);
+    }
+
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        if (isBuildType) {
+            buildJson = JSON.parse(event.target.result);
         }
         else {
-            // If target file matches the allowed extensions
-            if (ext == "json") {
-                reader.onload = function (event) {
-                    //console.log(event.target.result);
-                    jsonObj = JSON.parse(event.target.result);
-                    console.log(jsonObj);
-                }
-                reader.readAsText(e.target.files[0]);
-            }
-            else {
-                //showErrorToast(errorCodes.extNotSupported, ["" + ext]);
-            }
+            releaseJson = JSON.parse(event.target.result);
         }
+        //TODO: remove the line below later
+        releaseJson = buildJson;
     }
-    else {
-        console.log("No image uploaded");
-    }
+    reader.readAsText(e.target.files[0]);
+}
+
+
+function xhrUpload() {
+    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+    $.getJSON(flickerAPI, {
+        tags: "mount rainier",
+        tagmode: "any",
+        format: "json"
+    })
+    .done(function (data) {
+        $.each(data.items, function (i, item) {
+            $("<img>").attr("src", item.media.m).appendTo("#images");
+            if (i === 3) {
+                return false;
+            }
+        });
+    });
 }

@@ -616,76 +616,192 @@ if(!jQuery)throw new Error("Bootstrap requires jQuery");+function(a){"use strict
 
 // Global variables
 
-var buildJson = [];
-var releaseJson = [];
+var buildJson = {};
+var releaseJson = {};
 
 var templateNames = {
     UPLOAD: "UPLOAD",
+    VISUALIZE: "VISUALIZE",
+    BUILD: "BUILD",
+    RELEASE: "RELEASE",
     OUTPUT: "OUTPUT",
 }
 
 // Constants
 var BUILDJSONURL_QUERYSTRING = "buildjson";
 var RELEASEJSONURL_QUERYSTRING = "releasejson";
+
+var BUILDJSON_CONST = "build";
+var RELEASEJSON_CONST = "release";
 function uploadScreenView() {
-    switchTemplate(templateNames.UPLOAD);
+    switchTemplate(templateNames.UPLOAD, {});
 }
 
-function switchTemplate(templateName) {
+function visualizeScreenView() {
+    var visualizeJson = processJson();
+    switchTemplate(templateNames.VISUALIZE, visualizeJson);
+}
+
+function buildVisualizeScreenView() {
+    var visualizeJson = processJson();
+    switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
+}
+
+function releaseVisualizeScreenView() {
+    var visualizeJson = processJson();
+    switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
+}
+
+
+function switchTemplate(templateName, jsonData) {
     if (templateName === templateNames.UPLOAD) {
         $("#viewTemplateHolder").load("html-partials/upload.html #uploadPartial", function () {
             var contents = document.getElementById('uploadPartial').innerHTML;
-            var output = Mustache.render(contents, {});
+            var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
-            document.getElementById('buildJsonUploadControl').addEventListener('change', handleUploadedImage, false);
+            document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
+            document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+        });
+    }
+    if (templateName === templateNames.VISUALIZE) {
+        $("#viewTemplateHolder").load("html-partials/visualize.html #visualizePartial", function () {
+            var contents = document.getElementById('visualizePartial').innerHTML;
+            var output = Mustache.render(contents, jsonData);
+            $("#view").html(output);
+            visualization_ViewLoad(jsonData);
+            document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
+            document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
+        });
+    }
+    if (templateName === templateNames.BUILD) {
+        $("#buildReleaseViewTemplateHolder").load("html-partials/build.html #buildPartial", function () {
+            var contents = document.getElementById('buildPartial').innerHTML;
+            var output = Mustache.render(contents, jsonData);
+            $("#buildReleaseView").html(output);
+           
+        });
+    }
+    if (templateName === templateNames.RELEASE) {
+        $("#buildReleaseViewTemplateHolder").load("html-partials/release.html #releasePartial", function () {
+            var contents = document.getElementById('releasePartial').innerHTML;
+            var output = Mustache.render(contents, jsonData);
+            $("#buildReleaseView").html(output);
+           
         });
     }
     
 }
 
+//////////////////////////////////
+/////////    View loads
+//////////////////////////////////
 
-
-function handleUploadedImage(e) {
-    try {
-        _handleImage(e);
+function visualization_ViewLoad(combinedJson) {
+    if (combinedJson.buildDef != null) {
+        buildVisualizeScreenView();
     }
-    catch (err) {
-        console.log("Error: handleUploadedImage" + err.message);
+    else {
+        releaseVisualizeScreenView();
     }
 }
 
-function _handleImage(e) {
-    var reader = new FileReader();
-    var url = document.getElementById('buildJsonUploadControl').value;
-    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+//////////////////////////////////
+/////////    Navigation buttons
+//////////////////////////////////
 
-    if (!e.target.files) {
-        console.log("no image selected");
+function goToVisualization(e) {
+    visualizeScreenView();
+}
+
+function goToBuild(e) {
+    buildVisualizeScreenView();
+}
+
+function goToRelease(e) {
+    releaseVisualizeScreenView();
+}
+
+//////////////////////////////////
+/////////    Viz
+//////////////////////////////////
+
+function processJson() {
+    var combinedJson = {
+        buildDef: buildJson, //TODO: process build here
+        releaseDef: releaseJson
     }
-    console.log(e.target.files.length);
-    // If target control has files
-    if (e.target.files[0]) {
-        if (e.target.files[0].size > 5242880) {
-            //showErrorToast(errorCodes.fileSizeLimit, [""]);
+    return combinedJson;
+}
+
+function handleBuildFileUpload(e) {
+    try {
+        _handleJsonFile(e, BUILDJSON_CONST);
+    }
+    catch (err) {
+        console.error("Error: handleBuildFileUpload " + err.message);
+    }
+}
+
+function handleReleaseFileUpload(e) {
+    try {
+        _handleJsonFile(e, RELEASEJSON_CONST);
+    }
+    catch (err) {
+        console.error("Error: handleReleaseFileUpload " + err.message);
+    }
+}
+
+function _handleJsonFile(e, type) {
+    var isBuildType = (type === BUILDJSON_CONST);    
+    var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
+        : document.getElementById('buildJsonUploadControl').value;
+    var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+    
+    if (!e.target.files[0]) {
+        console.log("No file uploaded");   
+        //TODO: showErrorToast(errorCodes.noFileUploaded, ["" + ext]);
+    }
+
+    if (e.target.files[0].size > 5242880) {
+        console.log("File size exceeded");        
+        //TODO: showErrorToast(errorCodes.fileSizeLimit, [""]);
+    }
+    
+    if (fileExtension !== "json") {
+        console.log("File extension not supported"); 
+        //TODO: showErrorToast(errorCodes.extNotSupported, ["" + ext]);
+    }
+
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        if (isBuildType) {
+            buildJson = JSON.parse(event.target.result);
         }
         else {
-            // If target file matches the allowed extensions
-            if (ext == "json") {
-                reader.onload = function (event) {
-                    //console.log(event.target.result);
-                    jsonObj = JSON.parse(event.target.result);
-                    console.log(jsonObj);
-                }
-                reader.readAsText(e.target.files[0]);
-            }
-            else {
-                //showErrorToast(errorCodes.extNotSupported, ["" + ext]);
-            }
+            releaseJson = JSON.parse(event.target.result);
         }
+        //TODO: remove the line below later
+        releaseJson = buildJson;
     }
-    else {
-        console.log("No image uploaded");
-    }
+    reader.readAsText(e.target.files[0]);
+}
+
+
+function xhrUpload() {
+    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+    $.getJSON(flickerAPI, {
+        tags: "mount rainier",
+        tagmode: "any",
+        format: "json"
+    })
+    .done(function (data) {
+        $.each(data.items, function (i, item) {
+            $("<img>").attr("src", item.media.m).appendTo("#images");
+            if (i === 3) {
+                return false;
+            }
+        });
+    });
 }
 function getUrlVars() {
     var vars = [], hash;

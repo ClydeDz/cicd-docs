@@ -1,0 +1,29 @@
+﻿<script id="buildPartial" type="text/x-mustache">
+    <div class="container container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="card">
+                   Build {{ name }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="card">
+                    <p>
+                        <b>{{ project.name }}</b>
+                    </p>
+                    <p>
+                        {{ project.description }}
+                    </p>
+                </div>
+                <div class="card">
+                    <p>
+                        <b>{{ authoredBy.displayName }}</b>
+                    </p>
+                    <p>
+                        {{ authoredBy.uniqueName }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
