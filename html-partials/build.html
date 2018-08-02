@@ -3,24 +3,82 @@
         <div class="row">
             <div class="col-xs-12 col-md-8">
                 <div class="card">
-                   Build {{ name }}
+                    <p>
+                        Build {{ name }}
+                        {{ url }}<br />
+                        <img src="{{ buildStatusBadge }}" alt="status"/><br />
+                        {{ creationDate }}<br />
+                    </p>
+                    <p>
+                        Repository
+                        {{ repository.name }}<br />
+                        {{ repository.url }}<br />
+                        {{ repository.isTfsGit }}<br />
+                        <img src="{{ repository.icon }}" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="32" />
+                    </p>
+                    <div>
+                        {{#process}}
+                        <div>
+                            Phase name: {{ name }}<br />
+                            Exe typ:{{ executionType }}<br />
+                            {{#steps}}
+                            <div id="step-{{id}}">
+                                <p>
+                                    Step: {{ name }} <br />
+                                    Enabl {{ enabled }} <br />
+                                    {{ continueOnError }} <br />
+                                    <img alt="{{ name }}" src="{{icon}}" width="32" onerror="errorLoadingImage(this);"/>
+                                </p>
+                            </div>
+                            {{/steps}}
+                        </div>
+                        {{/process}}
+                    </div>
                 </div>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="card">
                     <p>
+                        <b>Project</b>
                         <b>{{ project.name }}</b>
                     </p>
                     <p>
                         {{ project.description }}
+                        {{ project.url }}
                     </p>
                 </div>
                 <div class="card">
                     <p>
-                        <b>{{ authoredBy.displayName }}</b>
+                        <b>{{ author.displayName }}</b>
                     </p>
                     <p>
-                        {{ authoredBy.uniqueName }}
+                        {{ author.email }}
+                    </p>
+                </div>
+                <div class="card">
+                    <p>
+                        <b>Batch changes {{ triggers.batchChanges }}</b>
+                    </p>
+                    <p>
+                        Trigger type {{ triggers.triggerType }}
+                    </p>
+                </div>
+                <div class="card">
+                    <p>
+                        <b>days to keep{{ retention.daysToKeep }}</b>
+                    </p>
+                    <p>
+                        Min to keep {{ retention.minimumToKeep }}
+                    </p>
+                </div>
+                <div class="card">
+                    <p>
+                        <b>{{ queue.displayName }}</b>
+                    </p>
+                    <p>
+                        {{ queue.name }}
+                        <img src="{{ queue.icon }}" alt="{{ queue.name }}" onerror="errorLoadingQueueIcon(this);" width="32" />
+                        is hosted: {{ queue.isHosted }}
                     </p>
                 </div>
             </div>

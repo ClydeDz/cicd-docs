@@ -12,6 +12,7 @@
       "js/modules/buildReleaseProcessor.js",
       "js/modules/buildProcessor.js",
       "js/modules/releaseProcessor.js",
+      "js/modules/dataAccess.js",
       "js/app.js"
     ]
   }

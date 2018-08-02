@@ -7,15 +7,17 @@ function getBuildJson(buildJsonInput) {
         name: getBuildDefinitionName(buildJsonInput),
         url: getBuildDefinitionUrl(buildJsonInput),
         buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+        creationDate: getBuildDefinitionCreationDate(buildJsonInput),
         repository: getBuildDefinitionRepository(buildJsonInput),
         author: getBuildDefinitionAuthor(buildJsonInput),
-        project: getBuildDefinitionAuthor(buildJsonInput),
+        project: getBuildDefinitionProject(buildJsonInput),
         triggers: getBuildDefinitionTriggers(buildJsonInput),
         retention: getBuildDefinitionRetention(buildJsonInput),
         queue: getBuildDefinitionQueue(buildJsonInput),
-        variables: getBuildDefinitionVariables(buildJsonInput)
+        variables: getBuildDefinitionVariables(buildJsonInput),
+        process: getBuildDefinitionProcess(buildJsonInput)
     };
-    return buildJsonInput;
+    return _buildDef;
 }
 
 ////////////////////////////////////////////////
@@ -49,6 +51,7 @@ function getBuildDefinitionRepository(buildJsonInput) {
         isTfvc: _isTfvc,
         isBitbucket: _isBitbucket,
         isOther: _isOther,
+        icon: `/images/extend/repository/${buildJsonInput.repository.type}/icon.png`
     }
     return _repository;
 }
@@ -79,6 +82,8 @@ function getBuildDefinitionTriggers(buildJsonInput) {
         batchChanges: buildJsonInput.triggers[0].batchChanges,
         triggerType: buildJsonInput.triggers[0].triggerType
     };
+    console.log("trigger");
+    console.log(_triggers);
     return _triggers;
 }
 
@@ -95,7 +100,8 @@ function getBuildDefinitionQueue(buildJsonInput) {
         displayName: buildJsonInput.queue.name,
         name: buildJsonInput.queue.pool.name,
         isHosted: buildJsonInput.queue.pool.isHosted,
-        id: buildJsonInput.queue.pool.id
+        id: buildJsonInput.queue.pool.id,
+        icon: `/images/extend/queue/${buildJsonInput.queue.pool.id}/icon.png`
     };
     return _queue;
 }
@@ -135,15 +141,16 @@ function getBuildDefinitionProcess(buildJsonInput) {
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        
-        for (j = 0; j < currentPhase.steps; j++) {
+        for (j = 0; j < currentPhase.steps.length; j++) {
             var _stepsArray = {};
             var currentStep = currentPhase.steps[j];
-
+            var _taskIcon = "";
+            
             _stepsArray["name"] = currentStep.displayName;
             _stepsArray["enabled"] = currentStep.enabled;
             _stepsArray["continueOnError"] = currentStep.continueOnError;
             _stepsArray["id"] = currentStep.task.id;
-            _stepsArray["icon"] = "\images"; //TODO: make this based on the ID of the task
+            _stepsArray["icon"] = `/images/extend/tasks/${currentStep.task.id}/icon.png`;
 
             _phasesArray["steps"].push(_stepsArray);
         }
@@ -155,14 +162,17 @@ function getBuildDefinitionProcess(buildJsonInput) {
     return _processJson;
 }
 
+function errorLoadingImage(e) {
+    e.src = "/images/logo/logo-sq.png";
+    console.clear();  
+}
 
-/*
- * QUEUE
- * *****
- * Hosted Linux Preview & isHosted id=3
- * Hosted VS2017 id=4
- * Hosted macOS Preview id=5
- * Hosted id=2
- * Default id=1 
- * process step 2c65196a-54fd-4a02-9be8-d9d1837b7c5d
- */
+function errorLoadingQueueIcon(e) {
+    e.src = "/images/extend/queue/0/icon.png";
+    console.clear();
+}
+
+function errorLoadingRepositoryIcon(e) {
+    e.src = "/images/extend/repository/Other/icon.png";
+    console.clear();
+}

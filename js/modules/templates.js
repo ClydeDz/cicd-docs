@@ -13,6 +13,8 @@ function visualizeScreenView() {
 
 function buildVisualizeScreenView() {
     var visualizeJson = processJson();
+    console.log("buildVisualizeScreenView");
+    console.log(visualizeJson.buildDef);
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
