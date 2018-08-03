@@ -35,6 +35,7 @@ function _switchTemplate(templateName, jsonData) {
             $("#view").html(output);
             document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
             document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+            document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
         });
     }
     if (templateName === templateNames.VISUALIZE) {
@@ -95,5 +96,28 @@ function goToRelease(e) {
     releaseVisualizeScreenView();
 }
 
+function downloadPdf(e) {
+    e.preventDefault();
+    var visualizeJson = processJson();
+    exportPdf(visualizeJson);
+}
 
 
+function __convertImgToDataURLviaCanvas(url) {
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    var dataURL;
+    img.onload = function () {
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');      
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL();
+        console.log(dataURL);
+        //callback(dataURL);
+        canvas = null;
+        return dataURL;        
+    };
+    img.src = url;
+}

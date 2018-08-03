@@ -51,7 +51,8 @@ function getBuildDefinitionRepository(buildJsonInput) {
         isTfvc: _isTfvc,
         isBitbucket: _isBitbucket,
         isOther: _isOther,
-        icon: `/images/extend/repository/${buildJsonInput.repository.type}/icon.png`
+        icon: `/images/extend/repository/${buildJsonInput.repository.type}/icon.png`,
+        type: buildJsonInput.repository.type
     }
     return _repository;
 }
@@ -119,7 +120,7 @@ function getBuildDefinitionVariables(buildJsonInput) {
         var _item = {};
         _item["id"] = i;
         _item["key"] = _key;
-        _item["value"] = _variables[_key];
+        _item["value"] = _variables[_key].value;
         _variablesJson.push(_item);
     }
 
@@ -150,6 +151,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
             _stepsArray["enabled"] = currentStep.enabled;
             _stepsArray["continueOnError"] = currentStep.continueOnError;
             _stepsArray["id"] = currentStep.task.id;
+            _stepsArray["version"] = currentStep.task.versionSpec;
             _stepsArray["icon"] = `/images/extend/tasks/${currentStep.task.id}/icon.png`;
 
             _phasesArray["steps"].push(_stepsArray);
