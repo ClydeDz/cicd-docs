@@ -12,9 +12,8 @@ var iconSize = 60;
 function exportPdf(buildReleaseJson) {
     var doc = new jsPDF('p', 'pt');
 
-    // Common header 
-    //////////////////////////////////////////////////////
-    doc = printHeadline(doc);
+    // DOCUMENT HEADER
+    doc = printDocumentHeader(doc);
 
     ////////////////////////
     //////   BUILD
@@ -24,46 +23,24 @@ function exportPdf(buildReleaseJson) {
         var _buildJson = buildReleaseJson.buildDef;
 
         // BUILD PIPELINE SECTION
-        //////////////////////////////////////////////////////
-        doc = printBuildPipeline(doc);
+        doc = printBuildPipelineHeading(doc);
 
-        // BUILD NAME
-        //////////////////////////////////////////////////////
-        doc = printBuildName(doc, _buildJson);
-
-        // Contents under build name
-        doc = printContentsInsideBuildName(doc, _buildJson);
+        // BUILD NAME, REPOSITORY, PROJECT AND AUTHOR
+        doc = printBuildNameHeading(doc, _buildJson);
+        doc = printRepositoryProjectAndAuthor(doc, _buildJson);
 
         // PROCESS / BUILD TASKS
-        //////////////////////////////////////////////////////
         doc = printProcessHeading(doc);
-
-        // Loop thru all the phases
-        doc.setTextColor(100);
-        doc.setFontType('normal');
-        doc.setFontSize(pFontSize_const);
-
-        // Queue
         doc = printQueueDetails(doc, _buildJson);
-
-        // Phases and steps
         doc = printPhasesAndSteps(doc, _buildJson);
 
         // VARIABLES
-        //////////////////////////////////////////////////////
         doc = printVariablesHeading(doc);
-
-        // Contents under variables
-        doc = printContentUnderVariables(doc, _buildJson);
+        doc = printVariables(doc, _buildJson);
 
         // TRIGGERS, RETENTION, ETC
-        //////////////////////////////////////////////////////
         doc = printTriggersRetentionHeading(doc);
-
-        // Contents under triggers, retention, etc.
-        doc = printContentsUnderTriggerRetention(doc, _buildJson);
-
-       
+        doc = printTriggersAndRetention(doc, _buildJson);
     }
 
     ////////////////////////
@@ -76,27 +53,9 @@ function exportPdf(buildReleaseJson) {
     //}
 
     // FOOTER
-    //////////////////////////////////////////////////////
     doc.text("footer", x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)));
 
     doc.save('a4.pdf');
-
-}
-
-
-function resetBodyColor(doc) {
-    doc.setTextColor(100);
-    return doc;
-}
-
-function colorBuildProcessTaskStatus(status) {
-    if (status) {
-        doc.setTextColor(0, 255, 0);
-    }
-    else {
-        doc.setTextColor(255, 0, 0);
-    }    
-    return doc;
 }
 
 
@@ -104,7 +63,7 @@ function colorBuildProcessTaskStatus(status) {
 //////   Build headlines
 ////////////////////////////////////////
 
-function printHeadline(doc) {
+function printDocumentHeader(doc) {
     doc.setFontSize(h1FontSize_const);
     var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
     doc.addImage(siteLogo, 'JPEG', x_const, yStartPoint - 15, 30, 30);
@@ -112,24 +71,17 @@ function printHeadline(doc) {
     return doc;
 }
 
-function printBuildPipeline(doc) {
+function printBuildPipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
     doc.text(x_const, (yStartPoint = yStartPoint + hLineHeight_const * 2), 'BUILD PIPELINE');
-
-    var lineY = yStartPoint + 7;
-    var lineX = x_const;
-    var lineLength = 550;
-    doc.setDrawColor(100);
-    doc.line(lineX, lineY, lineLength, lineY);
+    doc = drawLine(doc);
     yStartPoint = yStartPoint + (hLineHeight_const / 2);
     return doc;
 }
 
-function printBuildName(doc, _buildJson) {
-    doc.setFontSize(h3FontSize_const);
-    doc.setFontType('normal');
-    doc.setTextColor(142, 45, 226);
-    doc.text(x_const, (yStartPoint = yStartPoint + hLineHeight_const), _buildJson.name);
+function printBuildNameHeading(doc, _buildJson) {
+    doc = setH3HeadingStyle(doc);
+    doc.text(x_const, (yStartPoint = yStartPoint + hLineHeight_const), `Build name: ${_buildJson.name}`);
     return doc;
 }
 
@@ -157,16 +109,16 @@ function printTriggersRetentionHeading(doc) {
 ///////////////////////////////////////
 
 
-function printContentsInsideBuildName(doc, _buildJson) {
+function printRepositoryProjectAndAuthor(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), iconSize, iconSize);
     var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), iconSize, iconSize);
 
-    doc.addImage(repositoryIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 20, 20);
-    doc.textWithLink(_buildJson.repository.name, x_const + 25, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), { url: _buildJson.repository.url });
-    doc.addImage(platformVstsIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 20, 20);
-    doc.textWithLink(_buildJson.project.name, x_const + 25, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), { url: _buildJson.project.url });
+    doc.addImage(repositoryIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
+    doc.textWithLink(_buildJson.repository.name, x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), { url: _buildJson.repository.url });
+    doc.addImage(platformVstsIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
+    doc.textWithLink(_buildJson.project.name, x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), { url: _buildJson.project.url });
     //doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Type: ${_buildJson.repository.type} repository.`);
     doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
     doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Email: ${_buildJson.author.email}`);
@@ -174,17 +126,15 @@ function printContentsInsideBuildName(doc, _buildJson) {
     return doc;
 }
 
-
 function printQueueDetails(doc, _buildJson) {
+    doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), iconSize, iconSize);
-    doc.addImage(agentIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 20, 20);
-    doc.text(x_const + 25, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `${_buildJson.queue.displayName}`);
+    doc.addImage(agentIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
+    doc.text(x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), `${_buildJson.queue.displayName} agent`);
     return doc;
 }
 
-
 function printPhasesAndSteps(doc, _buildJson) {
-
     var _phases = _buildJson.process;
     for (phaseIndex = 0; phaseIndex < _phases.length; phaseIndex++) {
         var currentPhase = _phases[phaseIndex];
@@ -196,9 +146,9 @@ function printPhasesAndSteps(doc, _buildJson) {
             x1: x_const,
             x2: x_const,
             x3: x_const + 3,
-            y1: yStartPoint + 6,
-            y2: yStartPoint + 3,
-            y3: yStartPoint,
+            y1: yStartPoint,
+            y2: yStartPoint + 6,
+            y3: yStartPoint + 3,
             fill: 'FD'
         };
 
@@ -213,28 +163,23 @@ function printPhasesAndSteps(doc, _buildJson) {
             { title: "Task Icon", dataKey: "icon" },
             { title: "Name", dataKey: "name" },
             { title: "Version", dataKey: "version" },
-            { title: "Status", dataKey: "status" }
+            { title: "Enabled", dataKey: "enabled" }
         ];
         var rows = [];
 
         // Loop thru all the steps/tasks in each phase
-        var _steps = currentPhase.steps;
-        for (stepsIndex = 0; stepsIndex < _steps.length; stepsIndex++) {
-            var currentStep = _steps[stepsIndex];
-
+        for (stepsIndex = 0; stepsIndex < currentPhase.steps.length; stepsIndex++) {
+            var currentStep = currentPhase.steps[stepsIndex];
             var _stepsArray = {};
-            //_stepsArray["image"] = agentIcon;
             _stepsArray["name"] = currentStep.name;
             _stepsArray["version"] = currentStep.version;
-            //_stepsArray["status"] = currentStep.enabled;
-
             rows.push(_stepsArray);
         }
-        var imgElements = document.querySelectorAll('#table tbody img');
+
+        // Insert all steps into the table and display
         var images = [];
         var enabledStatusIconImages = [];
-        var i = 0; var j = 0;
-        // Insert all steps into the table and display
+        var taskIconIndex = 0; var enabledIconIndex = 0;
         doc.autoTable(columns, rows,
             {
                 theme: 'striped',
@@ -244,58 +189,52 @@ function printPhasesAndSteps(doc, _buildJson) {
                 startY: (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)),
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
-                    console.log(opts.column);
-                    if (opts.column.index === 0 || opts.column.index === 3) {
 
-                        if (opts.column.index === 0) { //_steps[i] != undefined
-                            console.log(i);
-                            var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${_steps[i].id}`), 32, 32);
-                            images.push({
-                                url: _stepIcon,//agentIcon, //imgElements[i].src,
-                                x: cell.textPos.x,
-                                y: cell.textPos.y
-                            });
-                            i++;
-                        }
+                    if (opts.column.index === 0) { //currentPhase.steps[i] != undefined
+                        var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${currentPhase.steps[taskIconIndex].id}`), 32, 32);
+                        images.push({
+                            url: _stepIcon,
+                            x: cell.textPos.x,
+                            y: cell.textPos.y
+                        });
+                        taskIconIndex++;
+                    }
 
-                        if (opts.column.index === 3) {
-                            console.log(j);
-                            var _enabledIcon;
-                            if (_steps[j].enabled) {
-                                _enabledIcon = getEnabledStatusIcon();
-                            }
-                            else {
-                                _enabledIcon = getDisabledStatusIcon();
-                            }
-                            enabledStatusIconImages.push({
-                                url: _enabledIcon,
-                                x: cell.textPos.x,
-                                y: cell.textPos.y
-                            });
-                            j++;
+                    if (opts.column.index === 3) {
+                        var _enabledIcon;
+                        if (currentPhase.steps[enabledIconIndex].enabled) {
+                            _enabledIcon = getEnabledStatusIcon();
                         }
+                        else {
+                            _enabledIcon = getDisabledStatusIcon();
+                        }
+                        enabledStatusIconImages.push({
+                            url: _enabledIcon,
+                            x: cell.textPos.x,
+                            y: cell.textPos.y
+                        });
+                        enabledIconIndex++;
                     }
                 },
                 addPageContent: function () {
                     for (var i = 0; i < images.length; i++) {
-                        doc.addImage(images[i].url, images[i].x, images[i].y, 16, 16);
-                        doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 16, 16);
+                        doc.addImage(images[i].url, images[i].x, images[i].y, 14, 14);
+                        doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
                     }
                 }
             });
-        yStartPoint = doc.autoTable.previous.finalY;//getNewPY(doc.autoTable.previous.finalY, hLineHeight_const);
+        yStartPoint = doc.autoTable.previous.finalY;
     }
     return doc;
 }
 
 
-function printContentUnderVariables(doc, _buildJson) {
-
+function printVariables(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     var columns = [
-        { title: "Key", dataKey: "key" },
-        { title: "Value", dataKey: "value" }
+        { title: "Variable Name", dataKey: "key" },
+        { title: "Variable Value", dataKey: "value" }
     ];
     var rows = [];
 
@@ -306,6 +245,8 @@ function printContentUnderVariables(doc, _buildJson) {
         _variableArray["value"] = _buildJson.variables[variableIndex].value;
         rows.push(_variableArray);
     }
+
+    // Insert all the variables into the table
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -319,7 +260,7 @@ function printContentUnderVariables(doc, _buildJson) {
 }
 
 
-function printContentsUnderTriggerRetention(doc, _buildJson) {
+function printTriggersAndRetention(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     // Triggers

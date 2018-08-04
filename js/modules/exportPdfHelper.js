@@ -45,3 +45,13 @@ function setBodyStyle(doc) {
     return doc;
 }
 
+function drawLine(doc) {
+    var line = {
+        x: x_const,
+        y: yStartPoint + 7,
+        length: 560
+    };
+    doc.setDrawColor(100);
+    doc.line(line.x, line.y, line.length, line.y);
+    return doc;
+}
