@@ -35,7 +35,7 @@ function _switchTemplate(templateName, jsonData) {
             $("#view").html(output);
             document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
             document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-            document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
+           
         });
     }
     if (templateName === templateNames.VISUALIZE) {
@@ -46,6 +46,7 @@ function _switchTemplate(templateName, jsonData) {
             visualization_ViewLoad(jsonData);
             document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
             document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
+            document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
         });
     }
     if (templateName === templateNames.BUILD) {

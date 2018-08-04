@@ -6,7 +6,7 @@
                     <p>
                         Build {{ name }}
                         {{ url }}<br />
-                        <img src="{{ buildStatusBadge }}" alt="status"/><br />
+                        <!--<img src="{{ buildStatusBadge }}" alt="status"/><br />-->
                         {{ creationDate }}<br />
                     </p>
                     <p>
@@ -14,7 +14,8 @@
                         {{ repository.name }}<br />
                         {{ repository.url }}<br />
                         {{ repository.isTfsGit }}<br />
-                        <img src="{{ repository.icon }}" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="32" />
+                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="32" />
+                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ repository.name }}" width="40" />
                     </p>
                     <div>
                         {{#process}}
@@ -27,7 +28,7 @@
                                     Step: {{ name }} <br />
                                     Enabl {{ enabled }} <br />
                                     {{ continueOnError }} <br />
-                                    <img alt="{{ name }}" src="{{icon}}" width="32" onerror="errorLoadingImage(this);"/>
+                                    <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);"/>
                                 </p>
                             </div>
                             {{/steps}}
@@ -77,7 +78,7 @@
                     </p>
                     <p>
                         {{ queue.name }}
-                        <img src="{{ queue.icon }}" alt="{{ queue.name }}" onerror="errorLoadingQueueIcon(this);" width="32" />
+                        <img src="{{ queue.icon }}" alt="{{ queue.name }}" id="queueAgentIcon" onerror="errorLoadingQueueIcon(this);" width="32" />
                         is hosted: {{ queue.isHosted }}
                     </p>
                 </div>
