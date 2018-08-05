@@ -1061,8 +1061,35 @@ var hLineHeight_const = 28;
 var pLineHeight_const = 14;
 var iconSize = 60;
 
+var pdf = {
+    xAxisValue: 40,
+    yAxisValue: 50,
+    bodyLineHeight: 18,
+    headingLineHeight: 28,
+    addNewBodyLine: function () {
+        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
+    },
+    addNewHeadingLine: function () {
+        this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
+    },
+    addNewSubHeadingLine: function () {
+        this.yAxisValue = this.yAxisValue + (this.headingLineHeight * 1.5);
+    },
+    bodyFontSize: 14,
+    h1FontSize: 22,
+    h2FontSize: 18,
+    h3FontSize: 15,
+    iconSize: 60
+};
+
+var lineHeightType = {
+    BODY: "BODY",
+    HEADING:"HEADING"
+};
+
 function exportPdf(buildReleaseJson) {
-    var doc = new jsPDF('p', 'pt');
+    var doc = new jsPDF('p', 'pt'); //, unit: 'pt'
+    //var doc = new jsPDF({ pagesplit: true }); //'p', 'pt', unit: 'pt'
 
     // DOCUMENT HEADER
     doc = printDocumentHeader(doc);
@@ -1105,9 +1132,30 @@ function exportPdf(buildReleaseJson) {
     //}
 
     // FOOTER
-    doc.text("footer", x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)));
+    for (t = 0; t <= 10; t++) {
+        pdf.addNewBodyLine();
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
+    }
+    
+    doc = addPageFooter(doc);
+    doc.save('b4.pdf');
+}
 
-    doc.save('a4.pdf');
+function addPageFooter(doc) {
+    console.log(doc.internal.getNumberOfPages());
+    for (var f = 1; f <= doc.internal.getNumberOfPages(); f++) {
+        // FOOTER
+        var str = "Page " + f;
+
+        // Total page number plugin only available in jspdf v1.0+
+        if (typeof doc.putTotalPages === 'function') {
+            str = str + " of " + doc.internal.getNumberOfPages();
+        }
+        doc.setFontSize(8);
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        doc.text(40, pageHeight - 10, str);
+    }    
+    return doc;
 }
 
 
@@ -1118,40 +1166,45 @@ function exportPdf(buildReleaseJson) {
 function printDocumentHeader(doc) {
     doc.setFontSize(h1FontSize_const);
     var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
-    doc.addImage(siteLogo, 'JPEG', x_const, yStartPoint - 15, 30, 30);
-    doc.text(x_const + 40, yStartPoint + 5, 'CI/CD Docs');
+    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 30, 30);
+    doc.text(pdf.xAxisValue + 40, pdf.yAxisValue + 7, 'CI/CD Docs');
     return doc;
 }
 
 function printBuildPipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
-    doc.text(x_const, (yStartPoint = yStartPoint + hLineHeight_const * 2), 'BUILD PIPELINE');
+    pdf.addNewHeadingLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'BUILD PIPELINE');
     doc = drawLine(doc);
-    yStartPoint = yStartPoint + (hLineHeight_const / 2);
+    //yStartPoint = yStartPoint + (hLineHeight_const / 2);
     return doc;
 }
 
 function printBuildNameHeading(doc, _buildJson) {
     doc = setH3HeadingStyle(doc);
-    doc.text(x_const, (yStartPoint = yStartPoint + hLineHeight_const), `Build name: ${_buildJson.name}`);
+    pdf.addNewSubHeadingLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build name: ${_buildJson.name}`);
     return doc;
 }
 
 function printProcessHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    doc.text(x_const, (yStartPoint = yStartPoint + (hLineHeight_const * 1.5)), 'Process');
+    pdf.addNewSubHeadingLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Process');
     return doc;
 }
 
 function printVariablesHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    doc.text(x_const, (yStartPoint = yStartPoint + (hLineHeight_const * 1.5)), 'Variables');
+    pdf.addNewSubHeadingLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Variables');
     return doc;
 }
 
 function printTriggersRetentionHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    doc.text(x_const, (yStartPoint = yStartPoint + (hLineHeight_const * 1.5)), 'Triggers, Retention, etc.');
+    pdf.addNewSubHeadingLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers, Retention, etc.');
     return doc;
 }
 
@@ -1167,13 +1220,20 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
     var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), iconSize, iconSize);
     var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), iconSize, iconSize);
 
-    doc.addImage(repositoryIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
-    doc.textWithLink(_buildJson.repository.name, x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), { url: _buildJson.repository.url });
-    doc.addImage(platformVstsIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
-    doc.textWithLink(_buildJson.project.name, x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), { url: _buildJson.project.url });
-    //doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Type: ${_buildJson.repository.type} repository.`);
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Email: ${_buildJson.author.email}`);
+    // Repo
+    pdf.addNewBodyLine();
+    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
+    // Project
+    pdf.addNewBodyLine();
+    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.project.url });
+    // Author
+    pdf.addNewBodyLine();
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
 
     return doc;
 }
@@ -1181,8 +1241,9 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), iconSize, iconSize);
-    doc.addImage(agentIcon, 'JPEG', x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), 14, 14);
-    doc.text(x_const + 20, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)-4), `${_buildJson.queue.displayName} agent`);
+    pdf.addNewBodyLine();
+    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
     return doc;
 }
 
@@ -1192,22 +1253,23 @@ function printPhasesAndSteps(doc, _buildJson) {
         var currentPhase = _phases[phaseIndex];
 
         // Phase
-        yStartPoint = yStartPoint + pLineHeight_const;
+        pdf.addNewBodyLine();
+        pdf.addNewBodyLine();
         // Triangle co-ords
         var triangle = {
-            x1: x_const,
-            x2: x_const,
-            x3: x_const + 3,
-            y1: yStartPoint,
-            y2: yStartPoint + 6,
-            y3: yStartPoint + 3,
+            x1: pdf.xAxisValue,
+            x2: pdf.xAxisValue,
+            x3: pdf.xAxisValue + 3,
+            y1: pdf.yAxisValue,
+            y2: pdf.yAxisValue + 6,
+            y3: pdf.yAxisValue + 3,
             fill: 'FD'
         };
 
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
         doc.text(triangle.x3 + 3, triangle.y3 + (triangle.y2 - triangle.y3), currentPhase.name);
-        yStartPoint = triangle.y3;
+        pdf.yAxisValue = triangle.y3;
 
         // Steps
         // Construct a table containing all steps in each phase
@@ -1232,13 +1294,14 @@ function printPhasesAndSteps(doc, _buildJson) {
         var images = [];
         var enabledStatusIconImages = [];
         var taskIconIndex = 0; var enabledIconIndex = 0;
+        pdf.addNewBodyLine();
         doc.autoTable(columns, rows,
             {
                 theme: 'striped',
                 styles: { overflow: 'linebreak' },
                 headerStyles: { fillColor: [142, 45, 226] },
-                margin: { left: x_const },
-                startY: (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)),
+                margin: { left: pdf.xAxisValue },
+                startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
 
@@ -1275,7 +1338,7 @@ function printPhasesAndSteps(doc, _buildJson) {
                     }
                 }
             });
-        yStartPoint = doc.autoTable.previous.finalY;
+        pdf.yAxisValue  = doc.autoTable.previous.finalY;
     }
     return doc;
 }
@@ -1298,16 +1361,17 @@ function printVariables(doc, _buildJson) {
         rows.push(_variableArray);
     }
 
+    pdf.addNewBodyLine();
     // Insert all the variables into the table
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
             headerStyles: { fillColor: [142, 45, 226] },
-            margin: { left: x_const },
-            startY: (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)),
+            margin: { left: pdf.xAxisValue },
+            startY: pdf.yAxisValue,
             showHeader: 'everyPage'
         });
-    yStartPoint = doc.autoTable.previous.finalY;
+    pdf.yAxisValue  = doc.autoTable.previous.finalY;
     return doc;
 }
 
@@ -1316,19 +1380,21 @@ function printTriggersAndRetention(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     // Triggers
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Trigger type: ${_buildJson.triggers.triggerType}`);
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Trigger type: ${_buildJson.triggers.triggerType}`);
 
     // Retention
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Email: ${_buildJson.retention.daysToKeep}`);
-    doc.text(x_const, (yStartPoint = getNewPY(yStartPoint, pLineHeight_const)), `Email: ${_buildJson.retention.minimumToKeep}`);
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.daysToKeep}`);
+    pdf.addNewBodyLine();
+    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.minimumToKeep}`);
     return doc;
 }
 
 
-function getNewPY(oldY, lineHeight) {
-    return oldY + lineHeight;
-}
+
 
 ///////////////////////////////
 //////   Image related
@@ -1377,16 +1443,23 @@ function setBodyStyle(doc) {
     return doc;
 }
 
+
+///////////////////////////////
+//////   Drawing an object
+///////////////////////////////
+
 function drawLine(doc) {
     var line = {
-        x: x_const,
-        y: yStartPoint + 7,
+        x: pdf.xAxisValue,
+        y: pdf.yAxisValue + 7,
         length: 560
     };
     doc.setDrawColor(100);
     doc.line(line.x, line.y, line.length, line.y);
     return doc;
 }
+
+
 $(document).ready(function () {
     var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
     console.log(buildJsonUrl);
