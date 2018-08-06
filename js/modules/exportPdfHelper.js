@@ -61,3 +61,11 @@ function drawLine(doc) {
     return doc;
 }
 
+
+///////////////////////////////
+//////   Decision making
+///////////////////////////////
+
+function getEnabledDisabledIcon(status) {
+    return status ? getEnabledStatusIcon() : getDisabledStatusIcon();
+}

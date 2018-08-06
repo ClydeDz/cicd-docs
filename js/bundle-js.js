@@ -1117,7 +1117,7 @@ function exportPdf(buildReleaseJson) {
 
         //// FOOTER
         //18 for 2page process list
-        for (t = 0; t <= 9; t++) {
+        for (t = 0; t <= 18; t++) {
             doc = addNewBodyLine(doc, lineHeightType.BODY);
             doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
         }
@@ -1146,7 +1146,7 @@ function exportPdf(buildReleaseJson) {
     //}
         
     doc = addPageFooter(doc);
-    doc.save('b4.pdf');
+    doc.save(`cicd-docs-${new Date().getMilliseconds()}.pdf`);
 }
 
 function addNewBodyLine(doc, type) {
@@ -1164,7 +1164,6 @@ function addNewBodyLine(doc, type) {
         if (type === lineHeightType.SUBHEADING) {
             pdf.addNewSubHeadingLine();
         }
-        
     }    
     return doc;
 }
@@ -1174,7 +1173,8 @@ function addPageFooter(doc) {
         doc.setPage(footerindex);
         doc.setFontSize(8);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()}`);
+        var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()} | ${footerText}`);
     }
     return doc;
 }
@@ -1311,11 +1311,8 @@ function printPhasesAndSteps(doc, _buildJson) {
         }
 
         // Insert all steps into the table and display
-        var images = [];
-        var printedImages = [];
-        var enabledStatusIconImages = [];
+        var images = []; var printImages = []; var enabledStatusIconImages = [];
         var taskIconIndex = 0; var enabledIconIndex = 0;
-
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.autoTable(columns, rows,
             {
@@ -1326,34 +1323,22 @@ function printPhasesAndSteps(doc, _buildJson) {
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
-                    console.log(opts);
+                    // Column 1 or index 0 (starts from 0) is 'task icon'
                     if (opts.column.index === 0) {
-                        //currentPhase.steps[i] != undefined
+                        //TODO: add extra checks: currentPhase.steps[i] != undefined
                         var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${currentPhase.steps[taskIconIndex].id}`), 32, 32);
-                        for (var imgIndex = 0; imgIndex < images.length; imgIndex++) {  
-                            console.log(currentPhase.steps[taskIconIndex].id + " && " + images[imgIndex].id);
-                            if (currentPhase.steps[taskIconIndex].id === images[imgIndex].id) {
-                                console.log("found");
-                            }
-                        }
                         images.push({
                             url: _stepIcon,
                             x: cell.textPos.x,
                             y: cell.textPos.y,
-                            id: currentPhase.steps[taskIconIndex].id,
-                            indexCount: taskIconIndex
+                            id: currentPhase.steps[taskIconIndex].id
                         });
                         taskIconIndex++;
                     }
 
+                    // Column 4 or index 3 (starts from 0) is 'enabled'
                     if (opts.column.index === 3) {
-                        var _enabledIcon;
-                        if (currentPhase.steps[enabledIconIndex].enabled) {
-                            _enabledIcon = getEnabledStatusIcon();
-                        }
-                        else {
-                            _enabledIcon = getDisabledStatusIcon();
-                        }
+                        var _enabledIcon = getEnabledDisabledIcon(currentPhase.steps[enabledIconIndex].enabled);
                         enabledStatusIconImages.push({
                             url: _enabledIcon,
                             x: cell.textPos.x,
@@ -1363,29 +1348,23 @@ function printPhasesAndSteps(doc, _buildJson) {
                     }
                 },
                 addPageContent: function () {
-                    console.log("addPageContent");
-                    console.log(images);
-                    var printImagesFlag = true;
                     for (var i = 0; i < images.length; i++) {
-                        console.log(printedImages);
-                        for (var printedImgsIndex = 0; printedImgsIndex < printedImages.length; printedImgsIndex++) {
-                            if (images[i].id === printedImages[printedImgsIndex].id) {
-                                printImagesFlag = false;
+                        var imageNotAlreadyPrinted = true;
+                        // Check if current image is already printed
+                        for (var printImagesIndex = 0; printImagesIndex < printImages.length; printImagesIndex++) {
+                            if (images[i].id === printImages[printImagesIndex].id) {
+                                imageNotAlreadyPrinted = false;
                                 break;
                             }
-                            printImagesFlag = true;
                         }
-                        if (printImagesFlag) { 
-                            console.log(printImagesFlag);
-                            console.log(images[i]);
-
-                            printedImages.push({
+                        if (imageNotAlreadyPrinted) { 
+                            // If its not printed, push it to the printed images store
+                            printImages.push({
                                 id: images[i].id
                             });
 
                             doc.addImage(images[i].url, images[i].x, images[i].y, 14, 14);
                             doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
-                            printImagesFlag = false;
                         }
                     }
                 }
@@ -1398,14 +1377,13 @@ function printPhasesAndSteps(doc, _buildJson) {
 
 function printVariables(doc, _buildJson) {
     doc = setBodyStyle(doc);
-
     var columns = [
         { title: "Variable Name", dataKey: "key" },
         { title: "Variable Value", dataKey: "value" }
     ];
     var rows = [];
 
-    // Loop thru all the variables
+    // Loop thru all the variables and fill the rows of this table
     for (variableIndex = 0; variableIndex < _buildJson.variables.length; variableIndex++) {
         var _variableArray = {};
         _variableArray["key"] = _buildJson.variables[variableIndex].key;
@@ -1413,8 +1391,8 @@ function printVariables(doc, _buildJson) {
         rows.push(_variableArray);
     }
 
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    // Insert all the variables into the table
+    // Insert all the rows and columns into the table
+    doc = addNewBodyLine(doc, lineHeightType.BODY);    
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -1512,6 +1490,13 @@ function drawLine(doc) {
 }
 
 
+///////////////////////////////
+//////   Decision making
+///////////////////////////////
+
+function getEnabledDisabledIcon(status) {
+    return status ? getEnabledStatusIcon() : getDisabledStatusIcon();
+}
 $(document).ready(function () {
     var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
     console.log(buildJsonUrl);
