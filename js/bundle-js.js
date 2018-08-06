@@ -1079,18 +1079,30 @@ var pdf = {
     h1FontSize: 22,
     h2FontSize: 18,
     h3FontSize: 15,
-    iconSize: 60
+    iconSize: 60,
+    pageCount: 0,
+    incrementPageCount: function () {
+        ++this.pageCount;
+    },
+    footerFlag: ""
 };
 
 var lineHeightType = {
     BODY: "BODY",
-    HEADING:"HEADING"
+    HEADING: "HEADING",
+    SUBHEADING: "SUBHEADING"
 };
 
 function exportPdf(buildReleaseJson) {
-    var doc = new jsPDF('p', 'pt'); //, unit: 'pt'
+    var doc = new jsPDF('p', 'pt', 'a4'); //, unit: 'pt'
     //var doc = new jsPDF({ pagesplit: true }); //'p', 'pt', unit: 'pt'
-
+    doc.setProperties({
+        title: 'CI/CD Docs',
+        subject: 'This is the subject',
+        author: 'CI/CD Docs',
+        keywords: 'documentation, cicd, devops, vsts',
+        creator: 'MEEE'
+    });
     // DOCUMENT HEADER
     doc = printDocumentHeader(doc);
 
@@ -1107,6 +1119,13 @@ function exportPdf(buildReleaseJson) {
         // BUILD NAME, REPOSITORY, PROJECT AND AUTHOR
         doc = printBuildNameHeading(doc, _buildJson);
         doc = printRepositoryProjectAndAuthor(doc, _buildJson);
+
+        //// FOOTER
+        //18 for 2page process list
+        for (t = 0; t <= 2; t++) {
+            doc = addNewBodyLine(doc, lineHeightType.BODY);
+            doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
+        }
 
         // PROCESS / BUILD TASKS
         doc = printProcessHeading(doc);
@@ -1131,31 +1150,51 @@ function exportPdf(buildReleaseJson) {
     //    doc.text(x_const, (yStartPoint = yStartPoint + lineHeight_const), 'Release Pipeline');
     //}
 
-    // FOOTER
-    for (t = 0; t <= 10; t++) {
-        pdf.addNewBodyLine();
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
+    var totalPagesExp = "{total_pages_count_string}";
+
+    console.log(doc);
+    console.log(doc.internal.getNumberOfPages());
+    for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
+        doc.setPage(footerindex);
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()}`);
     }
-    
-    doc = addPageFooter(doc);
+    //console.log(doc.putTotalPages().length);
+    doc.putTotalPages(totalPagesExp);
+    //doc = addPageFooter(doc);
     doc.save('b4.pdf');
 }
 
-function addPageFooter(doc) {
-    console.log(doc.internal.getNumberOfPages());
-    for (var f = 1; f <= doc.internal.getNumberOfPages(); f++) {
-        // FOOTER
-        var str = "Page " + f;
-
-        // Total page number plugin only available in jspdf v1.0+
-        if (typeof doc.putTotalPages === 'function') {
-            str = str + " of " + doc.internal.getNumberOfPages();
+function addNewBodyLine(doc, type) {
+    var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+    if (pdf.yAxisValue >= pageHeight - 50) {
+        //doc = addPageFooter(doc);
+        doc.addPage('p', 'pt');
+        pdf.yAxisValue = 50;
+    } else {
+        if (type === lineHeightType.BODY) {
+            pdf.addNewBodyLine();
         }
-        doc.setFontSize(8);
-        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        doc.text(40, pageHeight - 10, str);
+        if (type === lineHeightType.HEADING) {
+            pdf.addNewHeadingLine();
+        }
+        if (type === lineHeightType.SUBHEADING) {
+            pdf.addNewSubHeadingLine();
+        }
+        
     }    
     return doc;
+}
+
+function addPageFooter(doc, from) {
+    //if (pdf.footerFlag === "" || pdf.footerFlag === from) {
+        pdf.footerFlag = from;
+        pdf.incrementPageCount();
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pdf.pageCount} | ${from}`);
+        return doc;
+    //}
+    
 }
 
 
@@ -1173,7 +1212,8 @@ function printDocumentHeader(doc) {
 
 function printBuildPipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
-    pdf.addNewHeadingLine();
+    //pdf.addNewHeadingLine();
+    doc = addNewBodyLine(doc, lineHeightType.HEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'BUILD PIPELINE');
     doc = drawLine(doc);
     //yStartPoint = yStartPoint + (hLineHeight_const / 2);
@@ -1182,28 +1222,32 @@ function printBuildPipelineHeading(doc) {
 
 function printBuildNameHeading(doc, _buildJson) {
     doc = setH3HeadingStyle(doc);
-    pdf.addNewSubHeadingLine();
+    //pdf.addNewSubHeadingLine();
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build name: ${_buildJson.name}`);
     return doc;
 }
 
 function printProcessHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    pdf.addNewSubHeadingLine();
+    //pdf.addNewSubHeadingLine();
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Process');
     return doc;
 }
 
 function printVariablesHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    pdf.addNewSubHeadingLine();
+    //pdf.addNewSubHeadingLine();
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Variables');
     return doc;
 }
 
 function printTriggersRetentionHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    pdf.addNewSubHeadingLine();
+    //pdf.addNewSubHeadingLine();
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers, Retention, etc.');
     return doc;
 }
@@ -1221,18 +1265,23 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
     var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), iconSize, iconSize);
 
     // Repo
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.project.url });
     // Author
-    pdf.addNewBodyLine();
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
 
     return doc;
@@ -1241,7 +1290,8 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), iconSize, iconSize);
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
     return doc;
@@ -1253,8 +1303,10 @@ function printPhasesAndSteps(doc, _buildJson) {
         var currentPhase = _phases[phaseIndex];
 
         // Phase
-        pdf.addNewBodyLine();
-        pdf.addNewBodyLine();
+        //pdf.addNewBodyLine();
+        //pdf.addNewBodyLine();
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
         // Triangle co-ords
         var triangle = {
             x1: pdf.xAxisValue,
@@ -1292,9 +1344,11 @@ function printPhasesAndSteps(doc, _buildJson) {
 
         // Insert all steps into the table and display
         var images = [];
+        var printedImages = [];
         var enabledStatusIconImages = [];
         var taskIconIndex = 0; var enabledIconIndex = 0;
-        pdf.addNewBodyLine();
+        //pdf.addNewBodyLine();
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.autoTable(columns, rows,
             {
                 theme: 'striped',
@@ -1304,13 +1358,24 @@ function printPhasesAndSteps(doc, _buildJson) {
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
-
-                    if (opts.column.index === 0) { //currentPhase.steps[i] != undefined
+                    console.log(opts);
+                    if (opts.column.index === 0) {
+                        //currentPhase.steps[i] != undefined
                         var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${currentPhase.steps[taskIconIndex].id}`), 32, 32);
+                        for (var imgIndex = 0; imgIndex < images.length; imgIndex++) {  
+                            //var _currentImage = images[imgIndex];
+                            //var _currentId = currentPhase.steps[taskIconIndex].id;
+                            console.log(currentPhase.steps[taskIconIndex].id + " && " + images[imgIndex].id);
+                            if (currentPhase.steps[taskIconIndex].id === images[imgIndex].id) {
+                                console.log("found");
+                            }
+                        }
                         images.push({
                             url: _stepIcon,
                             x: cell.textPos.x,
-                            y: cell.textPos.y
+                            y: cell.textPos.y,
+                            id: currentPhase.steps[taskIconIndex].id,
+                            indexCount: taskIconIndex
                         });
                         taskIconIndex++;
                     }
@@ -1332,10 +1397,38 @@ function printPhasesAndSteps(doc, _buildJson) {
                     }
                 },
                 addPageContent: function () {
+                    console.log("addPageContent");
+                    console.log(images);
+                    var printImagesFlag = true;
                     for (var i = 0; i < images.length; i++) {
-                        doc.addImage(images[i].url, images[i].x, images[i].y, 14, 14);
-                        doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
+                        console.log(printedImages);
+                        for (var printedImgsIndex = 0; printedImgsIndex < printedImages.length; printedImgsIndex++) {
+                            if (images[i].id === printedImages[printedImgsIndex].id) {
+                                printImagesFlag = false;
+                                break;
+                            }
+                            printImagesFlag = true;
+                        }
+                        if (printImagesFlag) { 
+                            console.log(printImagesFlag);
+                            console.log(images[i]);
+
+                            printedImages.push({
+                                id: images[i].id
+                            });
+
+                            doc.addImage(images[i].url, images[i].x, images[i].y, 14, 14);
+                            doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
+                            printImagesFlag = false;
+                        }
+                        //images.splice(0, 1);
+                        //images.splice(0, 1);
                     }
+                    for (var i = 0; i < images.length; i++) {
+                        //images.splice(i, 1);
+                        //enabledStatusIconImages.splice(i, 1);
+                    }
+                    //addPageFooter(doc, "process");
                 }
             });
         pdf.yAxisValue  = doc.autoTable.previous.finalY;
@@ -1361,7 +1454,12 @@ function printVariables(doc, _buildJson) {
         rows.push(_variableArray);
     }
 
-    pdf.addNewBodyLine();
+    var pageContent = function (data) {
+        //addPageFooter(doc, "variables");
+    };
+
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     // Insert all the variables into the table
     doc.autoTable(columns, rows,
         {
@@ -1369,7 +1467,8 @@ function printVariables(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            addPageContent: pageContent
         });
     pdf.yAxisValue  = doc.autoTable.previous.finalY;
     return doc;
@@ -1380,15 +1479,19 @@ function printTriggersAndRetention(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     // Triggers
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Trigger type: ${_buildJson.triggers.triggerType}`);
 
     // Retention
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.daysToKeep}`);
-    pdf.addNewBodyLine();
+    //pdf.addNewBodyLine();
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.minimumToKeep}`);
     return doc;
 }
