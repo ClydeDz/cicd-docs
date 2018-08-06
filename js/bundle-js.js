@@ -1079,12 +1079,7 @@ var pdf = {
     h1FontSize: 22,
     h2FontSize: 18,
     h3FontSize: 15,
-    iconSize: 60,
-    pageCount: 0,
-    incrementPageCount: function () {
-        ++this.pageCount;
-    },
-    footerFlag: ""
+    iconSize: 60
 };
 
 var lineHeightType = {
@@ -1094,8 +1089,7 @@ var lineHeightType = {
 };
 
 function exportPdf(buildReleaseJson) {
-    var doc = new jsPDF('p', 'pt', 'a4'); //, unit: 'pt'
-    //var doc = new jsPDF({ pagesplit: true }); //'p', 'pt', unit: 'pt'
+    var doc = new jsPDF('p', 'pt', 'a4'); 
     doc.setProperties({
         title: 'CI/CD Docs',
         subject: 'This is the subject',
@@ -1103,6 +1097,7 @@ function exportPdf(buildReleaseJson) {
         keywords: 'documentation, cicd, devops, vsts',
         creator: 'MEEE'
     });
+
     // DOCUMENT HEADER
     doc = printDocumentHeader(doc);
 
@@ -1122,7 +1117,7 @@ function exportPdf(buildReleaseJson) {
 
         //// FOOTER
         //18 for 2page process list
-        for (t = 0; t <= 2; t++) {
+        for (t = 0; t <= 9; t++) {
             doc = addNewBodyLine(doc, lineHeightType.BODY);
             doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
         }
@@ -1149,26 +1144,14 @@ function exportPdf(buildReleaseJson) {
     //    doc.setFontSize(h2FontSize_const);
     //    doc.text(x_const, (yStartPoint = yStartPoint + lineHeight_const), 'Release Pipeline');
     //}
-
-    var totalPagesExp = "{total_pages_count_string}";
-
-    console.log(doc);
-    console.log(doc.internal.getNumberOfPages());
-    for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
-        doc.setPage(footerindex);
-        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()}`);
-    }
-    //console.log(doc.putTotalPages().length);
-    doc.putTotalPages(totalPagesExp);
-    //doc = addPageFooter(doc);
+        
+    doc = addPageFooter(doc);
     doc.save('b4.pdf');
 }
 
 function addNewBodyLine(doc, type) {
     var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    if (pdf.yAxisValue >= pageHeight - 50) {
-        //doc = addPageFooter(doc);
+    if (pdf.yAxisValue >= (pageHeight - 100)) {
         doc.addPage('p', 'pt');
         pdf.yAxisValue = 50;
     } else {
@@ -1186,15 +1169,14 @@ function addNewBodyLine(doc, type) {
     return doc;
 }
 
-function addPageFooter(doc, from) {
-    //if (pdf.footerFlag === "" || pdf.footerFlag === from) {
-        pdf.footerFlag = from;
-        pdf.incrementPageCount();
+function addPageFooter(doc) {
+    for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
+        doc.setPage(footerindex);
+        doc.setFontSize(8);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pdf.pageCount} | ${from}`);
-        return doc;
-    //}
-    
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()}`);
+    }
+    return doc;
 }
 
 
@@ -1212,17 +1194,14 @@ function printDocumentHeader(doc) {
 
 function printBuildPipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
-    //pdf.addNewHeadingLine();
     doc = addNewBodyLine(doc, lineHeightType.HEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'BUILD PIPELINE');
     doc = drawLine(doc);
-    //yStartPoint = yStartPoint + (hLineHeight_const / 2);
     return doc;
 }
 
 function printBuildNameHeading(doc, _buildJson) {
     doc = setH3HeadingStyle(doc);
-    //pdf.addNewSubHeadingLine();
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build name: ${_buildJson.name}`);
     return doc;
@@ -1230,7 +1209,6 @@ function printBuildNameHeading(doc, _buildJson) {
 
 function printProcessHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    //pdf.addNewSubHeadingLine();
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Process');
     return doc;
@@ -1238,7 +1216,6 @@ function printProcessHeading(doc) {
 
 function printVariablesHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    //pdf.addNewSubHeadingLine();
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Variables');
     return doc;
@@ -1246,7 +1223,6 @@ function printVariablesHeading(doc) {
 
 function printTriggersRetentionHeading(doc) {
     doc = setH3HeadingStyle(doc);
-    //pdf.addNewSubHeadingLine();
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers, Retention, etc.');
     return doc;
@@ -1265,22 +1241,17 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
     var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), iconSize, iconSize);
 
     // Repo
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.project.url });
     // Author
-    //pdf.addNewBodyLine();
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
 
@@ -1290,7 +1261,6 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), iconSize, iconSize);
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
@@ -1303,8 +1273,6 @@ function printPhasesAndSteps(doc, _buildJson) {
         var currentPhase = _phases[phaseIndex];
 
         // Phase
-        //pdf.addNewBodyLine();
-        //pdf.addNewBodyLine();
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         // Triangle co-ords
@@ -1347,7 +1315,7 @@ function printPhasesAndSteps(doc, _buildJson) {
         var printedImages = [];
         var enabledStatusIconImages = [];
         var taskIconIndex = 0; var enabledIconIndex = 0;
-        //pdf.addNewBodyLine();
+
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.autoTable(columns, rows,
             {
@@ -1363,8 +1331,6 @@ function printPhasesAndSteps(doc, _buildJson) {
                         //currentPhase.steps[i] != undefined
                         var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${currentPhase.steps[taskIconIndex].id}`), 32, 32);
                         for (var imgIndex = 0; imgIndex < images.length; imgIndex++) {  
-                            //var _currentImage = images[imgIndex];
-                            //var _currentId = currentPhase.steps[taskIconIndex].id;
                             console.log(currentPhase.steps[taskIconIndex].id + " && " + images[imgIndex].id);
                             if (currentPhase.steps[taskIconIndex].id === images[imgIndex].id) {
                                 console.log("found");
@@ -1421,14 +1387,7 @@ function printPhasesAndSteps(doc, _buildJson) {
                             doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
                             printImagesFlag = false;
                         }
-                        //images.splice(0, 1);
-                        //images.splice(0, 1);
                     }
-                    for (var i = 0; i < images.length; i++) {
-                        //images.splice(i, 1);
-                        //enabledStatusIconImages.splice(i, 1);
-                    }
-                    //addPageFooter(doc, "process");
                 }
             });
         pdf.yAxisValue  = doc.autoTable.previous.finalY;
@@ -1454,11 +1413,6 @@ function printVariables(doc, _buildJson) {
         rows.push(_variableArray);
     }
 
-    var pageContent = function (data) {
-        //addPageFooter(doc, "variables");
-    };
-
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     // Insert all the variables into the table
     doc.autoTable(columns, rows,
@@ -1467,8 +1421,7 @@ function printVariables(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage',
-            addPageContent: pageContent
+            showHeader: 'everyPage'
         });
     pdf.yAxisValue  = doc.autoTable.previous.finalY;
     return doc;
@@ -1479,18 +1432,14 @@ function printTriggersAndRetention(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     // Triggers
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Trigger type: ${_buildJson.triggers.triggerType}`);
 
     // Retention
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.daysToKeep}`);
-    //pdf.addNewBodyLine();
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.minimumToKeep}`);
     return doc;
