@@ -614,11 +614,15 @@ if(!jQuery)throw new Error("Bootstrap requires jQuery");+function(a){"use strict
 
 }));
 
-// Global variables
+////////////////////////////////////////
+//////   Global variables
+////////////////////////////////////////
 
-var buildJson = {};
-var releaseJson = {};
+// Build and release json data uploaded by user
+var buildJsonData = {};
+var releaseJsonData = {};
 
+// Template names for Mustache
 var templateNames = {
     UPLOAD: "UPLOAD",
     VISUALIZE: "VISUALIZE",
@@ -627,14 +631,57 @@ var templateNames = {
     OUTPUT: "OUTPUT",
 }
 
-// Constants
+// Export functionality variables
+var pdf = {
+    xAxisValue: 40,
+    yAxisValue: 50,
+    bodyLineHeight: 18,
+    headingLineHeight: 28,
+    addNewBodyLine: function () {
+        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
+    },
+    addNewHeadingLine: function () {
+        this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
+    },
+    addNewSubHeadingLine: function () {
+        this.yAxisValue = this.yAxisValue + (this.headingLineHeight * 1.5);
+    },
+    bodyFontSize: 10,
+    h1FontSize: 22,
+    h2FontSize: 18,
+    h3FontSize: 15,
+    iconSize: 60,
+    printIconSize: 14
+};
+
+var lineHeightType = {
+    BODY: "BODY",
+    HEADING: "HEADING",
+    SUBHEADING: "SUBHEADING"
+};
+
+var lineObjectLength = {
+    FULL: 560,
+    QUATER: 150
+};
+
+
+
+////////////////////////////////////////
+//////   Constants
+////////////////////////////////////////
+
+// App constants
 const appVersionNumber = "1.0.0";
+const appName = "CI/CD Docs";
+const appUrl = "https://clydedz.github.io/cicd-docs/";
 
-const BUILDJSONURL_QUERYSTRING = "buildjson";
-const RELEASEJSONURL_QUERYSTRING = "releasejson";
+// Other constants
+const buildJsonUrlQueryStringKey = "buildjson";
+const releaseJsonUrlQueryStringKey = "releasejson";
+const buildJsonText = "build";
+const releaseJsonText = "release";
 
-const BUILDJSON = "build";
-const RELEASEJSON = "release";
 //////////////////////////////////////////
 /////////    Template update starters
 //////////////////////////////////////////
@@ -762,7 +809,7 @@ function __convertImgToDataURLviaCanvas(url) {
 
 function handleBuildFileUpload(e) {
     try {
-        _handleJsonFile(e, BUILDJSON);
+        _handleJsonFile(e, buildJsonText);
     }
     catch (err) {
         console.error("Error: handleBuildFileUpload " + err.message);
@@ -771,7 +818,7 @@ function handleBuildFileUpload(e) {
 
 function handleReleaseFileUpload(e) {
     try {
-        _handleJsonFile(e, RELEASEJSON);
+        _handleJsonFile(e, releaseJsonText);
     }
     catch (err) {
         console.error("Error: handleReleaseFileUpload " + err.message);
@@ -779,7 +826,7 @@ function handleReleaseFileUpload(e) {
 }
 
 function _handleJsonFile(e, type) {
-    var isBuildType = (type === BUILDJSON);    
+    var isBuildType = (type === buildJsonText);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
         : document.getElementById('buildJsonUploadControl').value;
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
@@ -802,13 +849,13 @@ function _handleJsonFile(e, type) {
     var reader = new FileReader();
     reader.onload = function (event) {
         if (isBuildType) {
-            buildJson = JSON.parse(event.target.result);
+            buildJsonData = JSON.parse(event.target.result);
         }
         else {
-            releaseJson = JSON.parse(event.target.result);
+            releaseJsonData = JSON.parse(event.target.result);
         }
         //TODO: remove the line below later
-        releaseJson = buildJson;
+        releaseJsonData = buildJsonData;
     }
     reader.readAsText(e.target.files[0]);
 }
@@ -846,18 +893,19 @@ function getUrlVars() {
 
 
 function processJson() {
-    var x = getBuildJson(buildJson);
+    var x = getBuildJson(buildJsonData);
     console.log("process json");
     console.log(x);
     var combinedJson = {
         buildDef: x, //TODO: process build here
-        releaseDef: releaseJson
+        releaseDef: releaseJsonData
     }
     return combinedJson;
 }
 //////////////////////////////////
 /////////    Build process
 //////////////////////////////////
+
 function getBuildJson(buildJsonInput) {
 
     var _buildDef = {
@@ -1042,54 +1090,15 @@ function importTestData() {
     /// <summary>Method to import sticker data.</summary>
     $.getJSON("../samples/build/sample-build.json")
         .done(function (returnedData) {
-            buildJson = returnedData;
+            buildJsonData = returnedData;
             console.log("import test data");
-            console.log(buildJson);
+            console.log(buildJsonData);
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
             console.log("Request Failed: " + err);
         });
 }
-
-/////////////////////////////////
-//////   Document constants
-/////////////////////////////////
-
-
-var pdf = {
-    xAxisValue: 40,
-    yAxisValue: 50,
-    bodyLineHeight: 18,
-    headingLineHeight: 28,
-    addNewBodyLine: function () {
-        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
-    },
-    addNewHeadingLine: function () {
-        this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
-    },
-    addNewSubHeadingLine: function () {
-        this.yAxisValue = this.yAxisValue + (this.headingLineHeight * 1.5);
-    },
-    bodyFontSize: 10,
-    h1FontSize: 22,
-    h2FontSize: 18,
-    h3FontSize: 15,
-    iconSize: 60,
-    printIconSize: 14
-};
-
-var lineHeightType = {
-    BODY: "BODY",
-    HEADING: "HEADING",
-    SUBHEADING: "SUBHEADING"
-};
-
-var lineObjectLength = {
-    FULL: 560,
-    QUATER: 150
-};
-
 
 /////////////////////////////////////////
 //////   Export PDF starting point
@@ -1189,6 +1198,7 @@ function getDisabledStatusIcon() {
 
 function setH1HeadingStyle(doc) {
     doc.setFontSize(pdf.h1FontSize);
+    doc.setTextColor(39, 39, 39);
     return doc;
 }
 
@@ -1279,24 +1289,14 @@ function isPageAlmostOver(doc, currentYAxisValue) {
 ////////////////////////////////////////
 
 function addPageFooter(doc) {
-    for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
-        doc.setPage(footerindex);
+    var totalPages = doc.internal.getNumberOfPages();
+    for (var pageCounter = 1; pageCounter <= totalPages; pageCounter++) {
+        doc.setPage(pageCounter);
         doc.setFontSize(7);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
-        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()} | ${footerText}`);
+        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pageCounter} of ${totalPages} | ${footerText}`);
     }
-    return doc;
-}
-
-
-function addDocumentFooter(doc) {
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.setFontSize(6);
-    doc = drawLine(doc, lineObjectLength.QUATER);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version 1.0`;
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `${footerText}`);
     return doc;
 }
 
@@ -1306,21 +1306,15 @@ function addDocumentFooter(doc) {
 
 
 function processJson() {
-    var x = getBuildJson(buildJson);
+    var x = getBuildJson(buildJsonData);
     console.log("process json");
     console.log(x);
     var combinedJson = {
         buildDef: x, //TODO: process build here
-        releaseDef: releaseJson
+        releaseDef: releaseJsonData
     }
     return combinedJson;
 }
-/*
- * Build pipeline
- * 
- */
-
-
 ////////////////////////////////////////
 //////   Build headlines
 ////////////////////////////////////////
@@ -1328,8 +1322,8 @@ function processJson() {
 function printDocumentHeader(doc) {
     doc = setH1HeadingStyle(doc);
     var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
-    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 30, 30);
-    doc.text(pdf.xAxisValue + 40, pdf.yAxisValue + 7, 'CI/CD Docs');
+    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 35, 35);
+    doc.text(pdf.xAxisValue + 45, pdf.yAxisValue + 12, appName);
     return doc;
 }
 
@@ -1568,7 +1562,7 @@ function printTriggersAndRetention(doc, _buildJson) {
 
 
 $(document).ready(function () {
-    var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
+    var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");

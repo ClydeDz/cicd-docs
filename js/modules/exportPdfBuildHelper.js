@@ -1,18 +1,12 @@
-﻿/*
- * Build pipeline
- * 
- */
-
-
-////////////////////////////////////////
+﻿////////////////////////////////////////
 //////   Build headlines
 ////////////////////////////////////////
 
 function printDocumentHeader(doc) {
     doc = setH1HeadingStyle(doc);
     var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
-    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 30, 30);
-    doc.text(pdf.xAxisValue + 40, pdf.yAxisValue + 7, 'CI/CD Docs');
+    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 35, 35);
+    doc.text(pdf.xAxisValue + 45, pdf.yAxisValue + 12, appName);
     return doc;
 }
 

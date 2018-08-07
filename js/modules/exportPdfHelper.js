@@ -28,6 +28,7 @@ function getDisabledStatusIcon() {
 
 function setH1HeadingStyle(doc) {
     doc.setFontSize(pdf.h1FontSize);
+    doc.setTextColor(39, 39, 39);
     return doc;
 }
 
@@ -118,23 +119,13 @@ function isPageAlmostOver(doc, currentYAxisValue) {
 ////////////////////////////////////////
 
 function addPageFooter(doc) {
-    for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
-        doc.setPage(footerindex);
+    var totalPages = doc.internal.getNumberOfPages();
+    for (var pageCounter = 1; pageCounter <= totalPages; pageCounter++) {
+        doc.setPage(pageCounter);
         doc.setFontSize(7);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
-        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()} | ${footerText}`);
+        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
+        doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pageCounter} of ${totalPages} | ${footerText}`);
     }
-    return doc;
-}
-
-
-function addDocumentFooter(doc) {
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.setFontSize(6);
-    doc = drawLine(doc, lineObjectLength.QUATER);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version 1.0`;
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `${footerText}`);
     return doc;
 }

@@ -4,12 +4,12 @@
 
 
 function processJson() {
-    var x = getBuildJson(buildJson);
+    var x = getBuildJson(buildJsonData);
     console.log("process json");
     console.log(x);
     var combinedJson = {
         buildDef: x, //TODO: process build here
-        releaseDef: releaseJson
+        releaseDef: releaseJsonData
     }
     return combinedJson;
 }

@@ -1,43 +1,4 @@
-﻿/////////////////////////////////
-//////   Document constants
-/////////////////////////////////
-
-
-var pdf = {
-    xAxisValue: 40,
-    yAxisValue: 50,
-    bodyLineHeight: 18,
-    headingLineHeight: 28,
-    addNewBodyLine: function () {
-        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
-    },
-    addNewHeadingLine: function () {
-        this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
-    },
-    addNewSubHeadingLine: function () {
-        this.yAxisValue = this.yAxisValue + (this.headingLineHeight * 1.5);
-    },
-    bodyFontSize: 10,
-    h1FontSize: 22,
-    h2FontSize: 18,
-    h3FontSize: 15,
-    iconSize: 60,
-    printIconSize: 14
-};
-
-var lineHeightType = {
-    BODY: "BODY",
-    HEADING: "HEADING",
-    SUBHEADING: "SUBHEADING"
-};
-
-var lineObjectLength = {
-    FULL: 560,
-    QUATER: 150
-};
-
-
-/////////////////////////////////////////
+﻿/////////////////////////////////////////
 //////   Export PDF starting point
 /////////////////////////////////////////
 

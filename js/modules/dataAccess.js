@@ -3,9 +3,9 @@ function importTestData() {
     /// <summary>Method to import sticker data.</summary>
     $.getJSON("../samples/build/sample-build.json")
         .done(function (returnedData) {
-            buildJson = returnedData;
+            buildJsonData = returnedData;
             console.log("import test data");
-            console.log(buildJson);
+            console.log(buildJsonData);
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;

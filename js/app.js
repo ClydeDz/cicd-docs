@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
+    var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");
