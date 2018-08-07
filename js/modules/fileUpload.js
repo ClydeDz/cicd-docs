@@ -1,7 +1,7 @@
 ﻿
 function handleBuildFileUpload(e) {
     try {
-        _handleJsonFile(e, BUILDJSON_CONST);
+        _handleJsonFile(e, BUILDJSON);
     }
     catch (err) {
         console.error("Error: handleBuildFileUpload " + err.message);
@@ -10,7 +10,7 @@ function handleBuildFileUpload(e) {
 
 function handleReleaseFileUpload(e) {
     try {
-        _handleJsonFile(e, RELEASEJSON_CONST);
+        _handleJsonFile(e, RELEASEJSON);
     }
     catch (err) {
         console.error("Error: handleReleaseFileUpload " + err.message);
@@ -18,7 +18,7 @@ function handleReleaseFileUpload(e) {
 }
 
 function _handleJsonFile(e, type) {
-    var isBuildType = (type === BUILDJSON_CONST);    
+    var isBuildType = (type === BUILDJSON);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
         : document.getElementById('buildJsonUploadControl').value;
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();

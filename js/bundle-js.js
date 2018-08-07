@@ -628,11 +628,13 @@ var templateNames = {
 }
 
 // Constants
-var BUILDJSONURL_QUERYSTRING = "buildjson";
-var RELEASEJSONURL_QUERYSTRING = "releasejson";
+const appVersionNumber = "1.0.0";
 
-var BUILDJSON_CONST = "build";
-var RELEASEJSON_CONST = "release";
+const BUILDJSONURL_QUERYSTRING = "buildjson";
+const RELEASEJSONURL_QUERYSTRING = "releasejson";
+
+const BUILDJSON = "build";
+const RELEASEJSON = "release";
 //////////////////////////////////////////
 /////////    Template update starters
 //////////////////////////////////////////
@@ -760,7 +762,7 @@ function __convertImgToDataURLviaCanvas(url) {
 
 function handleBuildFileUpload(e) {
     try {
-        _handleJsonFile(e, BUILDJSON_CONST);
+        _handleJsonFile(e, BUILDJSON);
     }
     catch (err) {
         console.error("Error: handleBuildFileUpload " + err.message);
@@ -769,7 +771,7 @@ function handleBuildFileUpload(e) {
 
 function handleReleaseFileUpload(e) {
     try {
-        _handleJsonFile(e, RELEASEJSON_CONST);
+        _handleJsonFile(e, RELEASEJSON);
     }
     catch (err) {
         console.error("Error: handleReleaseFileUpload " + err.message);
@@ -777,7 +779,7 @@ function handleReleaseFileUpload(e) {
 }
 
 function _handleJsonFile(e, type) {
-    var isBuildType = (type === BUILDJSON_CONST);    
+    var isBuildType = (type === BUILDJSON);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
         : document.getElementById('buildJsonUploadControl').value;
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
@@ -1050,16 +1052,10 @@ function importTestData() {
         });
 }
 
-// Document constants
-var x_const = 40;
-var yStartPoint = 50;
-var h1FontSize_const = 22;
-var h2FontSize_const = 18;
-var h3FontSize_const = 15;
-var pFontSize_const = 10;
-var hLineHeight_const = 28;
-var pLineHeight_const = 14;
-var iconSize = 60;
+/////////////////////////////////
+//////   Document constants
+/////////////////////////////////
+
 
 var pdf = {
     xAxisValue: 40,
@@ -1075,11 +1071,12 @@ var pdf = {
     addNewSubHeadingLine: function () {
         this.yAxisValue = this.yAxisValue + (this.headingLineHeight * 1.5);
     },
-    bodyFontSize: 14,
+    bodyFontSize: 10,
     h1FontSize: 22,
     h2FontSize: 18,
     h3FontSize: 15,
-    iconSize: 60
+    iconSize: 60,
+    printIconSize: 14
 };
 
 var lineHeightType = {
@@ -1088,14 +1085,25 @@ var lineHeightType = {
     SUBHEADING: "SUBHEADING"
 };
 
+var lineObjectLength = {
+    FULL: 560,
+    QUATER: 150
+};
+
+
+/////////////////////////////////////////
+//////   Export PDF starting point
+/////////////////////////////////////////
+
+
 function exportPdf(buildReleaseJson) {
     var doc = new jsPDF('p', 'pt', 'a4'); 
     doc.setProperties({
-        title: 'CI/CD Docs',
-        subject: 'This is the subject',
+        title: getFileName(),
+        subject: 'Documentation for your VSTS CI/CD pipeline',
         author: 'CI/CD Docs',
         keywords: 'documentation, cicd, devops, vsts',
-        creator: 'MEEE'
+        creator: 'CI/CD Docs'
     });
 
     // DOCUMENT HEADER
@@ -1116,7 +1124,7 @@ function exportPdf(buildReleaseJson) {
         doc = printRepositoryProjectAndAuthor(doc, _buildJson);
 
         //// FOOTER
-        //18 for 2page process list
+        //18 for 2page process list //TODO: remove this for
         for (t = 0; t <= 18; t++) {
             doc = addNewBodyLine(doc, lineHeightType.BODY);
             doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
@@ -1146,12 +1154,67 @@ function exportPdf(buildReleaseJson) {
     //}
         
     doc = addPageFooter(doc);
-    doc.save(`cicd-docs-${new Date().getMilliseconds()}.pdf`);
+    //doc = addDocumentFooter(doc);
+    doc.save(`${getFileName()}.pdf`);
+}
+
+
+////////////////////////////////////////
+//////   Image processing
+////////////////////////////////////////
+
+function getBase64Image(img, oImageWidth, oImageHeight) {
+    var canvas = document.createElement("canvas");
+    canvas.width = (oImageWidth || img.width);
+    canvas.height = (oImageHeight || img.height);
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+    return dataURL;
+}
+
+function getEnabledStatusIcon() {
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAyNJREFUWMPtlk9oVFcUxn/nzptYkHYhAUWzUVynLQYmbzINkVKQgiiRdDfdiLgJoonpzlaxS2dUXLnpJu4KLUGx0EUbkviSDPhv46IgbqIR/wRmREjf5N3jYjIzmcx7k5nJdGW/1TD33Pf7znfunTfwsUva2XToylC34wR7CWyPGFQ0thR0rb7Ijebe/mcG3Kx70GLSghwDPg+rUXgkypQJ7KT3g/e0IwYS1xK7xcZ/BE4B8Sb9FkFumiC47E14r9o2kLyadK2a34A9LeVa1RtjzAnv7MxMVIGJWujPDnxn1fy9DThAt7X2TzeTGmkpATczmFSxfwE7tgHfKN8Y801YEnUG1mf+GNjdAfA74NP1zy/jjvTOnpl9vbGgbgTrB64T8D9sl79fVctd7ykW7YXNRTUG3Kx7kNJp367uFPIrx3OjubfE144CS6Xu5HRfNnUgOgF1vqf5qxbZ+Sd5Z+TJpSc+gBTjY0DP+lqXI6QjDajosQ7Ah6cvTa8C9GdSFxF+qm2yllE5hIeuDHXHzdrrpjDhulPIr5wodx4KL/dJ0D0/Nr9Sk0BM1vaF1OZVJS2w3CE4gFjjlEdSNWCM7t1UWFDlyOL47K1AGUJ40SD2kSbhJZatsioGREU31cVisVgXQG587h9rORxiYuuZhzqosioGAq2Leae19m7y2uBghIn24ABWKo1Ub8EOfymkdKe19nbyatItm5Ag+FqVXwr5leNtwUGh+LyS/MaVRDb1UOCLkE3vjTHfhv2WtwgHuL8wNtdXnwAgylTEpppxbAOOitYwagyYwE4CfgMTtxOZgf524YCva7FbNU3XRZr96gboaIOHFIBfgZMtwhG4Pj82dzYygVIKwWXgZYPnfNYmfNm3zs91vM1feBPeKyN2GPi3VUgDrVrV4fvnp99saQDAO+fNi5LukIlVFUkvjt9biEgmWonMQL+I/E6b/wsFlq3qcBQ8MoGyFsfvLcQd6UX1BtG3I0y+wHXfOr2N4FsmsFF92dQBR0iX3ufyZUTZA0GmgkAmcxMzz5pMqXW5WXcXxPepBD0AorElKD4vv+P/Vyv6AP7tWxzDVgMmAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA4LTA0VDA3OjU0OjI0KzAwOjAwrQ8BwwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wOC0wNFQwNzo1NDoyNCswMDowMNxSuX8AAAAodEVYdHN2ZzpiYXNlLXVyaQBmaWxlOi8vL3RtcC9tYWdpY2stbFBSS282Zm45r2VhAAAAAElFTkSuQmCC";
+}
+
+function getDisabledStatusIcon() {
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAA8BJREFUWMPtlk1MXFUUx3/nPih2xql0Ukpt0UWliQtjJVMgY9SMDAmyakKipIvZGEkTu2riwg1saOLKjYtWbeJCFjbBkLCyJQVNjEWwaBNjE2MbNlhqg0YYZigfc48L7sw8mA9mOnWlZ/Xueefe3//+73v3XvivhzxKp5VY5JDx6o6KpQXJqJr6BauZewcmZ//81wQsx6KtxttKCHIaOFmi7JYK4xmbGWmcmrv7WASsxjubBYYUHQDqK9S7KcIn1tQNhyZuPHhkAStd7S8bkTGg2W8G6Fci/KKWBUQU4TAqEVS7EJp8tfcN9AUmZ6erFpDsbn9LVD4HGlxqHnQwGE6NyujtjWJ9NBKpTzWafpAh4IRLr6uSCE3NjlYswM18KgsX5GIgnDxfClwgJBrdnwpkrgKvZUUYeL2YE2Z3YjXe2exsdzPX94KTM+cqhQOkg/YM8Iov1WBhLNnb1rS7tkCAwBBuzQW5+OTkDx9WCgZIdXe+raqX3dgW+Na9OmLW6wfLCliORVvd1w4wHwgnz9cCF5GBYNrrEeEOgApn1+KnjpcUYLytBLlfTQersb0o/PrMZzI9vaYw7Mr2WTWJkgLcJgOwHAynRvfGlodn3wcPrl4BlpwLp/19cwJWYpFD5HY4uVrp7PeCA7ixvnbNl5Z7ouECAUa8Y7kOqj8/LrgvbmaH97ZsS4EAEXs0+6zIvSrhKsq5MnBQ9W3JeVZOgIpo3jO1VcLfDU7Nflyuj4h4vkaOlf8IrSzmCzhche3v7AV3k3o670aelRNgDQu+gkiF8IGytu9YAXkx+5ipMzlWToC7TNxy1V0aiew4emuC97Y2AG+41k9PXZv+q3AJABXG3RI0bZ9qtcMBUpvhfiC0PbQZ37Ey/sbfXZHn6sS7DewDfgumvZPpoD1TC1xjsSdSXvpX4Flgw/N4fv/E7HxRBxqn5u6K8KlrnkgFMtdqgQOsmrWPHBzQS354gQAAa+qGgfuu+WpN8O7290Vyh9uizdgLu2sKBIQmbjww0Aes+9LfBVLmi2psT8Y7LqPygUs9NCJ9B76ZW9pdW/pK1tXxpggjZG9Fwh2F4eDB1Sslr2S9rQ2pzXA/ynDedh4qkghNznxZrE/ZS2k63hG1MAYc8aWX2D5YbgJ/oGJEeEbRF9j+1UK+2kUj0he4PvN9Kcae1/Jkb1uTWa8fVOEs239HJbEBeslm7IVitlclIBtr8VPHrZqEO8/bilfpj4IZN56O7P7aaxbgj+WeaNjLcEzsZguAmvqFjMfv/h3u/6g0/gH+ArkQUH1qzwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wOC0wNFQxMjowMDoxMiswMDowMLjMbUcAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDgtMDRUMTI6MDA6MTIrMDA6MDDJkdX7AAAAKHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy90bXAvbWFnaWNrLV9ZNlpSNGhnjwrmagAAAABJRU5ErkJggg==";
+}
+
+
+
+////////////////////////////////////////
+//////   Alignment and styling
+////////////////////////////////////////
+
+function setH1HeadingStyle(doc) {
+    doc.setFontSize(pdf.h1FontSize);
+    return doc;
+}
+
+function setH2HeadingStyle(doc) {
+    doc.setFontSize(pdf.h2FontSize);
+    doc.setFontType('bold');
+    doc.setTextColor(39, 39, 39);
+    return doc;
+}
+
+function setH3HeadingStyle(doc) {
+    doc.setFontSize(pdf.h3FontSize);
+    doc.setFontType('normal');
+    doc.setTextColor(142, 45, 226);
+    return doc;
+}
+
+function setBodyStyle(doc) {
+    doc.setFontSize(pdf.bodyFontSize);
+    doc.setFontType('normal');
+    doc.setTextColor(100);
+    return doc;
 }
 
 function addNewBodyLine(doc, type) {
-    var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    if (pdf.yAxisValue >= (pageHeight - 100)) {
+    if (isPageAlmostOver(doc, pdf.yAxisValue)) {
         doc.addPage('p', 'pt');
         pdf.yAxisValue = 50;
     } else {
@@ -1164,20 +1227,98 @@ function addNewBodyLine(doc, type) {
         if (type === lineHeightType.SUBHEADING) {
             pdf.addNewSubHeadingLine();
         }
-    }    
+    }
     return doc;
 }
+
+
+////////////////////////////////////////
+//////   Drawing an object
+////////////////////////////////////////
+
+function drawLine(doc, length) {
+    var line = {
+        x: pdf.xAxisValue,
+        y: pdf.yAxisValue + 7,
+        length: length
+    };
+    doc.setDrawColor(100);
+    doc.line(line.x, line.y, line.length, line.y);
+    return doc;
+}
+
+
+
+////////////////////////////////////////
+//////   Decision making
+////////////////////////////////////////
+
+function getEnabledDisabledIcon(status) {
+    return status ? getEnabledStatusIcon() : getDisabledStatusIcon();
+}
+
+function getFileName() {
+    var today = new Date();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let _getDate = () => {
+        if (today.getDate() < 10) { return `0${today.getDate()}`; }
+        else { return today.getDate();}
+    }
+    var dateForFileName = `${today.getFullYear()}${monthNames[today.getMonth()]}${_getDate()}${today.getMilliseconds()}`;
+    return `CICD-Docs-${dateForFileName}`;
+}
+
+function isPageAlmostOver(doc, currentYAxisValue) {
+    var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+    return currentYAxisValue >= (pageHeight - 100);
+}
+
+
+////////////////////////////////////////
+//////   Footer
+////////////////////////////////////////
 
 function addPageFooter(doc) {
     for (var footerindex = 1; footerindex <= doc.internal.getNumberOfPages(); footerindex++) {
         doc.setPage(footerindex);
-        doc.setFontSize(8);
+        doc.setFontSize(7);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+        var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
         doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${footerindex} of ${doc.internal.getNumberOfPages()} | ${footerText}`);
     }
     return doc;
 }
+
+
+function addDocumentFooter(doc) {
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.setFontSize(6);
+    doc = drawLine(doc, lineObjectLength.QUATER);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    var footerText = `Generated using CI/CD Docs [https://clydedz.github.io/cicd-docs/] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version 1.0`;
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `${footerText}`);
+    return doc;
+}
+
+//////////////////////////////////
+/////////    Process
+//////////////////////////////////
+
+
+function processJson() {
+    var x = getBuildJson(buildJson);
+    console.log("process json");
+    console.log(x);
+    var combinedJson = {
+        buildDef: x, //TODO: process build here
+        releaseDef: releaseJson
+    }
+    return combinedJson;
+}
+/*
+ * Build pipeline
+ * 
+ */
 
 
 ////////////////////////////////////////
@@ -1185,7 +1326,7 @@ function addPageFooter(doc) {
 ////////////////////////////////////////
 
 function printDocumentHeader(doc) {
-    doc.setFontSize(h1FontSize_const);
+    doc = setH1HeadingStyle(doc);
     var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
     doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 30, 30);
     doc.text(pdf.xAxisValue + 40, pdf.yAxisValue + 7, 'CI/CD Docs');
@@ -1196,7 +1337,7 @@ function printBuildPipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.HEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'BUILD PIPELINE');
-    doc = drawLine(doc);
+    doc = drawLine(doc, lineObjectLength.FULL);
     return doc;
 }
 
@@ -1230,23 +1371,23 @@ function printTriggersRetentionHeading(doc) {
 
 
 ////////////////////////////////////////
-//// Build pipeline contents
+////    Build pipeline contents
 ///////////////////////////////////////
 
 
 function printRepositoryProjectAndAuthor(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
-    var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), iconSize, iconSize);
-    var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), iconSize, iconSize);
+    var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), pdf.iconSize, pdf.iconSize);
+    var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), pdf.iconSize, pdf.iconSize);
 
     // Repo
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
     doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.project.url });
     // Author
     doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -1260,9 +1401,9 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
 
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
-    var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), iconSize, iconSize);
+    var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), pdf.iconSize, pdf.iconSize);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, 14, 14);
+    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
     return doc;
 }
@@ -1357,19 +1498,19 @@ function printPhasesAndSteps(doc, _buildJson) {
                                 break;
                             }
                         }
-                        if (imageNotAlreadyPrinted) { 
+                        if (imageNotAlreadyPrinted) {
                             // If its not printed, push it to the printed images store
                             printImages.push({
                                 id: images[i].id
                             });
 
-                            doc.addImage(images[i].url, images[i].x, images[i].y, 14, 14);
-                            doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, 14, 14);
+                            doc.addImage(images[i].url, images[i].x, images[i].y, pdf.printIconSize, pdf.printIconSize);
+                            doc.addImage(enabledStatusIconImages[i].url, enabledStatusIconImages[i].x, enabledStatusIconImages[i].y, pdf.printIconSize, pdf.printIconSize);
                         }
                     }
                 }
             });
-        pdf.yAxisValue  = doc.autoTable.previous.finalY;
+        pdf.yAxisValue = doc.autoTable.previous.finalY;
     }
     return doc;
 }
@@ -1392,7 +1533,7 @@ function printVariables(doc, _buildJson) {
     }
 
     // Insert all the rows and columns into the table
-    doc = addNewBodyLine(doc, lineHeightType.BODY);    
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -1401,7 +1542,7 @@ function printVariables(doc, _buildJson) {
             startY: pdf.yAxisValue,
             showHeader: 'everyPage'
         });
-    pdf.yAxisValue  = doc.autoTable.previous.finalY;
+    pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
 }
 
@@ -1411,92 +1552,21 @@ function printTriggersAndRetention(doc, _buildJson) {
 
     // Triggers
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Trigger type: ${_buildJson.triggers.triggerType}`);
 
     // Retention
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.daysToKeep}`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.retention.daysToKeep}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue , `Email: ${_buildJson.retention.minimumToKeep}`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.retention.minimumToKeep}`);
     return doc;
 }
 
 
 
 
-///////////////////////////////
-//////   Image related
-///////////////////////////////
-
-function getBase64Image(img, oImageWidth, oImageHeight) {
-    var canvas = document.createElement("canvas");
-    canvas.width = (oImageWidth || img.width);
-    canvas.height = (oImageHeight || img.height);
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-    return dataURL; //dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}
-
-function getEnabledStatusIcon() {
-    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAyNJREFUWMPtlk9oVFcUxn/nzptYkHYhAUWzUVynLQYmbzINkVKQgiiRdDfdiLgJoonpzlaxS2dUXLnpJu4KLUGx0EUbkviSDPhv46IgbqIR/wRmREjf5N3jYjIzmcx7k5nJdGW/1TD33Pf7znfunTfwsUva2XToylC34wR7CWyPGFQ0thR0rb7Ijebe/mcG3Kx70GLSghwDPg+rUXgkypQJ7KT3g/e0IwYS1xK7xcZ/BE4B8Sb9FkFumiC47E14r9o2kLyadK2a34A9LeVa1RtjzAnv7MxMVIGJWujPDnxn1fy9DThAt7X2TzeTGmkpATczmFSxfwE7tgHfKN8Y801YEnUG1mf+GNjdAfA74NP1zy/jjvTOnpl9vbGgbgTrB64T8D9sl79fVctd7ykW7YXNRTUG3Kx7kNJp367uFPIrx3OjubfE144CS6Xu5HRfNnUgOgF1vqf5qxbZ+Sd5Z+TJpSc+gBTjY0DP+lqXI6QjDajosQ7Ah6cvTa8C9GdSFxF+qm2yllE5hIeuDHXHzdrrpjDhulPIr5wodx4KL/dJ0D0/Nr9Sk0BM1vaF1OZVJS2w3CE4gFjjlEdSNWCM7t1UWFDlyOL47K1AGUJ40SD2kSbhJZatsioGREU31cVisVgXQG587h9rORxiYuuZhzqosioGAq2Leae19m7y2uBghIn24ABWKo1Ub8EOfymkdKe19nbyatItm5Ag+FqVXwr5leNtwUGh+LyS/MaVRDb1UOCLkE3vjTHfhv2WtwgHuL8wNtdXnwAgylTEpppxbAOOitYwagyYwE4CfgMTtxOZgf524YCva7FbNU3XRZr96gboaIOHFIBfgZMtwhG4Pj82dzYygVIKwWXgZYPnfNYmfNm3zs91vM1feBPeKyN2GPi3VUgDrVrV4fvnp99saQDAO+fNi5LukIlVFUkvjt9biEgmWonMQL+I/E6b/wsFlq3qcBQ8MoGyFsfvLcQd6UX1BtG3I0y+wHXfOr2N4FsmsFF92dQBR0iX3ufyZUTZA0GmgkAmcxMzz5pMqXW5WXcXxPepBD0AorElKD4vv+P/Vyv6AP7tWxzDVgMmAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA4LTA0VDA3OjU0OjI0KzAwOjAwrQ8BwwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wOC0wNFQwNzo1NDoyNCswMDowMNxSuX8AAAAodEVYdHN2ZzpiYXNlLXVyaQBmaWxlOi8vL3RtcC9tYWdpY2stbFBSS282Zm45r2VhAAAAAElFTkSuQmCC";
-}
-
-function getDisabledStatusIcon() {
-    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAA8BJREFUWMPtlk1MXFUUx3/nPih2xql0Ukpt0UWliQtjJVMgY9SMDAmyakKipIvZGEkTu2riwg1saOLKjYtWbeJCFjbBkLCyJQVNjEWwaBNjE2MbNlhqg0YYZigfc48L7sw8mA9mOnWlZ/Xueefe3//+73v3XvivhzxKp5VY5JDx6o6KpQXJqJr6BauZewcmZ//81wQsx6KtxttKCHIaOFmi7JYK4xmbGWmcmrv7WASsxjubBYYUHQDqK9S7KcIn1tQNhyZuPHhkAStd7S8bkTGg2W8G6Fci/KKWBUQU4TAqEVS7EJp8tfcN9AUmZ6erFpDsbn9LVD4HGlxqHnQwGE6NyujtjWJ9NBKpTzWafpAh4IRLr6uSCE3NjlYswM18KgsX5GIgnDxfClwgJBrdnwpkrgKvZUUYeL2YE2Z3YjXe2exsdzPX94KTM+cqhQOkg/YM8Iov1WBhLNnb1rS7tkCAwBBuzQW5+OTkDx9WCgZIdXe+raqX3dgW+Na9OmLW6wfLCliORVvd1w4wHwgnz9cCF5GBYNrrEeEOgApn1+KnjpcUYLytBLlfTQersb0o/PrMZzI9vaYw7Mr2WTWJkgLcJgOwHAynRvfGlodn3wcPrl4BlpwLp/19cwJWYpFD5HY4uVrp7PeCA7ixvnbNl5Z7ouECAUa8Y7kOqj8/LrgvbmaH97ZsS4EAEXs0+6zIvSrhKsq5MnBQ9W3JeVZOgIpo3jO1VcLfDU7Nflyuj4h4vkaOlf8IrSzmCzhche3v7AV3k3o670aelRNgDQu+gkiF8IGytu9YAXkx+5ipMzlWToC7TNxy1V0aiew4emuC97Y2AG+41k9PXZv+q3AJABXG3RI0bZ9qtcMBUpvhfiC0PbQZ37Ey/sbfXZHn6sS7DewDfgumvZPpoD1TC1xjsSdSXvpX4Flgw/N4fv/E7HxRBxqn5u6K8KlrnkgFMtdqgQOsmrWPHBzQS354gQAAa+qGgfuu+WpN8O7290Vyh9uizdgLu2sKBIQmbjww0Aes+9LfBVLmi2psT8Y7LqPygUs9NCJ9B76ZW9pdW/pK1tXxpggjZG9Fwh2F4eDB1Sslr2S9rQ2pzXA/ynDedh4qkghNznxZrE/ZS2k63hG1MAYc8aWX2D5YbgJ/oGJEeEbRF9j+1UK+2kUj0he4PvN9Kcae1/Jkb1uTWa8fVOEs239HJbEBeslm7IVitlclIBtr8VPHrZqEO8/bilfpj4IZN56O7P7aaxbgj+WeaNjLcEzsZguAmvqFjMfv/h3u/6g0/gH+ArkQUH1qzwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wOC0wNFQxMjowMDoxMiswMDowMLjMbUcAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDgtMDRUMTI6MDA6MTIrMDA6MDDJkdX7AAAAKHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy90bXAvbWFnaWNrLV9ZNlpSNGhnjwrmagAAAABJRU5ErkJggg==";
-}
-
-///////////////////////////////
-//////   Image related
-///////////////////////////////
-
-function setH2HeadingStyle(doc) {
-    doc.setFontSize(h2FontSize_const);
-    doc.setFontType('bold');
-    doc.setTextColor(39, 39, 39);
-    return doc;
-}
-
-function setH3HeadingStyle(doc) {
-    doc.setFontSize(h3FontSize_const);
-    doc.setFontType('normal');
-    doc.setTextColor(142, 45, 226);
-    return doc;
-}
-
-function setBodyStyle(doc) {
-    doc.setFontSize(pFontSize_const);
-    doc.setFontType('normal');
-    doc.setTextColor(100);
-    return doc;
-}
-
-
-///////////////////////////////
-//////   Drawing an object
-///////////////////////////////
-
-function drawLine(doc) {
-    var line = {
-        x: pdf.xAxisValue,
-        y: pdf.yAxisValue + 7,
-        length: 560
-    };
-    doc.setDrawColor(100);
-    doc.line(line.x, line.y, line.length, line.y);
-    return doc;
-}
-
-
-///////////////////////////////
-//////   Decision making
-///////////////////////////////
-
-function getEnabledDisabledIcon(status) {
-    return status ? getEnabledStatusIcon() : getDisabledStatusIcon();
-}
 $(document).ready(function () {
     var buildJsonUrl = getUrlVars()[BUILDJSONURL_QUERYSTRING];
     console.log(buildJsonUrl);

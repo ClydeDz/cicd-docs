@@ -12,8 +12,10 @@ var templateNames = {
 }
 
 // Constants
-var BUILDJSONURL_QUERYSTRING = "buildjson";
-var RELEASEJSONURL_QUERYSTRING = "releasejson";
+const appVersionNumber = "1.0.0";
 
-var BUILDJSON_CONST = "build";
-var RELEASEJSON_CONST = "release";
+const BUILDJSONURL_QUERYSTRING = "buildjson";
+const RELEASEJSONURL_QUERYSTRING = "releasejson";
+
+const BUILDJSON = "build";
+const RELEASEJSON = "release";
