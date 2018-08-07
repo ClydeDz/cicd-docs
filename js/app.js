@@ -4,7 +4,9 @@
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");
         importTestData();
-        uploadScreenView();
+        //TODO: uncomment this
+        //uploadScreenView();
+       
     }
     else {
         console.log("foud qs");

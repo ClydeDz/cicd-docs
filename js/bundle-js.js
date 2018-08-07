@@ -984,12 +984,12 @@ function getBuildDefinitionProject(buildJsonInput) {
 }
 
 function getBuildDefinitionTriggers(buildJsonInput) {
+    var triggersExist = buildJsonInput.triggers != null;
     var _triggers = {
-        batchChanges: buildJsonInput.triggers[0].batchChanges,
-        triggerType: buildJsonInput.triggers[0].triggerType
+        batchChanges: triggersExist ? buildJsonInput.triggers[0].batchChanges : false,
+        triggerType: triggersExist ? buildJsonInput.triggers[0].triggerType : 1,
+        continousIntegration: triggersExist
     };
-    console.log("trigger");
-    console.log(_triggers);
     return _triggers;
 }
 
@@ -1044,6 +1044,12 @@ function getBuildDefinitionProcess(buildJsonInput) {
         // Construct the meta data of each phase
         _phasesArray["name"] = currentPhase.name;
         _phasesArray["executionType"] = currentPhase.target.executionOptions.type;
+        _phasesArray["isExecutionTypeParallelismNone"] = currentPhase.target.executionOptions.type===0;
+        _phasesArray["isExecutionTypeParallelismMultiConfig"] = currentPhase.target.executionOptions.type === 1;
+        _phasesArray["isExecutionTypeParallelismMultiAgent"] = currentPhase.target.executionOptions.type === 2;
+        _phasesArray["phaseType"] = currentPhase.target.type;
+        _phasesArray["isPhaseAgentful"] = currentPhase.target.type===1;
+        _phasesArray["isPhaseAgentless"] = currentPhase.target.type===2;
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        
@@ -1091,8 +1097,7 @@ function importTestData() {
     $.getJSON("../samples/build/sample-build.json")
         .done(function (returnedData) {
             buildJsonData = returnedData;
-            console.log("import test data");
-            console.log(buildJsonData);
+            visualizeScreenView(); //TODO: remove this line from here
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
@@ -1567,7 +1572,9 @@ $(document).ready(function () {
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");
         importTestData();
-        uploadScreenView();
+        //TODO: uncomment this
+        //uploadScreenView();
+       
     }
     else {
         console.log("foud qs");

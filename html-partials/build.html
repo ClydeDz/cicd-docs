@@ -3,33 +3,68 @@
         <div class="row">
             <div class="col-xs-12 col-md-8">
                 <div class="card">
+                    <h2>{{ name }}</h2>
                     <p>
-                        Build {{ name }}
-                        {{ url }}<br />
-                        <!--<img src="{{ buildStatusBadge }}" alt="status"/><br />-->
-                        {{ creationDate }}<br />
+                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="24" />
+                        <a href="{{ repository.url }}">{{ repository.name }}</a>
+                        &nbsp;
+                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ project.name }}" width="24" />
+                        <a href="{{ project.url }}">{{ project.name }}</a>
                     </p>
-                    <p>
-                        Repository
-                        {{ repository.name }}<br />
-                        {{ repository.url }}<br />
-                        {{ repository.isTfsGit }}<br />
-                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="32" />
-                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ repository.name }}" width="40" />
-                    </p>
+                    <p>Project description: {{ project.description }}</p>
                     <div>
                         {{#process}}
                         <div>
-                            Phase name: {{ name }}<br />
-                            Exe typ:{{ executionType }}<br />
+                            <p><b>Phase name: {{ name }}</b><br /></p>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    {{#isExecutionTypeParallelismNone}}
+                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: None</small>
+                                    {{/isExecutionTypeParallelismNone}}
+
+                                    {{#isExecutionTypeParallelismMultiConfig}}
+                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: Multi-config</small>
+                                    {{/isExecutionTypeParallelismMultiConfig}}
+
+                                    {{#isExecutionTypeParallelismMultiAgent}}
+                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: Multi-agent</small>
+                                    {{/isExecutionTypeParallelismMultiAgent}}
+                                </div>
+                                <div class="col-xs-3">
+                                    {{#isPhaseAgentful}}
+                                    <small> <i class="mdi mdi-server-off text-muted"></i> Runs on agent</small>
+                                    {{/isPhaseAgentful}}
+
+                                    {{#isPhaseAgentless}}
+                                    <small> <i class="mdi mdi-server text-muted"></i> Runs on server</small>
+                                    {{/isPhaseAgentless}}
+                                </div>
+                            </div>
                             {{#steps}}
-                            <div id="step-{{id}}">
-                                <p>
-                                    Step: {{ name }} <br />
-                                    Enabl {{ enabled }} <br />
-                                    {{ continueOnError }} <br />
-                                    <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);"/>
-                                </p>
+                            <div id="step-{{id}}" class="row">
+                                <div class="col-xs-1">
+                                    <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                </div>
+                                <div class="col-xs-8">
+                                    {{ name }}<br />
+                                    <small class="text-muted">Version: {{ version }}</small>
+                                </div>
+                                <div class="col-xs-1">
+                                    {{#enabled}}
+                                    <i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>
+                                    {{/enabled}}
+                                    {{^enabled}}
+                                    <i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>
+                                    {{/enabled}}
+                                </div>
+                                <div class="col-xs-1">
+                                    {{#continueOnError}}
+                                    <i class="mdi mdi-alert-circle mdi-24px text-danger"></i>
+                                    {{/continueOnError}}
+                                    {{^continueOnError}}
+                                    <i class="mdi mdi-alert-circle mdi-24px text-muted"></i>
+                                    {{/continueOnError}}
+                                </div>
                             </div>
                             {{/steps}}
                         </div>
@@ -39,47 +74,83 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="card">
+                    <p><h3>Author</h3></p>
                     <p>
-                        <b>Project</b>
-                        <b>{{ project.name }}</b>
+                        <i class="mdi mdi-account mdi-24px text-muted"></i> {{ author.displayName }}
                     </p>
                     <p>
-                        {{ project.description }}
-                        {{ project.url }}
-                    </p>
-                </div>
-                <div class="card">
-                    <p>
-                        <b>{{ author.displayName }}</b>
+                        <i class="mdi mdi-email mdi-24px text-muted"></i> <a href="mailto:{{ author.email }}">{{ author.email }}</a>
                     </p>
                     <p>
-                        {{ author.email }}
+                        <i class="mdi mdi-clock mdi-24px text-muted"></i> {{ creationDate }}
                     </p>
                 </div>
                 <div class="card">
+                    <h3>Queue &amp; variables</h3>
                     <p>
-                        <b>Batch changes {{ triggers.batchChanges }}</b>
+                        <img src="{{ queue.icon }}" alt="{{ queue.name }}" id="queueAgentIcon" onerror="errorLoadingQueueIcon(this);" width="24" /> {{ queue.displayName }}
                     </p>
-                    <p>
-                        Trigger type {{ triggers.triggerType }}
-                    </p>
+                    <p>Is hosted: {{ queue.isHosted }}</p><br />
+                    <div>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">List of variables</button>
+                        <!-- Modal -->
+                        <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Variables</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row bg-primary">
+                                            <div class="col-xs-6">
+                                                Variable name
+                                            </div>
+                                            <div class="col-xs-6">
+                                                Variable value
+                                            </div>
+                                        </div>
+                                        {{#variables}}
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                {{ key }}
+                                            </div>
+                                            <div class="col-xs-6">
+                                                {{ value }}
+                                            </div>
+                                        </div>
+                                        {{/variables}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card">
+                    <h3>Triggers &amp; retention rules</h3>
                     <p>
-                        <b>days to keep{{ retention.daysToKeep }}</b>
+                        {{#triggers.continousIntegration}}
+                        <i class="mdi mdi-flash mdi-24px text-warning"></i> Continous integration enabled
+                        {{/triggers.continousIntegration}}
+                        {{^triggers.continousIntegration}}
+                        <i class="mdi mdi-flash mdi-24px text-muted"></i> Continous integration disabled
+                        {{/triggers.continousIntegration}}
                     </p>
                     <p>
-                        Min to keep {{ retention.minimumToKeep }}
+                        {{#triggers.batchChanges}}
+                        <i class="mdi mdi-truck mdi-24px text-success"></i> Batch changes enabled while a build is in progress
+                        {{/triggers.batchChanges}}
+                        {{^triggers.batchChanges}}
+                        <i class="mdi mdi-truck mdi-24px text-muted"></i> Batch changes disabled
+                        {{/triggers.batchChanges}}
                     </p>
-                </div>
-                <div class="card">
                     <p>
-                        <b>{{ queue.displayName }}</b>
-                    </p>
-                    <p>
-                        {{ queue.name }}
-                        <img src="{{ queue.icon }}" alt="{{ queue.name }}" id="queueAgentIcon" onerror="errorLoadingQueueIcon(this);" width="32" />
-                        is hosted: {{ queue.isHosted }}
+                        {{ retention.daysToKeep }} days to keep, {{ retention.minimumToKeep }} good build.
                     </p>
                 </div>
             </div>
