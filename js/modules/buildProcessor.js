@@ -16,7 +16,8 @@ function getBuildJson(buildJsonInput) {
         retention: getBuildDefinitionRetention(buildJsonInput),
         queue: getBuildDefinitionQueue(buildJsonInput),
         variables: getBuildDefinitionVariables(buildJsonInput),
-        process: getBuildDefinitionProcess(buildJsonInput)
+        process: getBuildDefinitionProcess(buildJsonInput),
+        metaInformation: getMetaInformation(buildJsonInput)
     };
     return _buildDef;
 }
@@ -90,10 +91,13 @@ function getBuildDefinitionTriggers(buildJsonInput) {
 }
 
 function getBuildDefinitionRetention(buildJsonInput) {
-    var _retention = {
-        daysToKeep: buildJsonInput.retentionRules[0].daysToKeep,
-        minimumToKeep: buildJsonInput.retentionRules[0].minimumToKeep
-    };
+    var _retention = [];
+    for (i = 0; i < buildJsonInput.retentionRules.length; i++) {
+        var _item = {};
+        _item["daysToKeep"] = buildJsonInput.retentionRules[i].daysToKeep;
+        _item["minimumToKeep"] = buildJsonInput.retentionRules[i].minimumToKeep;
+        _retention.push(_item);
+    }
     return _retention;
 }
 
@@ -169,6 +173,14 @@ function getBuildDefinitionProcess(buildJsonInput) {
     }
     
     return _processJson;
+}
+
+function getMetaInformation(buildJsonInput) {
+    var _meta = {
+        version: buildJsonInput.revision,
+        buildNumberFormat: buildJsonInput.buildNumberFormat
+    };
+    return _meta;
 }
 
 function errorLoadingImage(e) {

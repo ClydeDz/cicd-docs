@@ -26,17 +26,11 @@ function exportPdf(buildReleaseJson) {
         // BUILD PIPELINE SECTION
         doc = printBuildPipelineHeading(doc);
 
-        // BUILD NAME, REPOSITORY, PROJECT AND AUTHOR
+        // BUILD NAME, REPOSITORY, PROJECT AND TRIGGERS
         doc = printBuildNameHeading(doc, _buildJson);
-        doc = printRepositoryProjectAndAuthor(doc, _buildJson);
-
-        //// FOOTER
-        //18 for 2page process list //TODO: remove this for
-        for (t = 0; t <= 18; t++) {
-            doc = addNewBodyLine(doc, lineHeightType.BODY);
-            doc.text(pdf.xAxisValue, pdf.yAxisValue, "footer");
-        }
-
+        doc = printRepositoryAndProject(doc, _buildJson);
+        doc = printTriggers(doc, _buildJson);
+       
         // PROCESS / BUILD TASKS
         doc = printProcessHeading(doc);
         doc = printQueueDetails(doc, _buildJson);
@@ -46,9 +40,15 @@ function exportPdf(buildReleaseJson) {
         doc = printVariablesHeading(doc);
         doc = printVariables(doc, _buildJson);
 
-        // TRIGGERS, RETENTION, ETC
-        doc = printTriggersRetentionHeading(doc);
-        doc = printTriggersAndRetention(doc, _buildJson);
+        // RETENTION, ETC
+        doc = printRetentionRulesHeading(doc);
+        doc = printRetentionRules(doc, _buildJson);
+
+        // META INFORMATION AND AUTHOR
+        doc = printMetaInformationHeading(doc);
+        doc = printAuthorDetails(doc, _buildJson);
+        doc = printBuildMetaInformation(doc, _buildJson);
+
     }
 
     ////////////////////////

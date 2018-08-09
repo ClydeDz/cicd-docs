@@ -39,10 +39,17 @@ function printVariablesHeading(doc) {
     return doc;
 }
 
-function printTriggersRetentionHeading(doc) {
+function printRetentionRulesHeading(doc) {
     doc = setH3HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers, Retention, etc.');
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Retention rules');
+    return doc;
+}
+
+function printMetaInformationHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Meta information');
     return doc;
 }
 
@@ -52,7 +59,7 @@ function printTriggersRetentionHeading(doc) {
 ///////////////////////////////////////
 
 
-function printRepositoryProjectAndAuthor(doc, _buildJson) {
+function printRepositoryAndProject(doc, _buildJson) {
     doc = setBodyStyle(doc);
 
     var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), pdf.iconSize, pdf.iconSize);
@@ -64,17 +71,37 @@ function printRepositoryProjectAndAuthor(doc, _buildJson) {
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
-    doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.project.url });
+    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5 , pdf.printIconSize, pdf.printIconSize);
+    doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 15, { url: _buildJson.project.url });
+
+    return doc;
+}
+
+function printAuthorDetails(doc, _buildJson) {
+    doc = setBodyStyle(doc);
+    var createdOn = new Date(_buildJson.creationDate);
+
     // Author
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${_buildJson.creationDate}.`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${createdOn.toLocaleString()}.`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
 
     return doc;
 }
+
+
+function printBuildMetaInformation(doc, _buildJson) {
+    doc = setBodyStyle(doc);
+    
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build number format: ${_buildJson.metaInformation.buildNumberFormat}`);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Version: ${_buildJson.metaInformation.version}`);
+
+    return doc;
+}
+
 
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
@@ -106,8 +133,11 @@ function printPhasesAndSteps(doc, _buildJson) {
 
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
-        doc.text(triangle.x3 + 3, triangle.y3 + (triangle.y2 - triangle.y3), currentPhase.name);
-        pdf.yAxisValue = triangle.y3;
+        doc = setH4HeadingStyle(doc);
+        doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), currentPhase.name);
+        pdf.yAxisValue = triangle.y2;
+
+        doc = printPhaseMetaInformation(doc, currentPhase);
 
         // Steps
         // Construct a table containing all steps in each phase
@@ -193,6 +223,52 @@ function printPhasesAndSteps(doc, _buildJson) {
 }
 
 
+function printPhaseMetaInformation(doc, phase) {
+    doc = setBodyStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    pdf.yAxisValue = pdf.yAxisValue + 10;
+    let getParallelismValue = () => {
+        switch (phase.executionType) {
+            case 0:
+                return "None";
+            case 1:
+                return " Multi-config";
+            case 2:
+                return "Multi-agent";
+            default:
+                return "None";
+        }
+    };
+    let getAgentType = () => {
+        switch (phase.phaseType) {
+            case 1:
+                return "Runs on agent";
+            case 2:
+                return "Runs on server";
+            default:
+                return "Runs on agent";
+        }
+    };
+    let getAgentTypeIcon = () => {
+        switch (phase.phaseType) {
+            case 1:
+                return getServerOffIcon();
+            case 2:
+                return getServerIcon();
+            default:
+                return getServerOffIcon();
+        }
+    };
+
+    // Agent execution
+    doc.addImage(getParallelismIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue-11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + (pdf.printIconSize + 7), pdf.yAxisValue, `Parallelism: ${getParallelismValue()}`);
+    // Agent type
+    doc.addImage(getAgentTypeIcon(), 'JPEG', pdf.xAxisValue+150, pdf.yAxisValue-11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue +170, pdf.yAxisValue, `${getAgentType()}`);
+    return doc;
+}
+
 function printVariables(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var columns = [
@@ -224,20 +300,64 @@ function printVariables(doc, _buildJson) {
 }
 
 
-function printTriggersAndRetention(doc, _buildJson) {
+function printTriggers(doc, _buildJson) {
     doc = setBodyStyle(doc);
+
+    let triggersExist = _buildJson.triggers != null;
+    let getContinousIntegrationIcon = () => {
+        return _buildJson.triggers.continousIntegration  ? getContinuousIntegrationEnabledIcon() : getContinuousIntegrationDisabledIcon();
+    };
+    let getContinousIntegrationStatus = () => {
+        return _buildJson.triggers.continousIntegration ? 'enabled' : 'disabled';
+    };  
+    let getBatchChangesIcon = () => {
+        return _buildJson.triggers.batchChanges ? getBatchChangesEnabledIcon() : getBatchChangesDisabledIcon();
+    }; 
+    let getBatchChangesStatus = () => {
+        return _buildJson.triggers.batchChanges ? 'enabled' : 'disabled';
+    };   
 
     // Triggers
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Batch change enabled: ${_buildJson.triggers.batchChanges}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Trigger type: ${_buildJson.triggers.triggerType}`);
+    // CI
+    doc.addImage(getContinousIntegrationIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + (pdf.printIconSize + 7), pdf.yAxisValue, `Continuous integration ${getContinousIntegrationStatus()}`);
+    // Batch
+    doc.addImage(getBatchChangesIcon(), 'JPEG', pdf.xAxisValue + (pdf.printIconSize + 160), pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + (pdf.printIconSize + 180), pdf.yAxisValue, `Batch changes ${getBatchChangesStatus()}`);
+    
+    return doc;
+}
 
-    // Retention
+
+function printRetentionRules(doc, _buildJson) {
+    doc = setBodyStyle(doc);
+    var columns = [
+        { title: "Days to keep", dataKey: "key" },
+        { title: "Minimum to keep", dataKey: "value" }
+    ];
+    var rows = [];
+
+    // Loop thru all the retention and fill the rows of this table
+    for (var retentionIndex = 0; retentionIndex < _buildJson.retention.length; retentionIndex++) {
+        var _retentionArray = {};
+        _retentionArray["key"] = _buildJson.retention[retentionIndex].daysToKeep;
+        _retentionArray["value"] = _buildJson.retention[retentionIndex].minimumToKeep;
+        rows.push(_retentionArray);
+    }
+
+    // Insert all the rows and columns into the table
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.retention.daysToKeep}`);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.retention.minimumToKeep}`);
+    doc.autoTable(columns, rows,
+        {
+            theme: 'striped',
+            headerStyles: { fillColor: [142, 45, 226] },
+            margin: { left: pdf.xAxisValue },
+            startY: pdf.yAxisValue,
+            showHeader: 'everyPage'
+        });
+    pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
 }
 

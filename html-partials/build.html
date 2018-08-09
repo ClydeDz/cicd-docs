@@ -86,11 +86,31 @@
                     </p>
                 </div>
                 <div class="card">
-                    <h3>Queue &amp; variables</h3>
+                    <h3>Queue &amp; triggers</h3>
                     <p>
                         <img src="{{ queue.icon }}" alt="{{ queue.name }}" id="queueAgentIcon" onerror="errorLoadingQueueIcon(this);" width="24" /> {{ queue.displayName }}
                     </p>
                     <p>Is hosted: {{ queue.isHosted }}</p><br />
+                    <p>
+                        {{#triggers.continousIntegration}}
+                        <i class="mdi mdi-flash mdi-24px text-warning"></i> Continous integration enabled
+                        {{/triggers.continousIntegration}}
+                        {{^triggers.continousIntegration}}
+                        <i class="mdi mdi-flash mdi-24px text-muted"></i> Continous integration disabled
+                        {{/triggers.continousIntegration}}
+                    </p>
+                    <p>
+                        {{#triggers.batchChanges}}
+                        <i class="mdi mdi-truck mdi-24px text-success"></i> Batch changes enabled while a build is in progress
+                        {{/triggers.batchChanges}}
+                        {{^triggers.batchChanges}}
+                        <i class="mdi mdi-truck mdi-24px text-muted"></i> Batch changes disabled
+                        {{/triggers.batchChanges}}
+                    </p>
+                   
+                </div>
+                <div class="card">
+                    <h3>Variables &amp; retention rules</h3>
                     <div>
                         <!-- Trigger the modal with a button -->
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">List of variables</button>
@@ -130,28 +150,46 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <h3>Triggers &amp; retention rules</h3>
-                    <p>
-                        {{#triggers.continousIntegration}}
-                        <i class="mdi mdi-flash mdi-24px text-warning"></i> Continous integration enabled
-                        {{/triggers.continousIntegration}}
-                        {{^triggers.continousIntegration}}
-                        <i class="mdi mdi-flash mdi-24px text-muted"></i> Continous integration disabled
-                        {{/triggers.continousIntegration}}
-                    </p>
-                    <p>
-                        {{#triggers.batchChanges}}
-                        <i class="mdi mdi-truck mdi-24px text-success"></i> Batch changes enabled while a build is in progress
-                        {{/triggers.batchChanges}}
-                        {{^triggers.batchChanges}}
-                        <i class="mdi mdi-truck mdi-24px text-muted"></i> Batch changes disabled
-                        {{/triggers.batchChanges}}
-                    </p>
-                    <p>
-                        {{ retention.daysToKeep }} days to keep, {{ retention.minimumToKeep }} good build.
-                    </p>
+                    <!--Retention-->
+                    <div>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#buildRetentionRules">List of retention rules</button>
+                        <!-- Modal -->
+                        <div id="buildRetentionRules" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">retention rules</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row bg-primary">
+                                            <div class="col-xs-6">
+                                                daysToKeep
+                                            </div>
+                                            <div class="col-xs-6">
+                                                minimumToKeep
+                                            </div>
+                                        </div>
+                                        {{#retention}}
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                {{ daysToKeep }} days to keep,
+                                            </div>
+                                            <div class="col-xs-6">
+                                                {{ minimumToKeep }} good build.
+                                            </div>
+                                        </div>
+                                        {{/retention}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
