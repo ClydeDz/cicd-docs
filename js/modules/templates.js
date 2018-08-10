@@ -50,18 +50,18 @@ function _switchTemplate(templateName, jsonData) {
         });
     }
     if (templateName === templateNames.BUILD) {
-        $("#buildReleaseViewTemplateHolder").load("html-partials/build.html #buildPartial", function () {
+        $("#buildViewTemplateHolder").load("html-partials/build.html #buildPartial", function () {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
-            $("#buildReleaseView").html(output);
+            $("#buildView").html(output);
            
         });
     }
     if (templateName === templateNames.RELEASE) {
-        $("#buildReleaseViewTemplateHolder").load("html-partials/release.html #releasePartial", function () {
+        $("#releaseViewTemplateHolder").load("html-partials/release.html #releasePartial", function () {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
-            $("#buildReleaseView").html(output);
+            $("#releaseView").html(output);
            
         });
     }
@@ -73,12 +73,12 @@ function _switchTemplate(templateName, jsonData) {
 //////////////////////////////////////////////
 
 function visualization_ViewLoad(combinedJson) {
-    if (combinedJson.buildDef != null) {
-        buildVisualizeScreenView();
-    }
-    else {
-        releaseVisualizeScreenView();
-    }
+    //if (combinedJson.buildDef != null) {
+        buildVisualizeScreenView(); releaseVisualizeScreenView();
+    //}
+    //else {
+       
+    //}
 }
 
 //////////////////////////////////////////////

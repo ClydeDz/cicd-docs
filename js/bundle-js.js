@@ -735,18 +735,18 @@ function _switchTemplate(templateName, jsonData) {
         });
     }
     if (templateName === templateNames.BUILD) {
-        $("#buildReleaseViewTemplateHolder").load("html-partials/build.html #buildPartial", function () {
+        $("#buildViewTemplateHolder").load("html-partials/build.html #buildPartial", function () {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
-            $("#buildReleaseView").html(output);
+            $("#buildView").html(output);
            
         });
     }
     if (templateName === templateNames.RELEASE) {
-        $("#buildReleaseViewTemplateHolder").load("html-partials/release.html #releasePartial", function () {
+        $("#releaseViewTemplateHolder").load("html-partials/release.html #releasePartial", function () {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
-            $("#buildReleaseView").html(output);
+            $("#releaseView").html(output);
            
         });
     }
@@ -758,12 +758,12 @@ function _switchTemplate(templateName, jsonData) {
 //////////////////////////////////////////////
 
 function visualization_ViewLoad(combinedJson) {
-    if (combinedJson.buildDef != null) {
-        buildVisualizeScreenView();
-    }
-    else {
-        releaseVisualizeScreenView();
-    }
+    //if (combinedJson.buildDef != null) {
+        buildVisualizeScreenView(); releaseVisualizeScreenView();
+    //}
+    //else {
+       
+    //}
 }
 
 //////////////////////////////////////////////
@@ -894,12 +894,9 @@ function getUrlVars() {
 
 
 function processJson() {
-    var x = getBuildJson(buildJsonData);
-    console.log("process json");
-    console.log(x);
     var combinedJson = {
-        buildDef: x, //TODO: process build here
-        releaseDef: releaseJsonData
+        buildDef: getBuildJson(buildJsonData),
+        releaseDef: getReleaseJson(releaseJsonData)
     }
     return combinedJson;
 }
@@ -1103,13 +1100,47 @@ function errorLoadingRepositoryIcon(e) {
     console.clear();
 }
 
+//////////////////////////////////
+/////////    Release process
+//////////////////////////////////
 
+function getReleaseJson(releaseJsonInput) {
+
+    var _releaseDef = {
+        name: "temp"//getBuildDefinitionName(buildJsonInput)
+        //url: getBuildDefinitionUrl(buildJsonInput),
+        //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+        //creationDate: getBuildDefinitionCreationDate(buildJsonInput),
+        //repository: getBuildDefinitionRepository(buildJsonInput),
+        //author: getBuildDefinitionAuthor(buildJsonInput),
+        //project: getBuildDefinitionProject(buildJsonInput),
+        //triggers: getBuildDefinitionTriggers(buildJsonInput),
+        //retention: getBuildDefinitionRetention(buildJsonInput),
+        //queue: getBuildDefinitionQueue(buildJsonInput),
+        //variables: getBuildDefinitionVariables(buildJsonInput),
+        //process: getBuildDefinitionProcess(buildJsonInput),
+        //metaInformation: getMetaInformation(buildJsonInput)
+    };
+    return _releaseDef;
+}
 
 function importTestData() {
     /// <summary>Method to import sticker data.</summary>
     $.getJSON("../samples/build/sample-build.json")
         .done(function (returnedData) {
             buildJsonData = returnedData;
+            importTestReleaseData(); //TODO: remove this line from here
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log("Request Failed: " + err);
+        });
+}
+function importTestReleaseData() {
+    /// <summary>Method to import sticker data.</summary>
+    $.getJSON("../samples/release/sample-release.json")
+        .done(function (returnedData) {
+            releaseJsonData = returnedData;
             visualizeScreenView(); //TODO: remove this line from here
         })
         .fail(function (jqxhr, textStatus, error) {
@@ -1357,12 +1388,9 @@ function addPageFooter(doc) {
 
 
 function processJson() {
-    var x = getBuildJson(buildJsonData);
-    console.log("process json");
-    console.log(x);
     var combinedJson = {
-        buildDef: x, //TODO: process build here
-        releaseDef: releaseJsonData
+        buildDef: getBuildJson(buildJsonData),
+        releaseDef: getReleaseJson(releaseJsonData)
     }
     return combinedJson;
 }
