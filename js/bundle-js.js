@@ -1298,6 +1298,8 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
         item["conditionType"] = currentEnv.conditions.conditionType;
         item["deploymentPhases"] = [];
 
+        // TODO: check if each phases' queue id is the same for all accounts
+
         // Each environment can have multiple phases. Let's go thru each phase and add what's required to our list.
         for (var phaseIndex = 0; phaseIndex < currentEnv.deployPhases.length; phaseIndex++) {
             var phaseItem = {};
