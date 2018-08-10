@@ -17,7 +17,7 @@ function getBuildJson(buildJsonInput) {
         queue: getBuildDefinitionQueue(buildJsonInput),
         variables: getBuildDefinitionVariables(buildJsonInput),
         process: getBuildDefinitionProcess(buildJsonInput),
-        metaInformation: getMetaInformation(buildJsonInput)
+        metaInformation: getBuildMetaInformation(buildJsonInput)
     };
     return _buildDef;
 }
@@ -175,7 +175,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
     return _processJson;
 }
 
-function getMetaInformation(buildJsonInput) {
+function getBuildMetaInformation(buildJsonInput) {
     var _meta = {
         version: buildJsonInput.revision,
         buildNumberFormat: buildJsonInput.buildNumberFormat
