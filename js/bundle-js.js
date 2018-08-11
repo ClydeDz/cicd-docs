@@ -1114,6 +1114,7 @@ function getReleaseJson(releaseJsonInput) {
         modificationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
         environments: getReleaseDefinitionEnvironments(releaseJsonInput),
         artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
+        isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
         triggers: getReleaseDefinitionTriggers(releaseJsonInput),
         variables: getReleaseDefinitionVariables(releaseJsonInput),
         metaInformation: getReleaseMetaInformation(releaseJsonInput)
@@ -1160,6 +1161,10 @@ function getReleaseMetaInformation(releaseJsonInput) {
     return _meta;
 }
 
+function isTriggerSetupForReleaseDefinition(releaseJsonInput) {
+    return releaseJsonInput.triggers.length !== 0;
+}
+
 function getReleaseDefinitionTriggers(releaseJsonInput) {
     var _triggers = [];
 
@@ -1169,6 +1174,8 @@ function getReleaseDefinitionTriggers(releaseJsonInput) {
         var currentTriggerItem = releaseJsonInput.triggers[triggerIndex];
         item["artifactAlias"] = currentTriggerItem.artifactAlias;
         item["triggerType"] = currentTriggerItem.triggerType;
+        item["isTriggerTypeContinuousDeployment"] = currentTriggerItem.triggerType === 1;
+        item["isTriggerTypePullRequest"] = currentTriggerItem.triggerType === 6;
         item["triggerConditions"] = [];
 
         // Each trigger item has trigger conditions. Loop thru each condition and add them as well.
@@ -1293,47 +1300,168 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
         item["ownerEmail"] = currentEnv.owner.uniqueName;
         item["ownerEmail"] = currentEnv.owner.uniqueName;
         item["emailNotificationType"] = currentEnv.environmentOptions.emailNotificationType;
-        item["emailRecipients"] = currentEnv.environmentOptions.emailRecipients;
-        item["conditionName"] = currentEnv.conditions.name;
-        item["conditionType"] = currentEnv.conditions.conditionType;
-        item["deploymentPhases"] = [];
+        item["emailRecipients"] = currentEnv.environmentOptions.emailRecipients;      
 
+        // conditions
+        item["conditions"] = getConditonsForReleaseDefinition(currentEnv);
+
+        // Pre deployment approvals, if any
+        item["preDeployApprovals"] = getPreDeploymentApprovalsForReleaseDefinition(currentEnv);
+
+        // Post deployment approvals, if any
+        item["postDeployApprovals"] = getPostDeploymentApprovalsForReleaseDefinition(currentEnv);        
+
+        // Deployment phases
         // TODO: check if each phases' queue id is the same for all accounts
-
-        // Each environment can have multiple phases. Let's go thru each phase and add what's required to our list.
-        for (var phaseIndex = 0; phaseIndex < currentEnv.deployPhases.length; phaseIndex++) {
-            var phaseItem = {};
-            var currentPhase = currentEnv.deployPhases[phaseIndex];
-
-            phaseItem["phaseType"] = currentPhase.phaseType;
-            phaseItem["name"] = currentPhase.name;
-            phaseItem["rank"] = currentPhase.rank;
-            phaseItem["steps"] = [];
-
-            // Each phase can have multiple steps. Let's go thru each step and add them to the phase.
-            for (var stepIndex = 0; stepIndex < currentPhase.workflowTasks.length; stepIndex++) {
-                var stepItem = {};
-                var currentStep = currentPhase.workflowTasks[stepIndex];
-
-                stepItem["id"] = stepIndex;
-                stepItem["taskId"] = currentStep.taskId;
-                stepItem["name"] = currentStep.name;
-                stepItem["version"] = currentStep.version;
-                stepItem["enabled"] = currentStep.enabled;
-                stepItem["continueOnError"] = currentStep.continueOnError;
-
-                // Add each step to the list of steps in a particular phase
-                phaseItem["steps"].push(stepItem);
-            }
-
-            // Add each phase to the list of phases
-            item["deploymentPhases"].push(phaseItem);
-        }
+        item["deploymentPhases"] = getDeploymentPhaseDetailsForReleaseDefinition(currentEnv);      
 
         _environment.push(item);
     }
 
     return _environment;
+}
+
+function getDeploymentPhaseDetailsForReleaseDefinition(currentEnvironment) {
+    let phases = [];
+
+    // Each environment can have multiple phases. Let's go thru each phase and add what's required to our list.
+    for (let phaseIndex = 0; phaseIndex < currentEnvironment.deployPhases.length; phaseIndex++) {
+        var phaseItem = {};
+        var currentPhase = currentEnvironment.deployPhases[phaseIndex];
+
+        phaseItem["phaseType"] = currentPhase.phaseType;
+        phaseItem["name"] = currentPhase.name;
+        phaseItem["rank"] = currentPhase.rank;
+        phaseItem["steps"] = getStepsForEachPhaseInReleaseDefinition(currentPhase);
+
+        // Add each phase to the list of phases
+        phases.push(phaseItem);
+    }
+
+    return phases;
+}
+
+function getStepsForEachPhaseInReleaseDefinition(currentPhase) {
+    let steps = [];
+
+    // Each phase can have multiple steps. Let's go thru each step and add them to the phase.
+    for (let stepIndex = 0; stepIndex < currentPhase.workflowTasks.length; stepIndex++) {
+        var stepItem = {};
+        var currentStep = currentPhase.workflowTasks[stepIndex];
+
+        stepItem["id"] = currentStep.taskId;
+        stepItem["taskId"] = currentStep.taskId;
+        stepItem["name"] = currentStep.name;
+        stepItem["version"] = currentStep.version;
+        stepItem["enabled"] = currentStep.enabled;
+        stepItem["continueOnError"] = currentStep.continueOnError;
+        stepItem["icon"] = `/images/extend/tasks/${currentStep.taskId}/icon.png`;
+
+        // Add each step to the list of steps in a particular phase
+        steps.push(stepItem);
+    }
+    
+    return steps;
+}
+
+function getPostDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
+    let postDeploymentApprovals = [];
+
+    for (let postDepApprovalIndex = 0; postDepApprovalIndex < currentEnvironment.postDeployApprovals.approvals.length; postDepApprovalIndex++) {
+        let postDepItem = {};
+        let currentPostDepItem = currentEnvironment.postDeployApprovals.approvals[postDepApprovalIndex];
+
+        postDepItem["rank"] = currentPostDepItem.rank;
+        postDepItem["id"] = currentPostDepItem.id;
+        postDepItem["isNotificationOn"] = currentPostDepItem.isNotificationOn;
+        postDepItem["isAutomated"] = currentPostDepItem.isAutomated;
+
+        if (currentPostDepItem.isAutomated) {
+            postDepItem["approver"] = null;
+            postDeploymentApprovals.push(postDepItem);
+            continue;
+        }
+
+        postDepItem["approver"] = {
+            "displayName": currentPostDepItem.approver.displayName,
+            "uniqueName": currentPostDepItem.approver.uniqueName
+        };
+
+        postDeploymentApprovals.push(postDepItem);
+    }
+
+    return postDeploymentApprovals;
+}
+
+function getPreDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
+    let preDeploymentApprovals = [];
+
+    for (let preDepApprovalIndex = 0; preDepApprovalIndex < currentEnvironment.preDeployApprovals.approvals.length; preDepApprovalIndex++) {
+        let preDepItem = {};
+        let currentPreDepItem = currentEnvironment.preDeployApprovals.approvals[preDepApprovalIndex];
+
+        preDepItem["rank"] = currentPreDepItem.rank;
+        preDepItem["id"] = currentPreDepItem.id;
+        preDepItem["isNotificationOn"] = currentPreDepItem.isNotificationOn;
+        preDepItem["isAutomated"] = currentPreDepItem.isAutomated;
+
+        if (currentPreDepItem.isAutomated) {
+            preDepItem["approver"] = null;
+            preDeploymentApprovals.push(preDepItem);
+            continue;
+        }
+
+        preDepItem["approver"] = {
+            "displayName": currentPreDepItem.approver.displayName,
+            "uniqueName": currentPreDepItem.approver.uniqueName
+        };
+
+        preDeploymentApprovals.push(preDepItem);
+    }
+
+    return preDeploymentApprovals;
+}
+
+function getConditonsForReleaseDefinition(currentEnvironment) {   
+    let isConditionSetToManual = () => {
+        return currentEnvironment.conditions.length === 0
+    };   
+    let isConditionsSetToAfterEnvironment = () => {
+        if (currentEnvironment.conditions[0] === undefined) {
+            return false;
+        }
+        return currentEnvironment.conditions[0].conditionType === 6;
+    };
+    let getConditionDisplayName = () => {
+        if (currentEnvironment.conditions[0] === undefined) {
+            return "Manual Only";
+        }
+        return currentEnvironment.conditions[0].conditionType === 6 ? "After Environment" : "After Release";
+    };
+    let getEnvironmentNamesFromCondition = () => {
+        let envs = [];
+
+        if (!isConditionsSetToAfterEnvironment()) {
+            return envs;
+        }
+
+        for (let conditionIndex = 0; conditionIndex < currentEnvironment.conditions.length; conditionIndex++) {
+            envs.push(currentEnvironment.conditions[conditionIndex].name);
+        }
+
+        return envs;
+    };
+
+    let conditions = {
+        displayName: getConditionDisplayName(),
+        isConditionTypeIsAfterRelease: isConditionsSetToAfterEnvironment(), // defaults to false, which is after release
+        isConditionTypeIsAfterEnvironment: isConditionsSetToAfterEnvironment(),
+        isConditionTypeManual: isConditionSetToManual(),
+        environments: getEnvironmentNamesFromCondition()
+    };
+
+    return conditions;
+
 }
 
 function importTestData() {

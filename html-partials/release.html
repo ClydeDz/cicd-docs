@@ -3,25 +3,67 @@
         <div class="row">
             <div class="col-xs-12 col-md-8">
                 <div class="card">
-                    Release {{ name }}
+                    <div>
+                        Release {{ name }}<br />
+                        des {{ description }}<br />
+                        url {{ url }}<br />
+                        Version {{ metaInformation.version }}<br />
+                        Version {{ metaInformation.releaseNameFormat }}<br />
+                    </div>
+                    <!-- environment phases and tasks -->
+                    <div>
+                        {{#environments}}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3>{{ name }}</h3>
+                                <p>{{ ownerName }}</p>
+                                <p>
+                                    {{conditionName}}
+                                </p>
+                            </div>
+                            {{#deploymentPhases}}
+                            <div class="col-xs-12">
+                                <h3>{{ name }}</h3>
+                                <p>{{ phaseType }}</p>
+                                <!-- steps -->
+                                {{#steps}}
+                                <div id="step-{{id}}" class="row">
+                                    <div class="col-xs-1">
+                                        <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ name }}<br />
+                                        <small class="text-muted">Version: {{ version }}</small>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        {{#enabled}}
+                                        <i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>
+                                        {{/enabled}}
+                                        {{^enabled}}
+                                        <i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>
+                                        {{/enabled}}
+                                    </div>
+                                    <div class="col-xs-1">
+                                        {{#continueOnError}}
+                                        <i class="mdi mdi-alert-circle mdi-24px text-danger"></i>
+                                        {{/continueOnError}}
+                                        {{^continueOnError}}
+                                        <i class="mdi mdi-alert-circle mdi-24px text-muted"></i>
+                                        {{/continueOnError}}
+                                    </div>
+                                </div>
+                                {{/steps}}
+                            </div>
+                            {{/deploymentPhases}}
+                        </div>
+                        {{/environments}}
+                    </div>
                 </div>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="card">
-                    <p>
-                        <b>{{ project.name }}</b>
-                    </p>
-                    <p>
-                        {{ project.description }}
-                    </p>
                 </div>
                 <div class="card">
-                    <p>
-                        <b>{{ authoredBy.displayName }}</b>
-                    </p>
-                    <p>
-                        {{ authoredBy.uniqueName }}
-                    </p>
                 </div>
             </div>
         </div>
