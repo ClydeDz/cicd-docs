@@ -4,7 +4,7 @@
             <div class="col-xs-12 col-md-8">
                 <div class="card">
                     <div>
-                        Release {{ name }}<br />
+                        <h2>{{ name }}</h2> 
                         des {{ description }}<br />
                         url {{ url }}<br />
                         Version {{ metaInformation.version }}<br />
@@ -101,6 +101,32 @@
                         </div>
                     </div>
                     {{/artifacts}}
+                </div>
+                <div class="card">
+                    <h2>Triggers</h2>
+                    {{#isTriggerSetupForReleaseDefinition}}
+                    {{#triggers}}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{artifactAlias}}
+                        </div>
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{triggerType}}
+                        </div>
+                        {{#triggerConditions}}
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{sourceBranch}}
+                        </div>
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{useBuildDefinitionBranch}}
+                        </div>
+                        {{/triggerConditions}}
+                    </div>
+                    {{/triggers}}
+                    {{/isTriggerSetupForReleaseDefinition}}
+                    {{^isTriggerSetupForReleaseDefinition}}
+                    <p>No continuous deployment setup for this release pipeline</p>
+                    {{/isTriggerSetupForReleaseDefinition}}
                 </div>
             </div>
         </div>
