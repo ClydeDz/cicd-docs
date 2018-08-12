@@ -84,6 +84,23 @@
                     <p>{{modificationInformation.modifiedOn}}</p>
                 </div>
                 <div class="card">
+                    <h2>Artifacts</h2>
+                    {{#artifacts}}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{artifactAlias}}
+                        </div>
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{project}}
+                        </div>
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{source}}
+                        </div>
+                        <div class="col-xs-12">
+                            <span>ICON</span> {{defaultVersion}}
+                        </div>
+                    </div>
+                    {{/artifacts}}
                 </div>
             </div>
         </div>
