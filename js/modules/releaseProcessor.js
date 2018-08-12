@@ -10,6 +10,7 @@ function getReleaseJson(releaseJsonInput) {
         url: getReleaseDefinitionUrl(releaseJsonInput),
         creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
         modificationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
+        releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
         environments: getReleaseDefinitionEnvironments(releaseJsonInput),
         artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
         isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
@@ -182,6 +183,10 @@ function _getEnvironmentSpecificVariablesForReleaseDefinition(environmentVariabl
     }
 
     return envVariables;
+}
+
+function releaseDefinitonHasMultipleEnvironments(releaseJsonInput) {
+    return releaseJsonInput.environments.length > 1;
 }
 
 function getReleaseDefinitionEnvironments(releaseJsonInput) {

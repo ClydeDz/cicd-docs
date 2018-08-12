@@ -11,18 +11,29 @@
                         Version {{ metaInformation.releaseNameFormat }}<br />
                     </div>
                     <!-- environment phases and tasks -->
-                    <div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h3>Environment</h3>
+                        </div>
+                        <div class="col-xs-6">
+                            {{#releaseDefinitonHasMultipleEnvironments}}
+                            <button class="prev">Prev</button>
+                            <button class="next">Next</button>
+                            {{/releaseDefinitonHasMultipleEnvironments}}
+                        </div>
+                    </div>
+                    <div class="environment-slider">
                         {{#environments}}
                         <div class="row">
                             <div class="col-xs-12">
                                 <h3>{{ name }}</h3>
                                 <p>{{ ownerName }}</p>
                                 <p>
-                                    {{conditionName}}
+                                    {{emailRecipients}}
                                 </p>
                             </div>
                             {{#deploymentPhases}}
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" style='border-left-width: 18px; border-left-color: "#0000ff26"; border-left-style: solid;'> 
                                 <h3>{{ name }}</h3>
                                 <p>{{ phaseType }}</p>
                                 <!-- steps -->

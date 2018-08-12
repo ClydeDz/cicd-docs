@@ -62,7 +62,15 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
-           
+            $('.environment-slider').slick({
+                dots: false,
+                infinite: true,
+                speed: 500,
+                fade: true,
+                cssEase: 'linear',
+                prevArrow: $('.prev'),
+                nextArrow: $('.next')
+            });
         });
     }
     
