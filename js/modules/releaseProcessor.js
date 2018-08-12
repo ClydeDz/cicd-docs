@@ -9,7 +9,7 @@ function getReleaseJson(releaseJsonInput) {
         description: getReleaseDefinitionDescription(releaseJsonInput),
         url: getReleaseDefinitionUrl(releaseJsonInput),
         creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
-        modificationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
+        modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
         releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
         environments: getReleaseDefinitionEnvironments(releaseJsonInput),
         artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
@@ -36,10 +36,10 @@ function getReleaseDefinitionUrl(releaseJsonInput) {
 
 function getReleaseDefinitionCreationDate(releaseJsonInput) {
     var _creation = {
-        createdOn: releaseJsonInput.createdDate,
+        createdOn: releaseJsonInput.createdOn,
         createdBy: releaseJsonData.createdBy.displayName,
         createdByEmail: releaseJsonData.createdBy.uniqueName
-    }
+    };
     return _creation;
 }
 
@@ -48,8 +48,8 @@ function getReleaseDefinitionModificationDate(releaseJsonInput) {
         modifiedOn: releaseJsonInput.modifiedOn,
         modifiedBy: releaseJsonData.modifiedBy.displayName,
         modifiedByEmail: releaseJsonData.modifiedBy.uniqueName
-    }
-    return _creation;
+    };
+    return _modification;
 }
 
 function getReleaseMetaInformation(releaseJsonInput) {
