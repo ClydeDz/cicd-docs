@@ -128,6 +128,53 @@
                     <p>No continuous deployment setup for this release pipeline</p>
                     {{/isTriggerSetupForReleaseDefinition}}
                 </div>
+                <div>
+                    <!-- Trigger the modal with a button -->
+                    {{#doVariablesExists}}
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#releaseDefVariables">Variables</button>
+                    {{/doVariablesExists}}
+                    <!-- Modal -->
+                    <div id="releaseDefVariables" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Variables</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row bg-primary">
+                                        <div class="col-xs-3">
+                                            Name
+                                        </div>
+                                        <div class="col-xs-3">
+                                            Value
+                                        </div>
+                                        <div class="col-xs-3">
+                                            Scope
+                                        </div>
+                                    </div>
+                                    {{#variables}}
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            {{ key }}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {{ value }}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {{ scope }}
+                                        </div>
+                                    </div>
+                                    {{/variables}}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

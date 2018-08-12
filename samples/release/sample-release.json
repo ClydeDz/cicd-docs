@@ -23,7 +23,13 @@
   },
   "modifiedOn": "2018-05-05T06:15:50.893Z",
   "isDeleted": false,
-  "variables": {},
+  "variables": {
+    "abc": { "value": "bbc" },
+    "sec": {
+      "value": null,
+      "isSecret": true
+    }
+  },
   "variableGroups": [],
   "environments": [
     {
@@ -39,7 +45,7 @@
         "imageUrl": "https://sampleurl.visualstudio.com/_api/_common/identityImage?id=902bbca3-d3de-4dec-b353-6e45849e8b02",
         "descriptor": "msa.Zjc4MDUyMzEtYTA4Mi03YTNlLWIwYjEtZTkzYTQxYWI2ZTcx"
       },
-      "variables": {},
+      "variables": { "fff": { "value": "ggg" } },
       "variableGroups": [],
       "preDeployApprovals": {
         "approvals": [

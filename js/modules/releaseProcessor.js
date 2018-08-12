@@ -15,6 +15,7 @@ function getReleaseJson(releaseJsonInput) {
         artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
         isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
         triggers: getReleaseDefinitionTriggers(releaseJsonInput),
+        doVariablesExists: doVariablesExists(releaseJsonInput),
         variables: getReleaseDefinitionVariables(releaseJsonInput),
         metaInformation: getReleaseMetaInformation(releaseJsonInput)
     };
@@ -120,6 +121,20 @@ function getReleaseDefinitionArtifacts(releaseJsonInput) {
     return _artifacts;
 }
 
+function doVariablesExists(releaseJsonInput) {
+    let relPipelineContainsVariables = Object.keys(releaseJsonInput.variables).length > 0;
+    let eachEnvironmentContainsVariables = false;
+
+    for (var envIndex = 0; envIndex < releaseJsonInput.environments.length; envIndex++) {
+        let variables = releaseJsonInput.environments[envIndex].variables;
+        eachEnvironmentContainsVariables = Object.keys(variables).length > 0;
+        if (eachEnvironmentContainsVariables) {
+            break;
+        }
+    }
+
+    return relPipelineContainsVariables || eachEnvironmentContainsVariables;
+}
 
 function getReleaseDefinitionVariables(releaseJsonInput) {
     var _variables = releaseJsonInput.variables;
