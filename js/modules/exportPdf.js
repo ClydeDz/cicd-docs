@@ -55,10 +55,34 @@ function exportPdf(buildReleaseJson) {
     //////   RELEASE
     ////////////////////////
 
-    //if (buildReleaseJson.releaseDef !== null) {
-    //    doc.setFontSize(h2FontSize_const);
-    //    doc.text(x_const, (yStartPoint = yStartPoint + lineHeight_const), 'Release Pipeline');
-    //}
+    if (buildReleaseJson.releaseDef !== null) {
+        var _releaseJson = buildReleaseJson.releaseDef;
+
+        // RELEASE PIPELINE SECTION
+        doc = printReleasePipelineHeading(doc);
+
+        // RELEASE NAME, REPOSITORY, PROJECT AND TRIGGERS
+        doc = printReleaseNameHeading(doc, _releaseJson);
+        doc = printTriggersHeading(doc);
+        doc = printReleaseTriggers(doc, _releaseJson);
+
+        // META INFORMATION
+        doc = printMetaInformationHeading(doc);
+        doc = printReleaseAuthorDetails(doc, _releaseJson);
+        doc = printReleaseMetaInformation(doc, _releaseJson);
+
+        // VARIABLES
+        doc = printVariablesHeading(doc);
+        doc = printReleaseVariables(doc, _releaseJson);
+        
+        // ARTIFACTS
+        doc = printArtifactsHeading(doc);
+        doc = printReleaseArtifacts(doc, _releaseJson);
+
+        // ENVIRONMENTS, PHASES AND TASKS
+        doc = printEnvironmentHeading(doc);
+        doc = printReleaseDefinitionEnvironments(doc, _releaseJson);
+    }
         
     doc = addPageFooter(doc);
     //doc = addDocumentFooter(doc);
