@@ -74,6 +74,13 @@ function setH3HeadingStyle(doc) {
 
 function setH4HeadingStyle(doc) {
     doc.setFontSize(pdf.h4FontSize);
+    doc.setFontType('bold');
+    doc.setTextColor(142, 45, 226);
+    return doc;
+}
+
+function setH5HeadingStyle(doc) {
+    doc.setFontSize(pdf.h5FontSize);
     doc.setFontType('normal');
     doc.setTextColor(39, 39, 39);
     return doc;

@@ -669,6 +669,7 @@ var pdf = {
     h2FontSize: 18,
     h3FontSize: 15,
     h4FontSize: 12,
+    h5FontSize: 11,
     iconSize: 60,
     printIconSize: 14
 };
@@ -1703,6 +1704,13 @@ function setH3HeadingStyle(doc) {
 
 function setH4HeadingStyle(doc) {
     doc.setFontSize(pdf.h4FontSize);
+    doc.setFontType('bold');
+    doc.setTextColor(142, 45, 226);
+    return doc;
+}
+
+function setH5HeadingStyle(doc) {
+    doc.setFontSize(pdf.h5FontSize);
     doc.setFontType('normal');
     doc.setTextColor(39, 39, 39);
     return doc;
@@ -1939,7 +1947,7 @@ function printPhasesAndSteps(doc, _buildJson) {
 
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
-        doc = setH4HeadingStyle(doc);
+        doc = setH5HeadingStyle(doc);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), currentPhase.name);
         pdf.yAxisValue = triangle.y2;
 
@@ -2176,7 +2184,8 @@ function printRetentionRules(doc, _buildJson) {
 
 function printReleasePipelineHeading(doc) {
     doc = setH2HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.HEADING);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, 'RELEASE PIPELINE');
     doc = drawLine(doc, lineObjectLength.FULL);
     return doc;
@@ -2217,26 +2226,6 @@ function printEnvironmentHeading(doc) {
 ///////////////////////////////////////
 
 
-//function printReleaseRepositoryAndProject(doc, _releaseJson) {
-//    doc = setBodyStyle(doc);
-
-//    var repositoryIcon = getBase64Image(document.getElementById("repositoryIcon"), pdf.iconSize, pdf.iconSize);
-//    var platformVstsIcon = getBase64Image(document.getElementById("platformVstsIcon"), pdf.iconSize, pdf.iconSize);
-
-//    // Repo
-//    doc = addNewBodyLine(doc, lineHeightType.BODY);
-//    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
-//    doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
-//    // Project
-//    doc = addNewBodyLine(doc, lineHeightType.BODY);
-//    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5, pdf.printIconSize, pdf.printIconSize);
-//    doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 15, { url: _buildJson.project.url });
-
-//    return doc;
-//}
-
-
-
 function printReleaseTriggers(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
@@ -2272,9 +2261,9 @@ function printReleaseAuthorDetails(doc, _releaseJson) {
 
     // Author
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_releaseJson.creationInformation.createdBy} (${_releaseJson.creationInformation.createdByEmail}) on ${createdOn.toLocaleString()}.`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_releaseJson.creationInformation.createdBy} [${_releaseJson.creationInformation.createdByEmail}] on ${createdOn.toLocaleString()}.`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Last modified by ${_releaseJson.modificationInformation.modifiedBy} (${_releaseJson.modificationInformation.modifiedByEmail}) on ${modifiedOn.toLocaleString()}.`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Last modified by ${_releaseJson.modificationInformation.modifiedBy} [${_releaseJson.modificationInformation.modifiedByEmail}] on ${modifiedOn.toLocaleString()}.`);
     return doc;
 }
 
@@ -2356,18 +2345,23 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
     for (let environmentIndex = 0; environmentIndex < _releaseJson.environments.length; environmentIndex++) {
         let currentEnv = _releaseJson.environments[environmentIndex];
 
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `**${currentEnv.name}**`);
+        doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);        
+        doc = setH4HeadingStyle(doc);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `${currentEnv.name.toString().toUpperCase()}`);
+        doc = drawLine(doc, lineObjectLength.QUATER);
 
+
+        doc = setBodyStyle(doc);
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `Owner: ${currentEnv.ownerName}`);
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `Notification recipients: ${currentEnv.emailRecipients}`);
 
-        doc = printReleaseDefinitonTasksAndPhases(doc, currentEnv);
         doc = printReleaseDefinitionEnvironmentConditions(doc, currentEnv);
         doc = printPreDeploymentApprovalsForReleaseDefinition(doc, currentEnv);
+        doc = printReleaseDefinitonTasksAndPhases(doc, currentEnv);        
         doc = printPostDeploymentApprovalsForReleaseDefinition(doc, currentEnv);
     }
 
@@ -2375,15 +2369,34 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
 }
 
 function printReleaseDefinitonTasksAndPhases(doc, environment) {
+    doc = setH5HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phases`);
+
     doc = setBodyStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
 
     for (let deploymentPhasesIndex = 0; deploymentPhasesIndex < environment.deploymentPhases.length; deploymentPhasesIndex++) {
         let currentPhase = environment.deploymentPhases[deploymentPhasesIndex];
 
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phase: ${currentPhase.name}`);
+        // Triangle co-ords
+        var triangle = {
+            x1: pdf.xAxisValue,
+            x2: pdf.xAxisValue,
+            x3: pdf.xAxisValue + 3,
+            y1: pdf.yAxisValue,
+            y2: pdf.yAxisValue + 6,
+            y3: pdf.yAxisValue + 3,
+            fill: 'FD'
+        };
+        doc.setFillColor(0);
+        doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
+        doc = setH5HeadingStyle(doc);
+        doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+        doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
+        pdf.yAxisValue = triangle.y2;
 
+        doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phase type: ${currentPhase.phaseType}`);
 
@@ -2481,9 +2494,13 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
 }
 
 function printReleaseDefinitionEnvironmentConditions(doc, environment) {
+    doc = setH5HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environment triggers`);
+
     doc = setBodyStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Notification recipients: ${environment.conditions.displayName}`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${environment.conditions.displayName}`);
     if (!environment.conditions.isConditionTypeIsAfterEnvironment) {
         return doc;
     }
@@ -2500,6 +2517,10 @@ function printReleaseDefinitionEnvironmentConditions(doc, environment) {
 }
 
 function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
+    doc = setH5HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Pre deployment approvals`);
+
     doc = setBodyStyle(doc);
 
     for (let depIndex = 0; depIndex < environment.preDeployApprovals.length; depIndex++) {
@@ -2519,7 +2540,12 @@ function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
 
     return doc;
 }
+
 function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
+    doc = setH5HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Post deployment approvals`);
+
     doc = setBodyStyle(doc);
 
     for (let depIndex = 0; depIndex < environment.postDeployApprovals.length; depIndex++) {

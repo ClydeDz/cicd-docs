@@ -35,6 +35,7 @@ var pdf = {
     h2FontSize: 18,
     h3FontSize: 15,
     h4FontSize: 12,
+    h5FontSize: 11,
     iconSize: 60,
     printIconSize: 14
 };

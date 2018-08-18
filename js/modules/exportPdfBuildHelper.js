@@ -133,7 +133,7 @@ function printPhasesAndSteps(doc, _buildJson) {
 
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
-        doc = setH4HeadingStyle(doc);
+        doc = setH5HeadingStyle(doc);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), currentPhase.name);
         pdf.yAxisValue = triangle.y2;
 
