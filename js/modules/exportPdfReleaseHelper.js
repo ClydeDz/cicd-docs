@@ -194,6 +194,9 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `Notification recipients: ${currentEnv.emailRecipients}`);
 
         doc = printReleaseDefinitonTasksAndPhases(doc, currentEnv);
+        doc = printReleaseDefinitionEnvironmentConditions(doc, currentEnv);
+        doc = printPreDeploymentApprovalsForReleaseDefinition(doc, currentEnv);
+        doc = printPostDeploymentApprovalsForReleaseDefinition(doc, currentEnv);
     }
 
     return doc;
@@ -301,6 +304,66 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
         });
 
     pdf.yAxisValue = doc.autoTable.previous.finalY;
+
+    return doc;
+}
+
+function printReleaseDefinitionEnvironmentConditions(doc, environment) {
+    doc = setBodyStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Notification recipients: ${environment.conditions.displayName}`);
+    if (!environment.conditions.isConditionTypeIsAfterEnvironment) {
+        return doc;
+    }
+
+    let environments = "";
+    for (let envIndex = 0; envIndex < environment.conditions.environments.length; envIndex++) {
+        let selectedEnvironment = environment.conditions.environments[envIndex];
+        let isLastOption = envIndex + 1 === environment.conditions.environments.length;
+        environments += isLastOption ? selectedEnvironment : selectedEnvironment + ", ";
+    }
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environments selected: ${environments}`);
+    return doc;
+}
+
+function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
+    doc = setBodyStyle(doc);
+
+    for (let depIndex = 0; depIndex < environment.preDeployApprovals.length; depIndex++) {
+        let currentApproval = environment.preDeployApprovals[depIndex];
+        let approvalType = currentApproval.isAutomated ? "Automatic approval" : "Manual approval";
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${approvalType}`);
+
+        if (currentApproval.isAutomated) {
+            continue;
+        }
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+    }
+
+    return doc;
+}
+function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
+    doc = setBodyStyle(doc);
+
+    for (let depIndex = 0; depIndex < environment.postDeployApprovals.length; depIndex++) {
+        let currentApproval = environment.postDeployApprovals[depIndex];
+        let approvalType = currentApproval.isAutomated ? "Automatic approval" : "Manual approval";
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${approvalType}`);
+
+        if (currentApproval.isAutomated) {
+            continue;
+        }
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+    }
 
     return doc;
 }
