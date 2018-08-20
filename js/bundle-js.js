@@ -647,6 +647,7 @@ var templateNames = {
     BUILD: "BUILD",
     RELEASE: "RELEASE",
     OUTPUT: "OUTPUT",
+    FOOTER: "FOOTER"
 }
 
 // Export functionality variables
@@ -706,6 +707,10 @@ const releaseJsonText = "release";
 /////////    Template update starters
 //////////////////////////////////////////
 
+function footerView() {
+    _switchTemplate(templateNames.FOOTER, { "version": appVersionNumber });
+}
+
 function uploadScreenView() {
     _switchTemplate(templateNames.UPLOAD, {});
 }
@@ -732,6 +737,13 @@ function releaseVisualizeScreenView() {
 /////////////////////////////////////
 
 function _switchTemplate(templateName, jsonData) {
+    if (templateName === templateNames.FOOTER) {
+        $("#footerViewTemplateHolder").load("html-partials/footer.html #footerPartial", function () {
+            var contents = document.getElementById('footerPartial').innerHTML;
+            var output = Mustache.render(contents, jsonData);
+            $("#footerView").html(output);
+        });
+    }
     if (templateName === templateNames.UPLOAD) {
         $("#viewTemplateHolder").load("html-partials/upload.html #uploadPartial", function () {
             var contents = document.getElementById('uploadPartial').innerHTML;
@@ -2570,6 +2582,7 @@ $(document).ready(function () {
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");
+        footerView();
         importTestData();
         //TODO: uncomment this
         //uploadScreenView();

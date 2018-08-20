@@ -13,6 +13,7 @@ var templateNames = {
     BUILD: "BUILD",
     RELEASE: "RELEASE",
     OUTPUT: "OUTPUT",
+    FOOTER: "FOOTER"
 }
 
 // Export functionality variables

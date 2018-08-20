@@ -3,6 +3,7 @@
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         console.log("no qs");
+        footerView();
         importTestData();
         //TODO: uncomment this
         //uploadScreenView();
