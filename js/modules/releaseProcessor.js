@@ -6,12 +6,14 @@ function getReleaseJson(releaseJsonInput) {
 
     var _releaseDef = {
         name: getReleaseDefinitionName(releaseJsonInput),
+        doesReleaseDefinitionDescriptionExist: doesReleaseDefinitionDescriptionExist(releaseJsonData),
         description: getReleaseDefinitionDescription(releaseJsonInput),
         url: getReleaseDefinitionUrl(releaseJsonInput),
         creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
         modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
         releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
         environments: getReleaseDefinitionEnvironments(releaseJsonInput),
+        doeReleaseDefinitionHaveArtifacts: doeReleaseDefinitionHaveArtifacts(releaseJsonData),
         artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
         isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
         triggers: getReleaseDefinitionTriggers(releaseJsonInput),
@@ -26,6 +28,10 @@ function getReleaseDefinitionName(releaseJsonInput) {
     return releaseJsonInput.name;
 }
 
+
+function doesReleaseDefinitionDescriptionExist(releaseJsonInput) {
+    return releaseJsonInput.description !== null;
+}
 
 function getReleaseDefinitionDescription(releaseJsonInput) {
     return releaseJsonInput.description;
@@ -94,6 +100,9 @@ function getReleaseDefinitionTriggers(releaseJsonInput) {
 }
 
 
+function doeReleaseDefinitionHaveArtifacts(releaseJsonInput) {
+    return releaseJsonInput.artifacts.length !== 0;
+}
 
 function getReleaseDefinitionArtifacts(releaseJsonInput) {
     var _artifacts = [];
@@ -200,25 +209,59 @@ function _getEnvironmentSpecificVariablesForReleaseDefinition(environmentVariabl
     return envVariables;
 }
 
+
 function releaseDefinitonHasMultipleEnvironments(releaseJsonInput) {
     return releaseJsonInput.environments.length > 1;
+}
+
+function processEmailRecipients(encodedRecipientList, currentEnvironment, releaseDefinition) {
+    let recipientList = "";
+    let encodedRecipients = encodedRecipientList.split(';');
+    for (let listIndex = 0; listIndex < encodedRecipients.length; listIndex++) {
+        let currentRecipient = encodedRecipients[listIndex];
+        let isLastItemInTheList = (listIndex + 1 === encodedRecipients.length);
+        let suffixChar = isLastItemInTheList ? "" : ", ";
+        let alredyExistsInList = (recipient) => {
+            return recipientList.includes(recipient);
+        };
+
+        if (currentRecipient === "release.environment.owner") {
+            recipientList += alredyExistsInList(currentEnvironment.owner.displayName) ? "" : currentEnvironment.owner.displayName + suffixChar;
+        }
+
+        else if (currentRecipient === "release.creator") {
+            recipientList += alredyExistsInList(releaseDefinition.createdBy.displayName) ? "" : releaseDefinition.createdBy.displayName + suffixChar;
+        }
+
+        else {
+            recipientList += currentRecipient + suffixChar;
+        }
+    }
+
+    // Final cleanup
+    recipientList = recipientList.trim();
+    recipientList = recipientList.charAt(recipientList.length - 1) === ',' ? recipientList.substr(0, recipientList.length - 1) : recipientList;
+
+    return recipientList;
+
 }
 
 function getReleaseDefinitionEnvironments(releaseJsonInput) {
     var _environment = [];
 
     for (var envIndex = 0; envIndex < releaseJsonInput.environments.length; envIndex++) {
-        var item = {};
-        var currentEnv = releaseJsonInput.environments[envIndex];
+        let item = {};
+        let currentEnv = releaseJsonInput.environments[envIndex];
+        let isOwnerHuman = currentEnv.owner.isContainer === undefined;
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
-        item["ownerEmail"] = currentEnv.owner.uniqueName;
+        item["isOwnerHuman"] = isOwnerHuman;
         item["ownerEmail"] = currentEnv.owner.uniqueName;
         item["emailNotificationType"] = currentEnv.environmentOptions.emailNotificationType;
-        item["emailRecipients"] = currentEnv.environmentOptions.emailRecipients;      
+        item["emailRecipients"] = processEmailRecipients(currentEnv.environmentOptions.emailRecipients, currentEnv, releaseJsonData);      
 
         // conditions
         item["conditions"] = getConditonsForReleaseDefinition(currentEnv);
@@ -302,6 +345,7 @@ function getPostDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
 
         postDepItem["approver"] = {
             "displayName": currentPostDepItem.approver.displayName,
+            "isApproverHuman": currentPostDepItem.approver.isContainer === undefined,
             "uniqueName": currentPostDepItem.approver.uniqueName
         };
 
@@ -331,6 +375,7 @@ function getPreDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
 
         preDepItem["approver"] = {
             "displayName": currentPreDepItem.approver.displayName,
+            "isApproverHuman": currentPreDepItem.approver.isContainer === undefined,
             "uniqueName": currentPreDepItem.approver.uniqueName
         };
 
