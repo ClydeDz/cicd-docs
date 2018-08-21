@@ -84,19 +84,19 @@
                     <div class="row text-center">
                         <div class="col-xs-4">
                             <div class="text-center">
-                                <img src="../images/icons/environments.png"  width="32"/>  2
+                                <img src="../images/icons/environments.png" width="32" />  2
                             </div>
                             <div class="text-center">Environments</div>
                         </div>
                         <div class="col-xs-4">
                             <div class="text-center">
-                                <img src="../images/icons/tasks.png"  width="32"/>  2
+                                <img src="../images/icons/tasks.png" width="32" />  2
                             </div>
                             <div class="text-center">Tasks</div>
                         </div>
                         <div class="col-xs-4">
                             <div class="text-center">
-                                <img src="../images/icons/variables.png"  width="32"/>  2
+                                <img src="../images/icons/variables.png" width="32" />  2
                             </div>
                             <div class="text-center">Variables</div>
                         </div>
@@ -111,26 +111,27 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h2>Author</h2>
-                    <h3>Created by</h3>
+                    <h2>Created by</h2>
                     <p>
-                        <img src="../images/icons/user.png" width="32"/> {{creationInformation.createdBy}}
+                        <img src="../images/icons/user.png" width="32" /> {{creationInformation.createdBy}}
                     </p>
                     <p>
-                        <img src="../images/icons/email.png" width="32"/>  {{creationInformation.createdByEmail}}
+                        <img src="../images/icons/email.png" width="32" />  {{creationInformation.createdByEmail}}
                     </p>
                     <p>
-                        <img src="../images/icons/time.png" width="32"/>{{creationInformation.createdOn}}
+                        <img src="../images/icons/time.png" width="32" />{{creationInformation.createdOn}}
                     </p>
-                    <h3>Modified by</h3>
+                </div>
+                <div class="card">
+                    <h2>Modified by</h2>
                     <p>
-                        <img src="../images/icons/user.png" width="32"/> {{modificationInformation.modifiedBy}}
+                        <img src="../images/icons/user.png" width="32" /> {{modificationInformation.modifiedBy}}
                     </p>
                     <p>
-                        <img src="../images/icons/email.png" width="32"/> {{modificationInformation.modifiedByEmail}}
+                        <img src="../images/icons/email.png" width="32" /> {{modificationInformation.modifiedByEmail}}
                     </p>
                     <p>
-                        <img src="../images/icons/time.png" width="32"/> {{modificationInformation.modifiedOn}}
+                        <img src="../images/icons/time.png" width="32" /> {{modificationInformation.modifiedOn}}
                     </p>
                 </div>
                 <div class="card">
@@ -161,14 +162,14 @@
                     {{#triggers}}
                     <div class="row">
                         <div class="col-xs-12">
-                            <img src="../images/icons/artifact.png" width="32"/>  {{artifactAlias}}
+                            <img src="../images/icons/artifact.png" width="32" />  {{artifactAlias}}
                         </div>
                         <div class="col-xs-12">
                             {{#isTriggerTypeContinuousDeployment}}
                             <img src="../images/icons/continuous-delivery.png" width="32" /> Continuous deployment
                             {{/isTriggerTypeContinuousDeployment}}
                             {{#isTriggerTypePullRequest}}
-                            <img src="../images/icons/pull-request.png" width="32"  />   Pull request
+                            <img src="../images/icons/pull-request.png" width="32" />   Pull request
                             {{/isTriggerTypePullRequest}}
                         </div>
                         {{#triggerConditions}}

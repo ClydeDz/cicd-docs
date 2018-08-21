@@ -19,24 +19,26 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     {{#isExecutionTypeParallelismNone}}
-                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: None</small>
+                                    <small>
+                                        <img src="../images/icons/parallelism.png" width="24"/>  Parallelism: None
+                                    </small>
                                     {{/isExecutionTypeParallelismNone}}
 
                                     {{#isExecutionTypeParallelismMultiConfig}}
-                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: Multi-config</small>
+                                    <small>  <img src="../images/icons/parallelism.png" width="24" />  Parallelism: Multi-config</small>
                                     {{/isExecutionTypeParallelismMultiConfig}}
 
                                     {{#isExecutionTypeParallelismMultiAgent}}
-                                    <small> <i class="mdi mdi-run text-muted"></i> Parallelism: Multi-agent</small>
+                                    <small> <img src="../images/icons/parallelism.png" width="24" />  Parallelism: Multi-agent</small>
                                     {{/isExecutionTypeParallelismMultiAgent}}
                                 </div>
                                 <div class="col-xs-3">
                                     {{#isPhaseAgentful}}
-                                    <small> <i class="mdi mdi-server-off text-muted"></i> Runs on agent</small>
+                                    <small>  <img src="../images/icons/agent.png" width="24" />  Runs on agent</small>
                                     {{/isPhaseAgentful}}
 
                                     {{#isPhaseAgentless}}
-                                    <small> <i class="mdi mdi-server text-muted"></i> Runs on server</small>
+                                    <small>  <img src="../images/icons/server.png" width="24" />  Runs on server</small>
                                     {{/isPhaseAgentless}}
                                 </div>
                             </div>
