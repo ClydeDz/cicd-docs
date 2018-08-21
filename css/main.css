@@ -6900,3 +6900,38 @@ body {
   vertical-align: middle;
   float: none; }
 
+/* build and release todo: move this to individual file */
+.page-icon {
+  margin-right: 9px; }
+
+.buffer {
+  margin-right: 18px;
+  display: inline-block; }
+
+.phase {
+  padding: 18px 0; }
+  .phase h3 {
+    color: #757575;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: medium; }
+  .phase .phase-meta {
+    padding: 9px 0 18px 0; }
+  .phase .steps {
+    padding: 1px 0px 0px 8px;
+    border-left: 6px solid #82a0a0;
+    margin-left: 4px; }
+    .phase .steps .row {
+      padding: 9px 0;
+      border-top: 1px dashed #f3f3f3;
+      margin: 0 4px; }
+      .phase .steps .row:last-child {
+        border-bottom: 1px dashed #f3f3f3; }
+
+.environment-slider .phase {
+  margin-left: 18px; }
+
+.environment-slider .steps {
+  width: 96%; }
+

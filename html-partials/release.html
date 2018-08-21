@@ -35,41 +35,47 @@
                                 </p>
                             </div>
                             {{#deploymentPhases}}
-                            <div class="col-xs-12" style='border-left-width: 18px; border-left-color: "#0000ff26"; border-left-style: solid;'>
-                                <h3>{{ name }}</h3>
-                                <p>{{ phaseType }}</p>
+                            <div class="col-xs-12 phase">
+                                <h3>Phase: {{ name }}</h3>
+                                <div class="row phase-meta">
+                                    <div class="col-xs-12">
+                                        <p>{{ phaseType }}</p>
+                                    </div>                                    
+                                </div>                                
                                 <!-- steps -->
-                                {{#steps}}
-                                <div id="step-{{id}}" class="row">
-                                    <div class="col-xs-1">
-                                        <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                <div class="steps">
+                                    {{#steps}}
+                                    <div id="step-{{id}}" class="row">
+                                        <div class="col-xs-1">
+                                            <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                        </div>
+                                        <div class="col-xs-9">
+                                            {{ name }}<br />
+                                            <small class="text-muted">Version: {{ version }}</small>
+                                        </div>
+                                        <div class="col-xs-1">
+                                            {{#enabled}}
+                                            <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
+                                            <img src="../images/icons/checkmark.png" width="32" />
+                                            {{/enabled}}
+                                            {{^enabled}}
+                                            <img src="../images/icons/disabled.png" width="32" />
+                                            <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
+                                            {{/enabled}}
+                                        </div>
+                                        <div class="col-xs-1">
+                                            {{#continueOnError}}
+                                            <img src="../images/icons/error.png" width="32" />
+                                            <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
+                                            {{/continueOnError}}
+                                            {{^continueOnError}}
+                                            <img src="../images/icons/error-disabled.png" width="32" />
+                                            <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
+                                            {{/continueOnError}}
+                                        </div>
                                     </div>
-                                    <div class="col-xs-8">
-                                        {{ name }}<br />
-                                        <small class="text-muted">Version: {{ version }}</small>
-                                    </div>
-                                    <div class="col-xs-1">
-                                        {{#enabled}}
-                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
-                                        <img src="../images/icons/checkmark.png" width="32" />
-                                        {{/enabled}}
-                                        {{^enabled}}
-                                        <img src="../images/icons/disabled.png" width="32" />
-                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
-                                        {{/enabled}}
-                                    </div>
-                                    <div class="col-xs-1">
-                                        {{#continueOnError}}
-                                        <img src="../images/icons/error.png" width="32" />
-                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
-                                        {{/continueOnError}}
-                                        {{^continueOnError}}
-                                        <img src="../images/icons/error-disabled.png" width="32" />
-                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
-                                        {{/continueOnError}}
-                                    </div>
+                                    {{/steps}}
                                 </div>
-                                {{/steps}}
                             </div>
                             {{/deploymentPhases}}
                         </div>

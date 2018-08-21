@@ -14,65 +14,66 @@
                     <p>Project description: {{ project.description }}</p>
                     <div>
                         {{#process}}
-                        <div>
-                            <p><b>Phase name: {{ name }}</b><br /></p>
-                            <div class="row">
-                                <div class="col-xs-3">
+                        <div class="phase">
+                            <h3>Phase: {{ name }}</h3>
+                            <div class="row phase-meta">
+                                <div class="col-xs-12">
                                     {{#isExecutionTypeParallelismNone}}
                                     <small>
-                                        <img src="../images/icons/parallelism.png" width="24"/>  Parallelism: None
+                                        <img src="../images/icons/parallelism.png" width="26" class="page-icon"/>  Parallelism: None
                                     </small>
                                     {{/isExecutionTypeParallelismNone}}
 
                                     {{#isExecutionTypeParallelismMultiConfig}}
-                                    <small>  <img src="../images/icons/parallelism.png" width="24" />  Parallelism: Multi-config</small>
+                                    <small>  <img src="../images/icons/parallelism.png" width="26" class="page-icon" />  Parallelism: Multi-config</small>
                                     {{/isExecutionTypeParallelismMultiConfig}}
 
                                     {{#isExecutionTypeParallelismMultiAgent}}
-                                    <small> <img src="../images/icons/parallelism.png" width="24" />  Parallelism: Multi-agent</small>
+                                    <small> <img src="../images/icons/parallelism.png" width="26" class="page-icon"/>  Parallelism: Multi-agent</small>
                                     {{/isExecutionTypeParallelismMultiAgent}}
-                                </div>
-                                <div class="col-xs-3">
+                                    <div class="buffer">&nbsp;</div>
                                     {{#isPhaseAgentful}}
-                                    <small>  <img src="../images/icons/agent.png" width="24" />  Runs on agent</small>
+                                    <small>  <img src="../images/icons/agent.png" width="26" class="page-icon" />  Runs on agent</small>
                                     {{/isPhaseAgentful}}
 
                                     {{#isPhaseAgentless}}
-                                    <small>  <img src="../images/icons/server.png" width="24" />  Runs on server</small>
+                                    <small>  <img src="../images/icons/server.png" width="26" class="page-icon" />  Runs on server</small>
                                     {{/isPhaseAgentless}}
                                 </div>
                             </div>
-                            {{#steps}}
-                            <div id="step-{{id}}" class="row">
-                                <div class="col-xs-1">
-                                    <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                            <div class="steps">
+                                {{#steps}}
+                                <div id="step-{{id}}" class="row">
+                                    <div class="col-xs-1">
+                                        <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                    </div>
+                                    <div class="col-xs-9">
+                                        {{ name }}<br />
+                                        <small class="text-muted">Version: {{ version }}</small>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        {{#enabled}}
+                                        <img src="../images/icons/checkmark.png" width="32" />
+                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
+                                        {{/enabled}}
+                                        {{^enabled}}
+                                        <img src="../images/icons/disabled.png" width="30" />
+                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
+                                        {{/enabled}}
+                                    </div>
+                                    <div class="col-xs-1">
+                                        {{#continueOnError}}
+                                        <img src="../images/icons/error.png" width="32" />
+                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
+                                        {{/continueOnError}}
+                                        {{^continueOnError}}
+                                        <img src="../images/icons/error-disabled.png" width="32" />
+                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
+                                        {{/continueOnError}}
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    {{ name }}<br />
-                                    <small class="text-muted">Version: {{ version }}</small>
-                                </div>
-                                <div class="col-xs-1">
-                                    {{#enabled}}
-                                    <img src="../images/icons/checkmark.png" width="32" />
-                                    <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
-                                    {{/enabled}}
-                                    {{^enabled}}
-                                    <img src="../images/icons/disabled.png" width="30" />
-                                    <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
-                                    {{/enabled}}
-                                </div>
-                                <div class="col-xs-1">
-                                    {{#continueOnError}}
-                                    <img src="../images/icons/error.png" width="32"/>
-                                    <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
-                                    {{/continueOnError}}
-                                    {{^continueOnError}}
-                                    <img src="../images/icons/error-disabled.png" width="32" />
-                                    <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
-                                    {{/continueOnError}}
-                                </div>
+                                {{/steps}}
                             </div>
-                            {{/steps}}
                         </div>
                         {{/process}}
                     </div>
