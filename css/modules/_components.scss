@@ -11,6 +11,9 @@
 .card {
     @include card-common();
     border-radius: 3px;
+    h2{
+        color: $purple;
+    }
 }
 
 .card-sq {
@@ -53,14 +56,65 @@
     max-width:16%;
 }
 
+@mixin button-common() {
+    padding: 10px 14px;
+    border-radius: 31px;
+}
+
 .button {
+    @include button-common();
     @include border-color-gradient(right, $amin);
     background-color: white;
-    border-radius: 31px;
     color: #8e2de2;
-    padding: 10px 14px;
 
     &:hover {
         background-color: white;
     }
+}
+
+.button-dark {
+    @include button-common();
+    @include linear-gradient(right, $amin);
+    border: 1px solid white;
+    color: white;
+
+    &:hover {
+        background-color: white;
+    }
+}
+
+.button-dark-inverse {
+    @include button-common();
+    background-color: white;
+}
+
+.button-inverse {
+    @include button-common();
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+
+    &:hover {
+        background-color: transparent;
+        color: white;
+        opacity: 0.9;
+    }
+}
+
+.bg-gradient {
+    @include linear-gradient(right, $amin);
+    color: white;
+}
+
+.modal-body{
+    padding-top:0;
+}
+
+.modal-table-header {
+    padding:18px 9px;
+    margin-bottom: 9px;
+}
+
+.modal-table-row {
+    padding: 9px;
 }

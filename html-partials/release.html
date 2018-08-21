@@ -10,15 +10,17 @@
                         Version {{ metaInformation.version }}<br />
                         Version {{ metaInformation.releaseNameFormat }}<br />
                     </div>
+                </div>
+                <div class="card">
                     <!-- environment phases and tasks -->
                     <div class="row">
                         <div class="col-xs-6">
-                            <h3>Environment</h3>
+                            <h2>Environment</h2>
                         </div>
                         <div class="col-xs-6">
                             {{#releaseDefinitonHasMultipleEnvironments}}
-                            <button class="prev">Prev</button>
-                            <button class="next">Next</button>
+                            <button class="prev btn button">Prev</button>
+                            <button class="next btn button">Next</button>
                             {{/releaseDefinitonHasMultipleEnvironments}}
                         </div>
                     </div>
@@ -33,7 +35,7 @@
                                 </p>
                             </div>
                             {{#deploymentPhases}}
-                            <div class="col-xs-12" style='border-left-width: 18px; border-left-color: "#0000ff26"; border-left-style: solid;'> 
+                            <div class="col-xs-12" style='border-left-width: 18px; border-left-color: "#0000ff26"; border-left-style: solid;'>
                                 <h3>{{ name }}</h3>
                                 <p>{{ phaseType }}</p>
                                 <!-- steps -->
@@ -48,18 +50,22 @@
                                     </div>
                                     <div class="col-xs-1">
                                         {{#enabled}}
-                                        <i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>
+                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
+                                        <img src="../images/icons/checkmark.png" width="32" />
                                         {{/enabled}}
                                         {{^enabled}}
-                                        <i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>
+                                        <img src="../images/icons/disabled.png" width="32" />
+                                        <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
                                         {{/enabled}}
                                     </div>
                                     <div class="col-xs-1">
                                         {{#continueOnError}}
-                                        <i class="mdi mdi-alert-circle mdi-24px text-danger"></i>
+                                        <img src="../images/icons/error.png" width="32" />
+                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
                                         {{/continueOnError}}
                                         {{^continueOnError}}
-                                        <i class="mdi mdi-alert-circle mdi-24px text-muted"></i>
+                                        <img src="../images/icons/error-disabled.png" width="32" />
+                                        <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
                                         {{/continueOnError}}
                                     </div>
                                 </div>
@@ -77,21 +83,29 @@
                     <h2>At a glance</h2>
                     <div class="row text-center">
                         <div class="col-xs-4">
-                            <div class="text-center"><i class="mdi mdi-sitemap mdi-24px"></i> 2</div>
+                            <div class="text-center">
+                                <img src="../images/icons/environments.png"  width="32"/>  2
+                            </div>
                             <div class="text-center">Environments</div>
                         </div>
                         <div class="col-xs-4">
-                            <div class="text-center"><i class="mdi mdi-clipboard-check mdi-24px"></i> 2</div>
+                            <div class="text-center">
+                                <img src="../images/icons/tasks.png"  width="32"/>  2
+                            </div>
                             <div class="text-center">Tasks</div>
                         </div>
                         <div class="col-xs-4">
-                            <div class="text-center"><i class="mdi mdi-cube mdi-24px"></i> 2</div>
+                            <div class="text-center">
+                                <img src="../images/icons/variables.png"  width="32"/>  2
+                            </div>
                             <div class="text-center">Variables</div>
                         </div>
                     </div>
                     <div class="row text-center">
                         <div class="col-xs-4">
-                            <div class="text-center"><i class="mdi mdi-view-sequential mdi-24px"></i> 2</div>
+                            <div class="text-center">
+                                <img src="../images/icons/phases.png" width="32" />  2
+                            </div>
                             <div class="text-center">Phases</div>
                         </div>
                     </div>
@@ -99,29 +113,44 @@
                 <div class="card">
                     <h2>Author</h2>
                     <h3>Created by</h3>
-                    <p>{{creationInformation.createdBy}}</p>
-                    <p>{{creationInformation.createdByEmail}}</p>
-                    <p>{{creationInformation.createdOn}}</p>
+                    <p>
+                        <img src="../images/icons/user.png" width="32"/> {{creationInformation.createdBy}}
+                    </p>
+                    <p>
+                        <img src="../images/icons/email.png" width="32"/>  {{creationInformation.createdByEmail}}
+                    </p>
+                    <p>
+                        <img src="../images/icons/time.png" width="32"/>{{creationInformation.createdOn}}
+                    </p>
                     <h3>Modified by</h3>
-                    <p>{{modificationInformation.modifiedBy}}</p>
-                    <p>{{modificationInformation.modifiedByEmail}}</p>
-                    <p>{{modificationInformation.modifiedOn}}</p>
+                    <p>
+                        <img src="../images/icons/user.png" width="32"/> {{modificationInformation.modifiedBy}}
+                    </p>
+                    <p>
+                        <img src="../images/icons/email.png" width="32"/> {{modificationInformation.modifiedByEmail}}
+                    </p>
+                    <p>
+                        <img src="../images/icons/time.png" width="32"/> {{modificationInformation.modifiedOn}}
+                    </p>
                 </div>
                 <div class="card">
                     <h2>Artifacts</h2>
                     {{#artifacts}}
                     <div class="row">
                         <div class="col-xs-12">
-                            <span>ICON</span> {{artifactAlias}}
+                            <img src="../images/icons/build.png" width="32" /> Artifact type: Build
                         </div>
                         <div class="col-xs-12">
-                            <span>ICON</span> {{project}}
+                            <img src="../images/icons/artifact.png" width="32" /> {{artifactAlias}}
                         </div>
                         <div class="col-xs-12">
-                            <span>ICON</span> {{source}}
+                            <img src="../images/icons/project.png" width="32" />   {{project}}
                         </div>
                         <div class="col-xs-12">
-                            <span>ICON</span> {{defaultVersion}}
+                            <img src="../images/icons/source.png" width="32" />  {{source}}
+                        </div>
+                        <div class="col-xs-12">
+                            <img src="../images/icons/version.png" width="32" /> {{defaultVersion}}
                         </div>
                     </div>
                     {{/artifacts}}
@@ -132,17 +161,22 @@
                     {{#triggers}}
                     <div class="row">
                         <div class="col-xs-12">
-                            <span>ICON</span> {{artifactAlias}}
+                            <img src="../images/icons/artifact.png" width="32"/>  {{artifactAlias}}
                         </div>
                         <div class="col-xs-12">
-                            <span>ICON</span> {{triggerType}}
+                            {{#isTriggerTypeContinuousDeployment}}
+                            <img src="../images/icons/continuous-delivery.png" width="32" /> Continuous deployment
+                            {{/isTriggerTypeContinuousDeployment}}
+                            {{#isTriggerTypePullRequest}}
+                            <img src="../images/icons/pull-request.png" width="32"  />   Pull request
+                            {{/isTriggerTypePullRequest}}
                         </div>
                         {{#triggerConditions}}
                         <div class="col-xs-12">
-                            <span>ICON</span> {{sourceBranch}}
+                            <img src="../images/icons/code.png" width="32" /> Branch: {{sourceBranch}}
                         </div>
                         <div class="col-xs-12">
-                            <span>ICON</span> {{useBuildDefinitionBranch}}
+                            <img src="../images/icons/source.png" width="32" /> Use build definition branch: {{useBuildDefinitionBranch}}
                         </div>
                         {{/triggerConditions}}
                     </div>
@@ -155,19 +189,19 @@
                 <div>
                     <!-- Trigger the modal with a button -->
                     {{#doVariablesExists}}
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#releaseDefVariables">Variables</button>
+                    <button type="button" class="btn button-inverse" data-toggle="modal" data-target="#releaseDefVariables">Variables</button>
                     {{/doVariablesExists}}
-                    <!-- Modal -->
+                    <!-- Variables modal -->
                     <div id="releaseDefVariables" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Variables</h4>
+                                    <h3 class="modal-title">Variables</h3>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row bg-primary">
+                                    <div class="row modal-table-header bg-gradient">
                                         <div class="col-xs-3">
                                             Name
                                         </div>
@@ -179,7 +213,7 @@
                                         </div>
                                     </div>
                                     {{#variables}}
-                                    <div class="row">
+                                    <div class="row modal-table-row">
                                         <div class="col-xs-3">
                                             {{ key }}
                                         </div>
@@ -193,7 +227,7 @@
                                     {{/variables}}
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn button-dark" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

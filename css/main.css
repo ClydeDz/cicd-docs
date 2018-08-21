@@ -6748,6 +6748,8 @@ h1, h2, h3,
   min-height: 250px;
   /*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
   border-radius: 3px; }
+  .card h2 {
+    color: #8e2de2; }
 
 .card-sq {
   background-color: white;
@@ -6783,6 +6785,8 @@ h1, h2, h3,
   max-width: 16%; }
 
 .button {
+  padding: 10px 14px;
+  border-radius: 31px;
   /* fallback for old browsers */
   border-color: #8e2de2;
   /* Chrome 10-25, Safari 5.1-6 */
@@ -6790,11 +6794,58 @@ h1, h2, h3,
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-color: linear-gradient(to right, #8e2de2, #4a00e0);
   background-color: white;
-  border-radius: 31px;
-  color: #8e2de2;
-  padding: 10px 14px; }
+  color: #8e2de2; }
   .button:hover {
     background-color: white; }
+
+.button-dark {
+  padding: 10px 14px;
+  border-radius: 31px;
+  /* fallback for old browsers */
+  background: #8e2de2;
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, #8e2de2, #4a00e0);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  border: 1px solid white;
+  color: white; }
+  .button-dark:hover {
+    background-color: white; }
+
+.button-dark-inverse {
+  padding: 10px 14px;
+  border-radius: 31px;
+  background-color: white; }
+
+.button-inverse {
+  padding: 10px 14px;
+  border-radius: 31px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white; }
+  .button-inverse:hover {
+    background-color: transparent;
+    color: white;
+    opacity: 0.9; }
+
+.bg-gradient {
+  /* fallback for old browsers */
+  background: #8e2de2;
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, #8e2de2, #4a00e0);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  color: white; }
+
+.modal-body {
+  padding-top: 0; }
+
+.modal-table-header {
+  padding: 18px 9px;
+  margin-bottom: 9px; }
+
+.modal-table-row {
+  padding: 9px; }
 
 /* Specific CSS */
 /*

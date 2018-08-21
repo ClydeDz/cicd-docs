@@ -28,7 +28,6 @@ function getReleaseDefinitionName(releaseJsonInput) {
     return releaseJsonInput.name;
 }
 
-
 function doesReleaseDefinitionDescriptionExist(releaseJsonInput) {
     return releaseJsonInput.description !== null;
 }
