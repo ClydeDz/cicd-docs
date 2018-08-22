@@ -4,14 +4,23 @@
             <div class="col-xs-12 col-md-8">
                 <div class="card">
                     <h2>{{ name }}</h2>
-                    <p>
-                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="24" />
+                    <div>
+                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="24" class="page-icon" />
                         <a href="{{ repository.url }}">{{ repository.name }}</a>
-                        &nbsp;
-                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ project.name }}" width="24" />
+                        <div class="buffer"></div>
+                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ project.name }}" width="24" class="page-icon" />
                         <a href="{{ project.url }}">{{ project.name }}</a>
-                    </p>
-                    <p>Project description: {{ project.description }}</p>
+                    </div>
+                    {{#project.doesDescriptionExists}}
+                    <p>{{ project.description }}</p>
+                    {{/project.doesDescriptionExists}}   
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img src="../images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}
+                            <div class="buffer"></div>
+                            <img src="../images/icons/name-format.png" width="32" /> Build number format: {{metaInformation.buildNumberFormat}}
+                        </div>
+                    </div>
                     <div>
                         {{#process}}
                         <div class="phase">
@@ -20,7 +29,7 @@
                                 <div class="col-xs-12">
                                     {{#isExecutionTypeParallelismNone}}
                                     <small>
-                                        <img src="../images/icons/parallelism.png" width="26" class="page-icon"/>  Parallelism: None
+                                        <img src="../images/icons/parallelism.png" width="26" class="page-icon" />  Parallelism: None
                                     </small>
                                     {{/isExecutionTypeParallelismNone}}
 
@@ -29,7 +38,7 @@
                                     {{/isExecutionTypeParallelismMultiConfig}}
 
                                     {{#isExecutionTypeParallelismMultiAgent}}
-                                    <small> <img src="../images/icons/parallelism.png" width="26" class="page-icon"/>  Parallelism: Multi-agent</small>
+                                    <small> <img src="../images/icons/parallelism.png" width="26" class="page-icon" />  Parallelism: Multi-agent</small>
                                     {{/isExecutionTypeParallelismMultiAgent}}
                                     <div class="buffer">&nbsp;</div>
                                     {{#isPhaseAgentful}}
@@ -41,7 +50,7 @@
                                     {{/isPhaseAgentless}}
                                 </div>
                             </div>
-                            <div class="steps">
+                            <div class="steps highlight-div" style="border-left-color:{{colorHexCode}};">
                                 {{#steps}}
                                 <div id="step-{{id}}" class="row">
                                     <div class="col-xs-1">
@@ -126,7 +135,7 @@
                     </p>
                     <p>
                         <img src="../images/icons/hosted.png" width="32" />  Is hosted: {{ queue.isHosted }}
-                    </p><br />
+                    </p>
                     <p>
                         {{#triggers.continousIntegration}}
                         <img src="../images/icons/ci.png" width="32"/> Continous integration enabled

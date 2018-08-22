@@ -51,9 +51,7 @@ body {
     }
 
     .steps {
-        padding: 1px 0px 0px 8px;
-        border-left: 6px solid #82a0a0;
-        margin-left: 4px;
+        
 
         .row {
             padding: 9px 0;
@@ -68,10 +66,24 @@ body {
 }
 
 .environment-slider {
+    .env-meta {
+        padding: 9px 0 18px 0;
+    }
+}
+.slick-slide img {
+    display: inline-block;
+}
+.highlight-div {
+    padding: 1px 0px 0px 8px;
+    border-left: 6px solid #82a0a0;
+    margin-left: 4px;
+}
+
+.environment-slider {
     .phase{
         margin-left:18px;
     }
     .steps{
-        width:96%;
+        width:94%;
     }
 }

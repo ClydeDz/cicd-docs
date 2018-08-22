@@ -6918,20 +6918,27 @@ body {
     font-size: medium; }
   .phase .phase-meta {
     padding: 9px 0 18px 0; }
-  .phase .steps {
-    padding: 1px 0px 0px 8px;
-    border-left: 6px solid #82a0a0;
-    margin-left: 4px; }
-    .phase .steps .row {
-      padding: 9px 0;
-      border-top: 1px dashed #f3f3f3;
-      margin: 0 4px; }
-      .phase .steps .row:last-child {
-        border-bottom: 1px dashed #f3f3f3; }
+  .phase .steps .row {
+    padding: 9px 0;
+    border-top: 1px dashed #f3f3f3;
+    margin: 0 4px; }
+    .phase .steps .row:last-child {
+      border-bottom: 1px dashed #f3f3f3; }
+
+.environment-slider .env-meta {
+  padding: 9px 0 18px 0; }
+
+.slick-slide img {
+  display: inline-block; }
+
+.highlight-div {
+  padding: 1px 0px 0px 8px;
+  border-left: 6px solid #82a0a0;
+  margin-left: 4px; }
 
 .environment-slider .phase {
   margin-left: 18px; }
 
 .environment-slider .steps {
-  width: 96%; }
+  width: 94%; }
 

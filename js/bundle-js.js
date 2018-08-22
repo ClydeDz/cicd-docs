@@ -1013,9 +1013,11 @@ function getBuildDefinitionAuthor(buildJsonInput) {
 }
 
 function getBuildDefinitionProject(buildJsonInput) {
+    let doesDescriptionExists = buildJsonInput.project.description !== undefined || buildJsonInput.project.description !== "";
     var _project = {
         name: buildJsonInput.project.name,
-        description: buildJsonInput.project.description,
+        doesDescriptionExists: doesDescriptionExists,
+        description: doesDescriptionExists ? buildJsonInput.project.description : "",
         url: buildJsonInput.project.url
     };
     return _project;
@@ -1090,7 +1092,8 @@ function getBuildDefinitionProcess(buildJsonInput) {
         _phasesArray["isExecutionTypeParallelismMultiAgent"] = currentPhase.target.executionOptions.type === 2;
         _phasesArray["phaseType"] = currentPhase.target.type;
         _phasesArray["isPhaseAgentful"] = currentPhase.target.type===1;
-        _phasesArray["isPhaseAgentless"] = currentPhase.target.type===2;
+        _phasesArray["isPhaseAgentless"] = currentPhase.target.type === 2;
+        _phasesArray["colorHexCode"] = random_rgba();
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        
@@ -1396,6 +1399,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
+        item["colorHexCode"] = random_rgba();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;
@@ -1431,6 +1435,9 @@ function getDeploymentPhaseDetailsForReleaseDefinition(currentEnvironment) {
         var currentPhase = currentEnvironment.deployPhases[phaseIndex];
 
         phaseItem["phaseType"] = currentPhase.phaseType;
+        phaseItem["isPhaseAgentful"] = currentPhase.phaseType === 1;
+        phaseItem["isPhaseAgentless"] = currentPhase.phaseType === 2;
+        phaseItem["isDeploymentGroup"] = currentPhase.phaseType === 4;
         phaseItem["name"] = currentPhase.name;
         phaseItem["rank"] = currentPhase.rank;
         phaseItem["steps"] = getStepsForEachPhaseInReleaseDefinition(currentPhase);
@@ -1684,6 +1691,20 @@ function exportPdf(buildReleaseJson) {
 }
 
 
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function random_rgba() {
+    let o = Math.round, r = Math.random, s = 255;
+    return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+}
 ////////////////////////////////////////
 //////   Image processing
 ////////////////////////////////////////

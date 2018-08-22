@@ -255,6 +255,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
+        item["colorHexCode"] = random_rgba();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;
@@ -290,6 +291,9 @@ function getDeploymentPhaseDetailsForReleaseDefinition(currentEnvironment) {
         var currentPhase = currentEnvironment.deployPhases[phaseIndex];
 
         phaseItem["phaseType"] = currentPhase.phaseType;
+        phaseItem["isPhaseAgentful"] = currentPhase.phaseType === 1;
+        phaseItem["isPhaseAgentless"] = currentPhase.phaseType === 2;
+        phaseItem["isDeploymentGroup"] = currentPhase.phaseType === 4;
         phaseItem["name"] = currentPhase.name;
         phaseItem["rank"] = currentPhase.rank;
         phaseItem["steps"] = getStepsForEachPhaseInReleaseDefinition(currentPhase);
