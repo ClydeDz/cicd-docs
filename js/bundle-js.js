@@ -1564,7 +1564,7 @@ function getConditonsForReleaseDefinition(currentEnvironment) {
 
     let conditions = {
         displayName: getConditionDisplayName(),
-        isConditionTypeIsAfterRelease: isConditionsSetToAfterEnvironment(), // defaults to false, which is after release
+        isConditionTypeIsAfterRelease: !isConditionsSetToAfterEnvironment(), // defaults to false, which is after release
         isConditionTypeIsAfterEnvironment: isConditionsSetToAfterEnvironment(),
         isConditionTypeManual: isConditionSetToManual(),
         environments: getEnvironmentNamesFromCondition()

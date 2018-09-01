@@ -118,3 +118,22 @@
 .modal-table-row {
     padding: 9px;
 }
+
+.trigger-conditions {
+    margin-left: 14px;
+    border-left: 4px solid rgba(133, 39, 226, 0.18823529411764706);
+    margin-top: 9px;
+    margin-bottom: 9px;
+    div {
+        padding-left: 9px;
+    }
+}
+
+.triggers, .artifacts {
+    div.row {
+        div {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+    }
+}

@@ -4,16 +4,19 @@
             <div class="col-xs-12 col-md-8">
                 <div class="card">
                     <h2>{{ name }}</h2>
-                    <div>
-                        <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="24" class="page-icon" />
-                        <a href="{{ repository.url }}">{{ repository.name }}</a>
-                        <div class="buffer"></div>
-                        <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ project.name }}" width="24" class="page-icon" />
-                        <a href="{{ project.url }}">{{ project.name }}</a>
-                    </div>
                     {{#project.doesDescriptionExists}}
                     <p>{{ project.description }}</p>
-                    {{/project.doesDescriptionExists}}   
+                    {{/project.doesDescriptionExists}}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img src="{{ repository.icon }}" id="repositoryIcon" alt="{{ repository.name }}" onerror="errorLoadingRepositoryIcon(this);" width="24" class="page-icon" />
+                            <a href="{{ repository.url }}">{{ repository.name }}</a>
+                            <div class="buffer"></div>
+                            <img src="/images/extend/platforms/vsts/icon.png" id="platformVstsIcon" alt="{{ project.name }}" width="24" class="page-icon" />
+                            <a href="{{ project.url }}">{{ project.name }}</a>
+                        </div>
+                       
+                    </div>
                     <div class="row">
                         <div class="col-xs-12">
                             <img src="../images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}

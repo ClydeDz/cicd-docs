@@ -4,11 +4,19 @@
             <div class="col-xs-12 col-md-8">
                 <div class="card">
                     <div>
-                        <h2>{{ name }}</h2> 
-                        des {{ description }}<br />
-                        url {{ url }}<br />
-                        Version {{ metaInformation.version }}<br />
-                        Version {{ metaInformation.releaseNameFormat }}<br />
+                        <h2>{{ name }}</h2>
+                        {{#doesReleaseDefinitionDescriptionExist}}
+                        <p>{{ description }}</p>
+                        {{/doesReleaseDefinitionDescriptionExist}}
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img src="../images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}
+                            <div class="buffer"></div>
+                            <img src="../images/icons/name-format.png" width="32" /> Release version format: {{metaInformation.releaseNameFormat}}
+                            <div class="buffer"></div>
+                            <img src="../images/icons/external-link.png" width="32" /> <a href="{{ url }}">Open online</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card">
@@ -43,6 +51,58 @@
                                         {{/isOwnerHuman}}
                                         <div class="buffer"></div>
                                         <img src="../images/icons/notification.png" width="32" /> {{emailRecipients}}
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <h4>Environment Triggers</h4>
+                                        {{#conditions.isConditionTypeIsAfterRelease}}
+                                        <small>  <img src="../images/icons/after-release.png" width="26" class="page-icon" />   {{ conditions.displayName }}</small>
+                                        {{/conditions.isConditionTypeIsAfterRelease}}
+                                        {{#conditions.isConditionTypeManual}}
+                                        <small>  <img src="../images/icons/manual.png" width="26" class="page-icon" />  {{ conditions.displayName }}</small>
+                                        {{/conditions.isConditionTypeManual}}
+                                        {{#conditions.isConditionTypeIsAfterEnvironment}}
+                                        <small>  <img src="../images/icons/after-environment.png" width="26" class="page-icon" />   {{ conditions.displayName }}</small>
+                                        {{/conditions.isConditionTypeIsAfterEnvironment}}
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <h4>Pre-deployment approvals</h4>
+                                        {{#preDeployApprovals}}
+                                        {{#isAutomated}}
+                                        <p> <img src="../images/icons/ci.png" width="26" class="page-icon" /> Automated</p>
+                                        {{/isAutomated}}
+                                        {{^isAutomated}}
+                                        <p> <img src="../images/icons/manual.png" width="26" class="page-icon" /> Manual</p>
+                                        <p>{{ approver.displayName }}</p>
+                                        <p>{{ approver.uniqueName }}</p>
+                                        {{/isAutomated}}
+                                        {{#isNotificationOn}}
+                                        <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned on</p>
+                                        {{/isNotificationOn}}
+                                        {{^isNotificationOn}}
+                                        <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned off</p>
+                                        {{/isNotificationOn}}
+                                        {{/preDeployApprovals}}
+                                    </div>
+                                    <div class="row2">
+                                        <div class="col-xs-12">
+                                            <h4>Post-deployment approvals</h4>
+                                            {{#postDeployApprovals}}
+                                            {{#isAutomated}}
+                                            <p> <img src="../images/icons/ci.png" width="26" class="page-icon" /> Automated</p>
+                                            {{/isAutomated}}
+                                            {{^isAutomated}}
+                                            <p> <img src="../images/icons/manual.png" width="26" class="page-icon" /> Manual</p>
+                                            <p>{{ approver.displayName }}</p>
+                                            <p>{{ approver.uniqueName }}</p>
+                                            {{/isAutomated}}
+                                            {{#isNotificationOn}}
+                                            <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned on</p>
+                                            {{/isNotificationOn}}
+                                            {{^isNotificationOn}}
+                                            <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned off</p>
+                                            {{/isNotificationOn}}
+                                            {{/postDeployApprovals}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +161,7 @@
                                     </div>
                                 </div>
                                 {{/deploymentPhases}}
-                            </div>
+                            </div>                           
                         </div>
                         {{/environments}}
                     </div>
@@ -164,7 +224,7 @@
                         <img src="../images/icons/time.png" width="32" /> {{modificationInformation.modifiedOn}}
                     </p>
                 </div>
-                <div class="card">
+                <div class="card artifacts">
                     <h2>Artifacts</h2>
                     {{#artifacts}}
                     <div class="row">
@@ -186,7 +246,7 @@
                     </div>
                     {{/artifacts}}
                 </div>
-                <div class="card">
+                <div class="card triggers">
                     <h2>Triggers</h2>
                     {{#isTriggerSetupForReleaseDefinition}}
                     {{#triggers}}
@@ -204,11 +264,16 @@
                         </div>
                         {{#triggerConditions}}
                         <div class="col-xs-12">
-                            <img src="../images/icons/code.png" width="32" /> Branch: {{sourceBranch}}
+                            <div class="trigger-conditions">
+                                <div>
+                                    <img src="../images/icons/code.png" width="32" /> Branch: {{sourceBranch}}
+                                </div>
+                                <div>
+                                    <img src="../images/icons/source.png" width="32" /> Use build definition branch: {{useBuildDefinitionBranch}}
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-12">
-                            <img src="../images/icons/source.png" width="32" /> Use build definition branch: {{useBuildDefinitionBranch}}
-                        </div>
+                        
                         {{/triggerConditions}}
                     </div>
                     {{/triggers}}
