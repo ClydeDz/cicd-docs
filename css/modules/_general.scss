@@ -15,6 +15,7 @@ html {
 body {
     @include linear-gradient(right, $amin);
     margin-bottom: 40px;
+    color: #757575;
 }
 
 .vcenter {
@@ -36,7 +37,7 @@ body {
 }
 
 .phase {
-    padding: 18px 0;
+    padding: 4px 0;
 
     h3 {
         color: #757575;
@@ -67,7 +68,7 @@ body {
 
 .environment-slider {
     .env-meta {
-        padding: 9px 0 18px 0;
+        padding: 9px 0 9px 0;
     }
 }
 .slick-slide img {

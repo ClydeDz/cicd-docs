@@ -6700,8 +6700,8 @@ body {
   background-color: #f1f1f1;
   color: #484848; }
 
-h1, h2, h3,
-.h1, .h2, .h3 {
+h1, h2, h3, h4,
+.h1, .h2, .h3, .h4 {
   color: #484848; }
 
 .nav {
@@ -6737,8 +6737,8 @@ body {
   background-color: #f1f1f1;
   color: #484848; }
 
-h1, h2, h3,
-.h1, .h2, .h3 {
+h1, h2, h3, h4,
+.h1, .h2, .h3, .h4 {
   color: #484848; }
 
 .card {
@@ -6750,6 +6750,13 @@ h1, h2, h3,
   border-radius: 3px; }
   .card h2 {
     color: #8e2de2; }
+  .card a {
+    border-bottom: 1px dashed #f1f1f1;
+    padding-bottom: 6px; }
+    .card a:hover, .card a:focus {
+      text-decoration: none;
+      border-bottom: 1px dashed #8e2de2;
+      color: #8e2de2; }
 
 .card-sq {
   background-color: white;
@@ -6774,6 +6781,9 @@ h1, h2, h3,
 @media (min-width: 1201px) {
   .container-fluid {
     max-width: 98%; } }
+
+#releaseView .card, #buildView .card {
+  min-height: 100px; }
 
 .the-famous-or {
   font-size: 12vh;
@@ -6855,9 +6865,33 @@ h1, h2, h3,
   .trigger-conditions div {
     padding-left: 9px; }
 
-.triggers div.row div, .artifacts div.row div {
-  padding-top: 2px;
-  padding-bottom: 2px; }
+.triggers div.row div, .artifacts div.row div, .queue-triggers div.row div, .card-content div.row div {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  line-height: 30px; }
+  .triggers div.row div:last-child, .artifacts div.row div:last-child, .queue-triggers div.row div:last-child, .card-content div.row div:last-child {
+    padding-left: 24px; }
+
+/* 
+ * AT A GLANCE 
+ */
+.at-a-glance img {
+  margin-top: -5px; }
+
+.at-a-glance span {
+  font-size: x-large; }
+
+.at-a-glance .row {
+  padding-top: 9px;
+  padding-bottom: 9px; }
+
+/* env sliders */
+.environment-slider-buttons {
+  margin-top: 16px; }
+
+.row-padding {
+  padding-top: 9px;
+  padding-bottom: 9px; }
 
 /* Specific CSS */
 /*
@@ -6868,8 +6902,8 @@ body {
   background-color: #f1f1f1;
   color: #484848; }
 
-h1, h2, h3,
-.h1, .h2, .h3 {
+h1, h2, h3, h4,
+.h1, .h2, .h3, .h4 {
   color: #484848; }
 
 /*
@@ -6905,7 +6939,8 @@ body {
   background: -webkit-linear-gradient(to right, #8e2de2, #4a00e0);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(to right, #8e2de2, #4a00e0);
-  margin-bottom: 40px; }
+  margin-bottom: 40px;
+  color: #757575; }
 
 .vcenter {
   display: inline-block;
@@ -6921,7 +6956,7 @@ body {
   display: inline-block; }
 
 .phase {
-  padding: 18px 0; }
+  padding: 4px 0; }
   .phase h3 {
     color: #757575;
     font-weight: normal;
@@ -6938,7 +6973,7 @@ body {
       border-bottom: 1px dashed #f3f3f3; }
 
 .environment-slider .env-meta {
-  padding: 9px 0 18px 0; }
+  padding: 9px 0 9px 0; }
 
 .slick-slide img {
   display: inline-block; }

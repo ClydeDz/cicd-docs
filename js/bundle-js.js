@@ -958,7 +958,8 @@ function getBuildJson(buildJsonInput) {
         queue: getBuildDefinitionQueue(buildJsonInput),
         variables: getBuildDefinitionVariables(buildJsonInput),
         process: getBuildDefinitionProcess(buildJsonInput),
-        metaInformation: getBuildMetaInformation(buildJsonInput)
+        metaInformation: getBuildMetaInformation(buildJsonInput),
+        stats: getStatsForBuildDefinition(buildJsonInput)
     };
     return _buildDef;
 }
@@ -1142,6 +1143,25 @@ function errorLoadingRepositoryIcon(e) {
     console.clear();
 }
 
+
+function getStatsForBuildDefinition(buildJsonInput) {
+    let countOfVariables = getBuildDefinitionVariables(buildJsonData).length;
+    let countOfPhases = buildJsonInput.process.phases.length;
+
+    let getCountOfTasks = () => {
+        let _countTasks = 0;
+        for (let pIndex = 0; pIndex < buildJsonInput.process.phases.length; pIndex++) {
+            _countTasks += buildJsonInput.process.phases[pIndex].steps.length;            
+        }
+        return _countTasks;
+    }
+
+    return statistics = {
+        tasks: getCountOfTasks(),
+        variables: countOfVariables,
+        phases: countOfPhases
+    };
+}
 //////////////////////////////////
 /////////    Release process
 //////////////////////////////////
@@ -1163,7 +1183,8 @@ function getReleaseJson(releaseJsonInput) {
         triggers: getReleaseDefinitionTriggers(releaseJsonInput),
         doVariablesExists: doVariablesExists(releaseJsonInput),
         variables: getReleaseDefinitionVariables(releaseJsonInput),
-        metaInformation: getReleaseMetaInformation(releaseJsonInput)
+        metaInformation: getReleaseMetaInformation(releaseJsonInput),
+        stats: getStatsForReleaseDefinition(releaseJsonInput)
     };
     return _releaseDef;
 }
@@ -1572,6 +1593,39 @@ function getConditonsForReleaseDefinition(currentEnvironment) {
 
     return conditions;
 
+}
+
+
+function getStatsForReleaseDefinition(releaseJson) {
+    let listOfVariables = getReleaseDefinitionVariables(releaseJson);
+    let countOfVariables = listOfVariables.length;
+    let countOfEnvironments = releaseJson.environments.length;
+    let listOfEnvironments = getReleaseDefinitionEnvironments(releaseJson);
+
+    let getCountOfPhasesTasks = () => {
+        let _countPhases = 0;
+        let _countTasks = 0;
+        for (let eIndex = 0; eIndex < listOfEnvironments.length; eIndex++) {
+            _countPhases += listOfEnvironments[eIndex].deploymentPhases.length;
+
+            for (let pIndex = 0; pIndex < listOfEnvironments[eIndex].deploymentPhases.length; pIndex++) {
+                _countTasks += listOfEnvironments[eIndex].deploymentPhases[pIndex].steps.length;
+            }
+        }
+        return count = {
+            phases: _countPhases,
+            tasks: _countTasks
+        };
+    }
+
+    let countOfPhasesTasks = getCountOfPhasesTasks();
+
+    return statistics = {
+        environments: countOfEnvironments,
+        tasks: countOfPhasesTasks.tasks,
+        variables: countOfVariables,
+        phases: countOfPhasesTasks.phases
+    };
 }
 
 function importTestData() {

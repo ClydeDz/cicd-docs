@@ -11,8 +11,20 @@
 .card {
     @include card-common();
     border-radius: 3px;
-    h2{
+
+    h2 {
         color: $purple;
+    }
+
+    a {
+        border-bottom: 1px dashed $light-gray;
+        padding-bottom: 6px;
+
+        &:hover, &:focus {
+            text-decoration: none;
+            border-bottom: 1px dashed $purple;
+            color: $purple;
+        }
     }
 }
 
@@ -42,6 +54,12 @@
 @media (min-width: 1201px) {
     .container-fluid {
         max-width: 98%;
+    }
+}
+
+#releaseView, #buildView {
+    .card {
+        min-height: 100px;
     }
 }
 
@@ -129,11 +147,48 @@
     }
 }
 
-.triggers, .artifacts {
+.triggers, .artifacts, .queue-triggers, .card-content {
     div.row {
         div {
-            padding-top: 2px;
-            padding-bottom: 2px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            line-height: 30px;
+
+            &:last-child {
+                padding-left: 24px;
+            }
         }
+    }
+}
+
+/* 
+ * AT A GLANCE 
+ */
+.at-a-glance {
+    img {
+        margin-top: -5px;
+    }
+
+    span {
+        font-size: x-large;
+    }
+
+    .row {
+        padding: {
+            top: 9px;
+            bottom: 9px;
+        }
+    }
+}
+
+/* env sliders */
+.environment-slider-buttons{
+    margin-top: 16px;
+}
+
+.row-padding {
+    padding: {
+        top: 9px;
+        bottom: 9px;
     }
 }

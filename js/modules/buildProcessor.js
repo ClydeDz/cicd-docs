@@ -17,7 +17,8 @@ function getBuildJson(buildJsonInput) {
         queue: getBuildDefinitionQueue(buildJsonInput),
         variables: getBuildDefinitionVariables(buildJsonInput),
         process: getBuildDefinitionProcess(buildJsonInput),
-        metaInformation: getBuildMetaInformation(buildJsonInput)
+        metaInformation: getBuildMetaInformation(buildJsonInput),
+        stats: getStatsForBuildDefinition(buildJsonInput)
     };
     return _buildDef;
 }
@@ -199,4 +200,24 @@ function errorLoadingQueueIcon(e) {
 function errorLoadingRepositoryIcon(e) {
     e.src = "/images/extend/repository/Other/icon.png";
     console.clear();
+}
+
+
+function getStatsForBuildDefinition(buildJsonInput) {
+    let countOfVariables = getBuildDefinitionVariables(buildJsonData).length;
+    let countOfPhases = buildJsonInput.process.phases.length;
+
+    let getCountOfTasks = () => {
+        let _countTasks = 0;
+        for (let pIndex = 0; pIndex < buildJsonInput.process.phases.length; pIndex++) {
+            _countTasks += buildJsonInput.process.phases[pIndex].steps.length;            
+        }
+        return _countTasks;
+    }
+
+    return statistics = {
+        tasks: getCountOfTasks(),
+        variables: countOfVariables,
+        phases: countOfPhases
+    };
 }

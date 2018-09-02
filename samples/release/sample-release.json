@@ -45,7 +45,10 @@
         "imageUrl": "https://sampleurl.visualstudio.com/_api/_common/identityImage?id=902bbca3-d3de-4dec-b353-6e45849e8b02",
         "descriptor": "msa.Zjc4MDUyMzEtYTA4Mi03YTNlLWIwYjEtZTkzYTQxYWI2ZTcx"
       },
-      "variables": { "fff": { "value": "ggg" } },
+      "variables": {
+        "fff": { "value": "ggg" },
+        "xyz": { "value": "xyz-value" }
+      },
       "variableGroups": [],
       "preDeployApprovals": {
         "approvals": [

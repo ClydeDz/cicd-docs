@@ -10,7 +10,7 @@
                         {{/doesReleaseDefinitionDescriptionExist}}
                     </div>
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-xs-12 row-padding">
                             <img src="../images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}
                             <div class="buffer"></div>
                             <img src="../images/icons/name-format.png" width="32" /> Release version format: {{metaInformation.releaseNameFormat}}
@@ -25,10 +25,12 @@
                         <div class="col-xs-6">
                             <h2>Environment</h2>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 text-right">
                             {{#releaseDefinitonHasMultipleEnvironments}}
-                            <button class="prev btn button">Prev</button>
-                            <button class="next btn button">Next</button>
+                            <div class="environment-slider-buttons">
+                                <button class="prev btn button">Prev</button>
+                                <button class="next btn button">Next</button>
+                            </div>
                             {{/releaseDefinitonHasMultipleEnvironments}}
                         </div>
                     </div>
@@ -37,69 +39,75 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <h3>{{ name }}</h3>
-                                <div class="row env-meta">
-                                    <div class="col-xs-12">
-                                        {{#isOwnerHuman}}
-                                        <img src="../images/icons/user.png" width="32" />
-                                        <a href="mailto:{{ownerEmail}}">
-                                            {{ ownerName }}
-                                        </a>
-                                        {{/isOwnerHuman}}
-                                        {{^isOwnerHuman}}
-                                        <img src="../images/icons/user-group.png" width="32" />
-                                        {{ ownerName }}
-                                        {{/isOwnerHuman}}
-                                        <div class="buffer"></div>
-                                        <img src="../images/icons/notification.png" width="32" /> {{emailRecipients}}
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <h4>Environment Triggers</h4>
-                                        {{#conditions.isConditionTypeIsAfterRelease}}
-                                        <small>  <img src="../images/icons/after-release.png" width="26" class="page-icon" />   {{ conditions.displayName }}</small>
-                                        {{/conditions.isConditionTypeIsAfterRelease}}
-                                        {{#conditions.isConditionTypeManual}}
-                                        <small>  <img src="../images/icons/manual.png" width="26" class="page-icon" />  {{ conditions.displayName }}</small>
-                                        {{/conditions.isConditionTypeManual}}
-                                        {{#conditions.isConditionTypeIsAfterEnvironment}}
-                                        <small>  <img src="../images/icons/after-environment.png" width="26" class="page-icon" />   {{ conditions.displayName }}</small>
-                                        {{/conditions.isConditionTypeIsAfterEnvironment}}
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <h4>Pre-deployment approvals</h4>
-                                        {{#preDeployApprovals}}
-                                        {{#isAutomated}}
-                                        <p> <img src="../images/icons/ci.png" width="26" class="page-icon" /> Automated</p>
-                                        {{/isAutomated}}
-                                        {{^isAutomated}}
-                                        <p> <img src="../images/icons/manual.png" width="26" class="page-icon" /> Manual</p>
-                                        <p>{{ approver.displayName }}</p>
-                                        <p>{{ approver.uniqueName }}</p>
-                                        {{/isAutomated}}
-                                        {{#isNotificationOn}}
-                                        <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned on</p>
-                                        {{/isNotificationOn}}
-                                        {{^isNotificationOn}}
-                                        <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned off</p>
-                                        {{/isNotificationOn}}
-                                        {{/preDeployApprovals}}
-                                    </div>
-                                    <div class="row2">
+                                <div>
+                                    <div class="row env-meta">
                                         <div class="col-xs-12">
-                                            <h4>Post-deployment approvals</h4>
-                                            {{#postDeployApprovals}}
+                                            {{#isOwnerHuman}}
+                                            <img src="../images/icons/user.png" width="32" />
+                                            <a href="mailto:{{ownerEmail}}">
+                                                {{ ownerName }}
+                                            </a>
+                                            {{/isOwnerHuman}}
+                                            {{^isOwnerHuman}}
+                                            <img src="../images/icons/user-group.png" width="32" />
+                                            {{ ownerName }}
+                                            {{/isOwnerHuman}}
+                                            <div class="buffer"></div>
+                                            <img src="../images/icons/notification.png" width="32" /> {{emailRecipients}}
+                                        </div>
+                                    </div>
+                                    <div class="row env-meta">
+                                        <div class="col-xs-12">
+                                            <h4>Environment Triggers</h4>
+                                            {{#conditions.isConditionTypeIsAfterRelease}}
+                                            <div>  <img src="../images/icons/after-release.png" width="32" class="page-icon" />   {{ conditions.displayName }}</div>
+                                            {{/conditions.isConditionTypeIsAfterRelease}}
+                                            {{#conditions.isConditionTypeManual}}
+                                            <div>  <img src="../images/icons/manual.png" width="32" class="page-icon" />  {{ conditions.displayName }}</div>
+                                            {{/conditions.isConditionTypeManual}}
+                                            {{#conditions.isConditionTypeIsAfterEnvironment}}
+                                            <div>  <img src="../images/icons/after-environment.png" width="32" class="page-icon" />   {{ conditions.displayName }}</div>
+                                            {{/conditions.isConditionTypeIsAfterEnvironment}}
+                                        </div>
+                                    </div>
+                                    <div class="row env-meta">
+                                        <div class="col-xs-12">
+                                            <h4>Pre-deployment approvals</h4>
+                                            {{#preDeployApprovals}}
                                             {{#isAutomated}}
-                                            <p> <img src="../images/icons/ci.png" width="26" class="page-icon" /> Automated</p>
+                                            <p> <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated</p>
                                             {{/isAutomated}}
                                             {{^isAutomated}}
-                                            <p> <img src="../images/icons/manual.png" width="26" class="page-icon" /> Manual</p>
+                                            <p> <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual</p>
                                             <p>{{ approver.displayName }}</p>
                                             <p>{{ approver.uniqueName }}</p>
                                             {{/isAutomated}}
                                             {{#isNotificationOn}}
-                                            <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned on</p>
+                                            <p> <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on</p>
                                             {{/isNotificationOn}}
                                             {{^isNotificationOn}}
-                                            <p> <img src="../images/icons/notification.png" width="26" class="page-icon" /> Notification turned off</p>
+                                            <p> <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off</p>
+                                            {{/isNotificationOn}}
+                                            {{/preDeployApprovals}}
+                                        </div>
+                                    </div>
+                                    <div class="row env-meta">
+                                        <div class="col-xs-12">
+                                            <h4>Post-deployment approvals</h4>
+                                            {{#postDeployApprovals}}
+                                            {{#isAutomated}}
+                                            <p> <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated</p>
+                                            {{/isAutomated}}
+                                            {{^isAutomated}}
+                                            <p> <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual</p>
+                                            <p>{{ approver.displayName }}</p>
+                                            <p>{{ approver.uniqueName }}</p>
+                                            {{/isAutomated}}
+                                            {{#isNotificationOn}}
+                                            <p> <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on</p>
+                                            {{/isNotificationOn}}
+                                            {{^isNotificationOn}}
+                                            <p> <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off</p>
                                             {{/isNotificationOn}}
                                             {{/postDeployApprovals}}
                                         </div>
@@ -161,7 +169,7 @@
                                     </div>
                                 </div>
                                 {{/deploymentPhases}}
-                            </div>                           
+                            </div>
                         </div>
                         {{/environments}}
                     </div>
@@ -171,77 +179,138 @@
                 <!-- At a glance -->
                 <div class="card">
                     <h2>At a glance</h2>
-                    <div class="row text-center">
-                        <div class="col-xs-4">
-                            <div class="text-center">
-                                <img src="../images/icons/environments.png" width="32" />  2
+                    <div class="at-a-glance">
+                        <div class="row text-center">
+                            <div class="col-xs-4">
+                                <div class="text-center">
+                                    <img src="../images/icons/environments.png" width="40" alt="Number of environments" />
+                                    <span>{{stats.environments}}</span>
+                                </div>
+                                <div class="text-center"><small>Environments</small></div>
                             </div>
-                            <div class="text-center">Environments</div>
+                            <div class="col-xs-4">
+                                <div class="text-center">
+                                    <img src="../images/icons/tasks.png" width="40" alt="Number of tasks" />
+                                    <span> {{stats.tasks}}</span>
+                                </div>
+                                <div class="text-center"><small>Tasks</small></div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="text-center">
+                                    <img src="../images/icons/variables.png" width="40" alt="Number of variables" />
+                                    <span>{{stats.variables}}</span>
+                                </div>
+                                <div class="text-center"><small>Variables</small></div>
+                            </div>
                         </div>
-                        <div class="col-xs-4">
-                            <div class="text-center">
-                                <img src="../images/icons/tasks.png" width="32" />  2
+                        <div class="row text-center">
+                            <div class="col-xs-12">
+                                <div class="text-center">
+                                    <img src="../images/icons/phases.png" width="40" alt="Number of phases" />
+                                    <span> {{stats.phases}}</span>
+                                </div>
+                                <div class="text-center"><small>Phases</small></div>
                             </div>
-                            <div class="text-center">Tasks</div>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="text-center">
-                                <img src="../images/icons/variables.png" width="32" />  2
-                            </div>
-                            <div class="text-center">Variables</div>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-xs-4">
-                            <div class="text-center">
-                                <img src="../images/icons/phases.png" width="32" />  2
-                            </div>
-                            <div class="text-center">Phases</div>
                         </div>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card card-content">
                     <h2>Created by</h2>
-                    <p>
-                        <img src="../images/icons/user.png" width="32" /> {{creationInformation.createdBy}}
-                    </p>
-                    <p>
-                        <img src="../images/icons/email.png" width="32" />  {{creationInformation.createdByEmail}}
-                    </p>
-                    <p>
-                        <img src="../images/icons/time.png" width="32" />{{creationInformation.createdOn}}
-                    </p>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/user.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{creationInformation.createdBy}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/email.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{creationInformation.createdByEmail}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/time.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{creationInformation.createdOn}}
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
+                <div class="card card-content">
                     <h2>Modified by</h2>
-                    <p>
-                        <img src="../images/icons/user.png" width="32" /> {{modificationInformation.modifiedBy}}
-                    </p>
-                    <p>
-                        <img src="../images/icons/email.png" width="32" /> {{modificationInformation.modifiedByEmail}}
-                    </p>
-                    <p>
-                        <img src="../images/icons/time.png" width="32" /> {{modificationInformation.modifiedOn}}
-                    </p>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/user.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{modificationInformation.modifiedBy}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/email.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{modificationInformation.modifiedByEmail}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <img src="../images/icons/time.png" width="32" />
+                        </div>
+                        <div class="col-xs-11">
+                            {{modificationInformation.modifiedOn}}
+                        </div>
+                    </div>
                 </div>
-                <div class="card artifacts">
+                <div class="card card-content">
                     <h2>Artifacts</h2>
                     {{#artifacts}}
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <img src="../images/icons/build.png" width="32" /> Artifact type: Build
+                    <div>
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/build.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                Artifact type: Build
+                            </div>
                         </div>
-                        <div class="col-xs-12">
-                            <img src="../images/icons/artifact.png" width="32" /> {{artifactAlias}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/artifact.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                {{artifactAlias}}
+                            </div>
                         </div>
-                        <div class="col-xs-12">
-                            <img src="../images/icons/project.png" width="32" />   {{project}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/project.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                {{project}}
+                            </div>
                         </div>
-                        <div class="col-xs-12">
-                            <img src="../images/icons/source.png" width="32" />  {{source}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/source.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                {{source}}
+                            </div>
                         </div>
-                        <div class="col-xs-12">
-                            <img src="../images/icons/version.png" width="32" /> {{defaultVersion}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/version.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                {{defaultVersion}}
+                            </div>
                         </div>
                     </div>
                     {{/artifacts}}
@@ -251,31 +320,55 @@
                     {{#isTriggerSetupForReleaseDefinition}}
                     {{#triggers}}
                     <div class="row">
-                        <div class="col-xs-12">
-                            <img src="../images/icons/artifact.png" width="32" />  {{artifactAlias}}
+                        <div class="col-xs-1">
+                            <img src="../images/icons/artifact.png" width="32" />
                         </div>
-                        <div class="col-xs-12">
-                            {{#isTriggerTypeContinuousDeployment}}
-                            <img src="../images/icons/continuous-delivery.png" width="32" /> Continuous deployment
-                            {{/isTriggerTypeContinuousDeployment}}
-                            {{#isTriggerTypePullRequest}}
-                            <img src="../images/icons/pull-request.png" width="32" />   Pull request
-                            {{/isTriggerTypePullRequest}}
+                        <div class="col-xs-11">
+                            {{artifactAlias}}
                         </div>
-                        {{#triggerConditions}}
-                        <div class="col-xs-12">
-                            <div class="trigger-conditions">
-                                <div>
-                                    <img src="../images/icons/code.png" width="32" /> Branch: {{sourceBranch}}
-                                </div>
-                                <div>
-                                    <img src="../images/icons/source.png" width="32" /> Use build definition branch: {{useBuildDefinitionBranch}}
-                                </div>
+                    </div>
+                    <div>
+                        {{#isTriggerTypeContinuousDeployment}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/continuous-delivery.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                Continuous deployment
                             </div>
                         </div>
-                        
-                        {{/triggerConditions}}
+                        {{/isTriggerTypeContinuousDeployment}}
+                        {{#isTriggerTypePullRequest}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/pull-request.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                Pull request
+                            </div>
+                        </div>
+                        {{/isTriggerTypePullRequest}}
                     </div>
+                    {{#triggerConditions}}
+                    <div class="trigger-conditions">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/code.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                Branch: {{sourceBranch}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <img src="../images/icons/source.png" width="32" />
+                            </div>
+                            <div class="col-xs-11">
+                                Use build definition branch: {{useBuildDefinitionBranch}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/triggerConditions}}
                     {{/triggers}}
                     {{/isTriggerSetupForReleaseDefinition}}
                     {{^isTriggerSetupForReleaseDefinition}}
