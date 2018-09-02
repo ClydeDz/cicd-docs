@@ -65,7 +65,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#buildView").html(output);
-           
+            animateCards();
         });
     }
     if (templateName === templateNames.RELEASE) {

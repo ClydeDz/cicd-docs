@@ -19,6 +19,7 @@
       "js/modules/buildReleaseProcessor.js",
       "js/modules/exportPdfBuildHelper.js",
       "js/modules/exportPdfReleaseHelper.js",
+      "js/modules/cardAnimations.js",
       "js/app.js"
     ]
   }
