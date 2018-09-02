@@ -28,6 +28,12 @@
     }
 }
 
+.modal{
+    h3{
+        color: $purple;
+    }
+}
+
 .card-sq {
     @include card-common();
     border-radius: 0;
@@ -96,8 +102,10 @@
     border: 1px solid white;
     color: white;
 
-    &:hover {
-        background-color: white;
+    &:hover, &:focus {
+        color: white;
+        opacity: 0.9;
+        @include linear-gradient(right, $amin);
     }
 }
 
@@ -112,7 +120,7 @@
     border: 1px solid white;
     color: white;
 
-    &:hover {
+    &:hover, &:focus {
         background-color: transparent;
         color: white;
         opacity: 0.9;
@@ -144,6 +152,9 @@
     margin-bottom: 9px;
     div {
         padding-left: 9px;
+        img{
+            margin-left: 4px;
+        }
     }
 }
 

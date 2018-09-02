@@ -6758,6 +6758,9 @@ h1, h2, h3, h4,
       border-bottom: 1px dashed #8e2de2;
       color: #8e2de2; }
 
+.modal h3 {
+  color: #8e2de2; }
+
 .card-sq {
   background-color: white;
   padding: 18px;
@@ -6819,8 +6822,15 @@ h1, h2, h3, h4,
   background: linear-gradient(to right, #8e2de2, #4a00e0);
   border: 1px solid white;
   color: white; }
-  .button-dark:hover {
-    background-color: white; }
+  .button-dark:hover, .button-dark:focus {
+    color: white;
+    opacity: 0.9;
+    /* fallback for old browsers */
+    background: #8e2de2;
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #8e2de2, #4a00e0);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #8e2de2, #4a00e0); }
 
 .button-dark-inverse {
   padding: 10px 14px;
@@ -6833,7 +6843,7 @@ h1, h2, h3, h4,
   background-color: transparent;
   border: 1px solid white;
   color: white; }
-  .button-inverse:hover {
+  .button-inverse:hover, .button-inverse:focus {
     background-color: transparent;
     color: white;
     opacity: 0.9; }
@@ -6864,6 +6874,8 @@ h1, h2, h3, h4,
   margin-bottom: 9px; }
   .trigger-conditions div {
     padding-left: 9px; }
+    .trigger-conditions div img {
+      margin-left: 4px; }
 
 .triggers div.row div, .artifacts div.row div, .queue-triggers div.row div, .card-content div.row div {
   padding-top: 3px;

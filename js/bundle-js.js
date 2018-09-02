@@ -977,7 +977,8 @@ function getBuildDefinitionUrl(buildJsonInput) {
 }
 
 function getBuildDefinitionCreationDate(buildJsonInput) {
-    return buildJsonInput.createdDate;
+    var createdOn = new Date(buildJsonInput.createdDate);
+    return createdOn.toLocaleString();
 }
 
 function getBuildDefinitionRepository(buildJsonInput) {
@@ -1206,8 +1207,10 @@ function getReleaseDefinitionUrl(releaseJsonInput) {
 }
 
 function getReleaseDefinitionCreationDate(releaseJsonInput) {
-    var _creation = {
-        createdOn: releaseJsonInput.createdOn,
+    let createdOn = new Date(releaseJsonInput.createdOn);
+
+    let _creation = {
+        createdOn: createdOn.toLocaleString(),
         createdBy: releaseJsonData.createdBy.displayName,
         createdByEmail: releaseJsonData.createdBy.uniqueName
     };
@@ -1215,8 +1218,10 @@ function getReleaseDefinitionCreationDate(releaseJsonInput) {
 }
 
 function getReleaseDefinitionModificationDate(releaseJsonInput) {
+    let modifiedOn = new Date(releaseJsonInput.modifiedOn);
+
     var _modification = {
-        modifiedOn: releaseJsonInput.modifiedOn,
+        modifiedOn: modifiedOn.toLocaleString(),
         modifiedBy: releaseJsonData.modifiedBy.displayName,
         modifiedByEmail: releaseJsonData.modifiedBy.uniqueName
     };

@@ -166,7 +166,12 @@
                             <img src="../images/icons/hosted.png" width="32" />
                         </div>
                         <div class="col-xs-11">
-                            Is hosted: {{ queue.isHosted }}
+                            {{#queue.isHosted}}
+                            Is hosted
+                            {{/queue.isHosted}}
+                            {{^queue.isHosted}}
+                            Not hosted
+                            {{/queue.isHosted}}
                         </div>
                     </div>
                     {{#triggers.continousIntegration}}

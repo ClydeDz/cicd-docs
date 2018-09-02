@@ -36,7 +36,8 @@ function getBuildDefinitionUrl(buildJsonInput) {
 }
 
 function getBuildDefinitionCreationDate(buildJsonInput) {
-    return buildJsonInput.createdDate;
+    var createdOn = new Date(buildJsonInput.createdDate);
+    return createdOn.toLocaleString();
 }
 
 function getBuildDefinitionRepository(buildJsonInput) {
