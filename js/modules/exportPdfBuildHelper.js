@@ -83,9 +83,11 @@ function printAuthorDetails(doc, _buildJson) {
 
     // Author
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${createdOn.toLocaleString()}.`);
+    doc.addImage(getUserIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Created by ${_buildJson.author.displayName} on ${createdOn.toLocaleString()}.`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
+    doc.addImage(getEmailIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Email: ${_buildJson.author.email}`);
 
     return doc;
 }
@@ -95,9 +97,11 @@ function printBuildMetaInformation(doc, _buildJson) {
     doc = setBodyStyle(doc);
     
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build number format: ${_buildJson.metaInformation.buildNumberFormat}`);
+    doc.addImage(getNameFormatIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Build number format: ${_buildJson.metaInformation.buildNumberFormat}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Version: ${_buildJson.metaInformation.version}`);
+    doc.addImage(getRevisionVersionNumberIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Version: ${_buildJson.metaInformation.version}`);
 
     return doc;
 }

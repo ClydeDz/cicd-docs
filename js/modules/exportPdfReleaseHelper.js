@@ -14,7 +14,7 @@ function printReleasePipelineHeading(doc) {
 function printReleaseNameHeading(doc, _releaseJson) {
     doc = setH3HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build name: ${_releaseJson.name}`);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Release name: ${_releaseJson.name}`);
     return doc;
 }
 
@@ -59,13 +59,37 @@ function printReleaseTriggers(doc, _releaseJson) {
     for (let triggerIndex = 0; triggerIndex < _releaseJson.triggers.length; triggerIndex++) {
         let currentTrigger = _releaseJson.triggers[triggerIndex];
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.addImage(getContinuousIntegrationEnabledIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
-        doc.text(pdf.xAxisValue + (pdf.printIconSize + 7), pdf.yAxisValue, `${currentTrigger.artifactAlias} of type ${currentTrigger.triggerType}`);
+        let triggerTypeIcon = () => {
+            if (currentTrigger.isTriggerTypeContinuousDeployment) {
+                return getContinuousIntegrationEnabledIcon();
+            }
+            if (currentTrigger.isTriggerTypePullRequest) {
+                return getPullRequestIcon();
+            }
+        };
+        let triggerTypeDisplayName = () => {
+            if (currentTrigger.isTriggerTypeContinuousDeployment) {
+                return "Continuous deployment";
+            }
+            if (currentTrigger.isTriggerTypePullRequest) {
+                return "Pull request";
+            }
+        };
+        //doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.addImage(triggerTypeIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + (pdf.printIconSize + 5), pdf.yAxisValue, `Trigger type: ${triggerTypeDisplayName()}`);
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.addImage(getArtifactIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + (pdf.printIconSize + 5), pdf.yAxisValue, `Artifact name: ${currentTrigger.artifactAlias}`);
 
         for (let conditionIndex = 0; conditionIndex < currentTrigger.triggerConditions.length; conditionIndex++) {
             let currentCondition = currentTrigger.triggerConditions[conditionIndex];
             doc = addNewBodyLine(doc, lineHeightType.BODY);
-            doc.text(pdf.xAxisValue * 2, pdf.yAxisValue, `Source branch ${currentCondition.sourceBranch} | Use build definition ${currentCondition.useBuildDefinitionBranch}`);
+            doc.addImage(getCodeIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+            doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Source branch: ${currentCondition.sourceBranch}`);
+            doc = addNewBodyLine(doc, lineHeightType.BODY);
+            doc.addImage(getSourceIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+            doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Use build definition: ${currentCondition.useBuildDefinitionBranch}`);
         }
     }
 
@@ -79,11 +103,21 @@ function printReleaseAuthorDetails(doc, _releaseJson) {
     var createdOn = new Date(_releaseJson.creationInformation.createdOn);
     var modifiedOn = new Date(_releaseJson.modificationInformation.modifiedOn);
 
-    // Author
+    // Created on
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Created by ${_releaseJson.creationInformation.createdBy} [${_releaseJson.creationInformation.createdByEmail}] on ${createdOn.toLocaleString()}.`);
+    doc.addImage(getUserIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Created by ${_releaseJson.creationInformation.createdBy} on ${createdOn.toLocaleString()}.`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Last modified by ${_releaseJson.modificationInformation.modifiedBy} [${_releaseJson.modificationInformation.modifiedByEmail}] on ${modifiedOn.toLocaleString()}.`);
+    doc.addImage(getEmailIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Email: ${_releaseJson.creationInformation.createdByEmail}`);
+
+    // Modified on
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.addImage(getUserIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Last modified by ${_releaseJson.modificationInformation.modifiedBy} on ${modifiedOn.toLocaleString()}.`);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.addImage(getEmailIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Email: ${_releaseJson.modificationInformation.modifiedByEmail}`);
     return doc;
 }
 
@@ -92,9 +126,12 @@ function printReleaseMetaInformation(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Release number format: ${_releaseJson.metaInformation.releaseNameFormat}`);
+    doc.addImage(getNameFormatIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Release number format: ${_releaseJson.metaInformation.releaseNameFormat}`);
+
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Version: ${_releaseJson.metaInformation.version}`);
+    doc.addImage(getRevisionVersionNumberIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Version: ${_releaseJson.metaInformation.version}`);
 
     return doc;
 }
@@ -148,11 +185,24 @@ function printReleaseArtifacts(doc, _releaseJson) {
     for (let artifactsIndex = 0; artifactsIndex < _releaseJson.artifacts.length; artifactsIndex++) {
         let currentArtifact = _releaseJson.artifacts[artifactsIndex];
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Artifact type: Build`);
+        doc.addImage(getArtifactBuildIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Artifact type: Build`);
+
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Artifact alias: ${currentArtifact.artifactAlias} | Version: ${currentArtifact.defaultVersion} `);
+        doc.addImage(getArtifactIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Artifact alias: ${currentArtifact.artifactAlias}`);
+
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Project: ${currentArtifact.project} | Source: ${currentArtifact.source} `);
+        doc.addImage(getProjectIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Project: ${currentArtifact.project}`);
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.addImage(getVersionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Version: ${currentArtifact.defaultVersion}`);
+
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.addImage(getSourceIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Source: ${currentArtifact.source}`);
     }
 
     return doc;
@@ -167,17 +217,25 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
 
         doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);        
         doc = setH4HeadingStyle(doc);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `${currentEnv.name.toString().toUpperCase()}`);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `#${environmentIndex+1} ${currentEnv.name.toString().toUpperCase()}`);
         doc = drawLine(doc, lineObjectLength.QUATER);
 
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Owner: ${currentEnv.ownerName}`);
+        let getOwnerIcon = () => {
+            if (currentEnv.isOwnerHuman) {
+                return getUserIcon();
+            }
+            return getUserGroupIcon();
+        };
+        doc.addImage(getOwnerIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Owner: ${currentEnv.ownerName}`);
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Notification recipients: ${currentEnv.emailRecipients}`);
+        doc.addImage(getNotificationIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Notification recipients: ${currentEnv.emailRecipients}`);
 
         doc = printReleaseDefinitionEnvironmentConditions(doc, currentEnv);
         doc = printPreDeploymentApprovalsForReleaseDefinition(doc, currentEnv);
@@ -218,7 +276,31 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phase type: ${currentPhase.phaseType}`);
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        let getPhaseIcon = () => {
+            if (currentPhase.isPhaseAgentful) {
+                return getServerIcon();
+            }
+            if (currentPhase.isPhaseAgentless) {
+                return getServerOffIcon();
+            }
+            if (currentPhase.isDeploymentGroup) {
+                return getDeploymentGroupIcon();
+            }
+        };
+        let getPhaseDisplayName = () => {
+            if (currentPhase.isPhaseAgentful) {
+                return "Runs on agent";
+            }
+            if (currentPhase.isPhaseAgentless) {
+                return "Runs on server";
+            }
+            if (currentPhase.isDeploymentGroup) {
+                return "Deployment group phase";
+            }
+        };
+        doc.addImage(getPhaseIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${getPhaseDisplayName()}`);
 
         doc = printTasksForEachPhaseInReleaseDefinition(doc, currentPhase);
     }
@@ -320,7 +402,22 @@ function printReleaseDefinitionEnvironmentConditions(doc, environment) {
 
     doc = setBodyStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${environment.conditions.displayName}`);
+    let getEnvConditionIcon = () => {
+        if (environment.conditions.isConditionTypeIsAfterRelease) {
+            return getAfterReleaseIcon();
+        }
+        if (environment.conditions.isConditionTypeIsAfterEnvironment) {
+            return getAfterEnvironmentIcon();
+        }
+        if (environment.conditions.isConditionTypeManual) {
+            return getManualIcon();
+        }
+    };
+    doc.addImage(getEnvConditionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${environment.conditions.displayName}`);
+
+    // If after environment, then return back as this is the only information that is printed.
+    // If not, then continue as there is more info required to be printed.
     if (!environment.conditions.isConditionTypeIsAfterEnvironment) {
         return doc;
     }
@@ -346,9 +443,13 @@ function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
     for (let depIndex = 0; depIndex < environment.preDeployApprovals.length; depIndex++) {
         let currentApproval = environment.preDeployApprovals[depIndex];
         let approvalType = currentApproval.isAutomated ? "Automatic approval" : "Manual approval";
+        let getApprovalIcon = () => {
+            return currentApproval.isAutomated ? getContinuousIntegrationEnabledIcon() : getManualIcon();
+        };
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${approvalType}`);
+        doc.addImage(getApprovalIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${approvalType}`);
 
         if (currentApproval.isAutomated) {
             continue;
@@ -371,9 +472,12 @@ function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
     for (let depIndex = 0; depIndex < environment.postDeployApprovals.length; depIndex++) {
         let currentApproval = environment.postDeployApprovals[depIndex];
         let approvalType = currentApproval.isAutomated ? "Automatic approval" : "Manual approval";
-
+        let getApprovalIcon = () => {
+            return currentApproval.isAutomated ? getContinuousIntegrationEnabledIcon() : getManualIcon();
+        };
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Type: ${approvalType}`);
+        doc.addImage(getApprovalIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${approvalType}`);
 
         if (currentApproval.isAutomated) {
             continue;
