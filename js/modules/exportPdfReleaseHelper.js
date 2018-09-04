@@ -46,6 +46,17 @@ function printEnvironmentHeading(doc) {
 ///////////////////////////////////////
 
 
+function printReleaseDescription(doc, _releaseJson) {
+    if (!_releaseJson.doesReleaseDefinitionDescriptionExist) {
+        return doc;
+    }
+
+    doc = setBodyStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `${_releaseJson.description}`);
+    return doc;
+}
+
 function printReleaseTriggers(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
@@ -279,10 +290,10 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         let getPhaseIcon = () => {
             if (currentPhase.isPhaseAgentful) {
-                return getServerIcon();
+                return getServerOffIcon();
             }
             if (currentPhase.isPhaseAgentless) {
-                return getServerOffIcon();
+                return getServerIcon();
             }
             if (currentPhase.isDeploymentGroup) {
                 return getDeploymentGroupIcon();

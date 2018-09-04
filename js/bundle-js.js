@@ -672,7 +672,8 @@ var pdf = {
     h4FontSize: 12,
     h5FontSize: 11,
     iconSize: 60,
-    printIconSize: 14
+    printImageIconSize: 13,
+    printIconSize: 15
 };
 
 var lineHeightType = {
@@ -1686,9 +1687,12 @@ function exportPdf(buildReleaseJson) {
         // BUILD PIPELINE SECTION
         doc = printBuildPipelineHeading(doc);
 
-        // BUILD NAME, REPOSITORY, PROJECT AND TRIGGERS
+        // BUILD NAME, REPOSITORY, PROJECT 
         doc = printBuildNameHeading(doc, _buildJson);
         doc = printRepositoryAndProject(doc, _buildJson);
+
+        // TRIGGERS
+        doc = printTriggersHeading(doc);
         doc = printTriggers(doc, _buildJson);
        
         // PROCESS / BUILD TASKS
@@ -1723,6 +1727,7 @@ function exportPdf(buildReleaseJson) {
 
         // RELEASE NAME, REPOSITORY, PROJECT AND TRIGGERS
         doc = printReleaseNameHeading(doc, _releaseJson);
+        doc = printReleaseDescription(doc, _releaseJson);
         doc = printTriggersHeading(doc);
         doc = printReleaseTriggers(doc, _releaseJson);
 
@@ -2111,12 +2116,13 @@ function printRepositoryAndProject(doc, _buildJson) {
 
     // Repo
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5 , pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 15, { url: _buildJson.project.url });
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
 
     return doc;
 }
@@ -2155,8 +2161,13 @@ function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), pdf.iconSize, pdf.iconSize);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.addImage(getHostedIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    let hostedDisplayText = _buildJson.queue.isHosted ? "Is hosted" : "Is not hosted";
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${hostedDisplayText}`);
     return doc;
 }
 
@@ -2367,7 +2378,6 @@ function printTriggers(doc, _buildJson) {
 
     // Triggers
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
     // CI
     doc.addImage(getContinousIntegrationIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
     doc.text(pdf.xAxisValue + (pdf.printIconSize + 7), pdf.yAxisValue, `Continuous integration ${getContinousIntegrationStatus()}`);
@@ -2459,6 +2469,17 @@ function printEnvironmentHeading(doc) {
 ////    Release pipeline contents
 ///////////////////////////////////////
 
+
+function printReleaseDescription(doc, _releaseJson) {
+    if (!_releaseJson.doesReleaseDefinitionDescriptionExist) {
+        return doc;
+    }
+
+    doc = setBodyStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `${_releaseJson.description}`);
+    return doc;
+}
 
 function printReleaseTriggers(doc, _releaseJson) {
     doc = setBodyStyle(doc);
@@ -2693,10 +2714,10 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         let getPhaseIcon = () => {
             if (currentPhase.isPhaseAgentful) {
-                return getServerIcon();
+                return getServerOffIcon();
             }
             if (currentPhase.isPhaseAgentless) {
-                return getServerOffIcon();
+                return getServerIcon();
             }
             if (currentPhase.isDeploymentGroup) {
                 return getDeploymentGroupIcon();

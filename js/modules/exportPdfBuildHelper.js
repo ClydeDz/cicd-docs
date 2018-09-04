@@ -67,12 +67,13 @@ function printRepositoryAndProject(doc, _buildJson) {
 
     // Repo
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(repositoryIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.textWithLink(_buildJson.repository.name, pdf.xAxisValue + 20, pdf.yAxisValue + 10, { url: _buildJson.repository.url });
     // Project
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5 , pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(platformVstsIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue + 5, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.textWithLink(_buildJson.project.name, pdf.xAxisValue + 20, pdf.yAxisValue + 15, { url: _buildJson.project.url });
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
 
     return doc;
 }
@@ -111,8 +112,13 @@ function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), pdf.iconSize, pdf.iconSize);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printIconSize, pdf.printIconSize);
+    doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc.addImage(getHostedIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+    let hostedDisplayText = _buildJson.queue.isHosted ? "Is hosted" : "Is not hosted";
+    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${hostedDisplayText}`);
     return doc;
 }
 
@@ -322,7 +328,6 @@ function printTriggers(doc, _buildJson) {
     };   
 
     // Triggers
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     // CI
     doc.addImage(getContinousIntegrationIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);

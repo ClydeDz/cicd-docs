@@ -38,7 +38,8 @@ var pdf = {
     h4FontSize: 12,
     h5FontSize: 11,
     iconSize: 60,
-    printIconSize: 14
+    printImageIconSize: 13,
+    printIconSize: 15
 };
 
 var lineHeightType = {

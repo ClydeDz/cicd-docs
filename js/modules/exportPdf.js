@@ -26,9 +26,12 @@ function exportPdf(buildReleaseJson) {
         // BUILD PIPELINE SECTION
         doc = printBuildPipelineHeading(doc);
 
-        // BUILD NAME, REPOSITORY, PROJECT AND TRIGGERS
+        // BUILD NAME, REPOSITORY, PROJECT 
         doc = printBuildNameHeading(doc, _buildJson);
         doc = printRepositoryAndProject(doc, _buildJson);
+
+        // TRIGGERS
+        doc = printTriggersHeading(doc);
         doc = printTriggers(doc, _buildJson);
        
         // PROCESS / BUILD TASKS
@@ -63,6 +66,7 @@ function exportPdf(buildReleaseJson) {
 
         // RELEASE NAME, REPOSITORY, PROJECT AND TRIGGERS
         doc = printReleaseNameHeading(doc, _releaseJson);
+        doc = printReleaseDescription(doc, _releaseJson);
         doc = printTriggersHeading(doc);
         doc = printReleaseTriggers(doc, _releaseJson);
 
