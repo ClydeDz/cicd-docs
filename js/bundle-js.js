@@ -657,7 +657,10 @@ var pdf = {
     bodyLineHeight: 18,
     headingLineHeight: 28,
     addNewBodyLine: function () {
-        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
+        this.yAxisValue = this.yAxisValue + (this.bodyLineHeight*1.1);
+    },
+    addNewHalfLine: function () {
+        this.yAxisValue = this.yAxisValue + (this.bodyLineHeight/2);
     },
     addNewHeadingLine: function () {
         this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
@@ -673,11 +676,16 @@ var pdf = {
     h5FontSize: 11,
     iconSize: 60,
     printImageIconSize: 13,
-    printIconSize: 15
+    printIconSize: 15,
+    lineHeightForIcon: 11,
+    getIconIndentValue: function () {
+        return this.printIconSize + 5;
+    }
 };
 
 var lineHeightType = {
     BODY: "BODY",
+    HALFLINE: "HALFLINE",
     HEADING: "HEADING",
     SUBHEADING: "SUBHEADING"
 };
@@ -1966,6 +1974,9 @@ function addNewBodyLine(doc, type) {
         if (type === lineHeightType.BODY) {
             pdf.addNewBodyLine();
         }
+        if (type === lineHeightType.HALFLINE) {
+            pdf.addNewHalfLine();
+        }
         if (type === lineHeightType.HEADING) {
             pdf.addNewHeadingLine();
         }
@@ -2146,7 +2157,7 @@ function printAuthorDetails(doc, _buildJson) {
 function printBuildMetaInformation(doc, _buildJson) {
     doc = setBodyStyle(doc);
     
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);   
     doc.addImage(getNameFormatIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
     doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Build number format: ${_buildJson.metaInformation.buildNumberFormat}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -2160,11 +2171,11 @@ function printBuildMetaInformation(doc, _buildJson) {
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), pdf.iconSize, pdf.iconSize);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.addImage(getHostedIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
     let hostedDisplayText = _buildJson.queue.isHosted ? "Is hosted" : "Is not hosted";
     doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${hostedDisplayText}`);
@@ -2177,7 +2188,7 @@ function printPhasesAndSteps(doc, _buildJson) {
         var currentPhase = _phases[phaseIndex];
 
         // Phase
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         // Triangle co-ords
         var triangle = {
@@ -2345,7 +2356,7 @@ function printVariables(doc, _buildJson) {
     }
 
     // Insert all the rows and columns into the table
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -2577,7 +2588,7 @@ function printReleaseVariables(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
     if (!_releaseJson.doVariablesExists) {
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `No variables found for this release pipeline.`);
         return doc;
     }
@@ -2599,7 +2610,7 @@ function printReleaseVariables(doc, _releaseJson) {
     }
 
     // Insert all the rows and columns into the table
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -2658,7 +2669,7 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         let getOwnerIcon = () => {
             if (currentEnv.isOwnerHuman) {
                 return getUserIcon();
@@ -2711,7 +2722,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         let getPhaseIcon = () => {
             if (currentPhase.isPhaseAgentful) {
                 return getServerOffIcon();

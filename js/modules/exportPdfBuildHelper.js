@@ -97,7 +97,7 @@ function printAuthorDetails(doc, _buildJson) {
 function printBuildMetaInformation(doc, _buildJson) {
     doc = setBodyStyle(doc);
     
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.BODY);   
     doc.addImage(getNameFormatIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
     doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `Build number format: ${_buildJson.metaInformation.buildNumberFormat}`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -111,11 +111,11 @@ function printBuildMetaInformation(doc, _buildJson) {
 function printQueueDetails(doc, _buildJson) {
     doc = setBodyStyle(doc);
     var agentIcon = getBase64Image(document.getElementById("queueAgentIcon"), pdf.iconSize, pdf.iconSize);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.addImage(agentIcon, 'JPEG', pdf.xAxisValue, pdf.yAxisValue, pdf.printImageIconSize, pdf.printImageIconSize);
     doc.text(pdf.xAxisValue + 20, pdf.yAxisValue + 10, `${_buildJson.queue.displayName} agent`);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.addImage(getHostedIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
     let hostedDisplayText = _buildJson.queue.isHosted ? "Is hosted" : "Is not hosted";
     doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${hostedDisplayText}`);
@@ -128,7 +128,7 @@ function printPhasesAndSteps(doc, _buildJson) {
         var currentPhase = _phases[phaseIndex];
 
         // Phase
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         // Triangle co-ords
         var triangle = {
@@ -296,7 +296,7 @@ function printVariables(doc, _buildJson) {
     }
 
     // Insert all the rows and columns into the table
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.autoTable(columns, rows,
         {
             theme: 'striped',

@@ -195,6 +195,9 @@ function addNewBodyLine(doc, type) {
         if (type === lineHeightType.BODY) {
             pdf.addNewBodyLine();
         }
+        if (type === lineHeightType.HALFLINE) {
+            pdf.addNewHalfLine();
+        }
         if (type === lineHeightType.HEADING) {
             pdf.addNewHeadingLine();
         }

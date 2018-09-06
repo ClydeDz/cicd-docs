@@ -23,7 +23,10 @@ var pdf = {
     bodyLineHeight: 18,
     headingLineHeight: 28,
     addNewBodyLine: function () {
-        this.yAxisValue = this.yAxisValue + this.bodyLineHeight;
+        this.yAxisValue = this.yAxisValue + (this.bodyLineHeight*1.1);
+    },
+    addNewHalfLine: function () {
+        this.yAxisValue = this.yAxisValue + (this.bodyLineHeight/2);
     },
     addNewHeadingLine: function () {
         this.yAxisValue = (this.yAxisValue + this.headingLineHeight) * 1.5;
@@ -39,11 +42,16 @@ var pdf = {
     h5FontSize: 11,
     iconSize: 60,
     printImageIconSize: 13,
-    printIconSize: 15
+    printIconSize: 15,
+    lineHeightForIcon: 11,
+    getIconIndentValue: function () {
+        return this.printIconSize + 5;
+    }
 };
 
 var lineHeightType = {
     BODY: "BODY",
+    HALFLINE: "HALFLINE",
     HEADING: "HEADING",
     SUBHEADING: "SUBHEADING"
 };

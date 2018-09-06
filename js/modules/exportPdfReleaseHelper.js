@@ -153,7 +153,7 @@ function printReleaseVariables(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
     if (!_releaseJson.doVariablesExists) {
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `No variables found for this release pipeline.`);
         return doc;
     }
@@ -175,7 +175,7 @@ function printReleaseVariables(doc, _releaseJson) {
     }
 
     // Insert all the rows and columns into the table
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
+    doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
@@ -234,7 +234,7 @@ function printReleaseDefinitionEnvironments(doc, _releaseJson) {
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         let getOwnerIcon = () => {
             if (currentEnv.isOwnerHuman) {
                 return getUserIcon();
@@ -287,7 +287,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
 
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         let getPhaseIcon = () => {
             if (currentPhase.isPhaseAgentful) {
                 return getServerOffIcon();
