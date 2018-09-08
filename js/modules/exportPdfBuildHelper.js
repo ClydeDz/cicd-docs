@@ -156,6 +156,12 @@ function printPhasesAndSteps(doc, _buildJson) {
 
         doc = printPhaseMetaInformation(doc, currentPhase);
 
+        if (currentPhase.steps.length === 0) {
+            doc = addNewBodyLine(doc, lineHeightType.BODY);
+            doc.text(pdf.xAxisValue, pdf.yAxisValue, `No tasks found in this phase.`);
+            return doc;
+        }
+
         // Steps
         // Construct a table containing all steps in each phase
         var columns = [
@@ -288,6 +294,13 @@ function printPhaseMetaInformation(doc, phase) {
 
 function printVariables(doc, _buildJson) {
     doc = setBodyStyle(doc);
+
+    if (_buildJson.variables.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No variables to display.`);
+        return doc;
+    }
+
     var columns = [
         { title: "Variable Name", dataKey: "key" },
         { title: "Variable Value", dataKey: "value" }
@@ -349,6 +362,13 @@ function printTriggers(doc, _buildJson) {
 
 function printRetentionRules(doc, _buildJson) {
     doc = setBodyStyle(doc);
+
+    if (_buildJson.retention.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No retention rules to display.`);
+        return doc;
+    }
+
     var columns = [
         { title: "Days to keep", dataKey: "key" },
         { title: "Minimum to keep", dataKey: "value" }
