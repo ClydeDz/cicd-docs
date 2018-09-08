@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////
-//////   Image processing
+//////   Image processing and icons
 ////////////////////////////////////////
 
 function getBase64Image(img, oImageWidth, oImageHeight) {
@@ -255,5 +255,106 @@ function addPageFooter(doc) {
         var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
         doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pageCounter} of ${totalPages} | ${footerText}`);
     }
+    return doc;
+}
+
+
+
+////////////////////////////////////////
+//////   Document headings
+////////////////////////////////////////
+
+// Site
+
+function printDocumentHeader(doc) {
+    doc = setH1HeadingStyle(doc);
+    var siteLogo = getBase64Image(document.getElementById("printSiteLogo"), null, null);
+    doc.addImage(siteLogo, 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 15, 35, 35);
+    doc.text(pdf.xAxisValue + 45, pdf.yAxisValue + 12, appName);
+    return doc;
+}
+
+// Release headlines
+
+function printReleasePipelineHeading(doc) {
+    doc = setH2HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'RELEASE PIPELINE');
+    doc = drawLine(doc, lineObjectLength.FULL);
+    return doc;
+}
+
+function printReleaseNameHeading(doc, _releaseJson) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Release name: ${_releaseJson.name}`);
+    return doc;
+}
+
+function printTriggersHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers');
+    return doc;
+}
+
+function printArtifactsHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Artifacts');
+    return doc;
+}
+
+
+function printEnvironmentHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Environments');
+    return doc;
+}
+
+// Build headlines
+
+function printBuildPipelineHeading(doc) {
+    doc = setH2HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.HEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'BUILD PIPELINE');
+    doc = drawLine(doc, lineObjectLength.FULL);
+    return doc;
+}
+
+function printBuildNameHeading(doc, _buildJson) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Build name: ${_buildJson.name}`);
+    return doc;
+}
+
+function printProcessHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Process');
+    return doc;
+}
+
+function printVariablesHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Variables');
+    return doc;
+}
+
+function printRetentionRulesHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Retention rules');
+    return doc;
+}
+
+function printMetaInformationHeading(doc) {
+    doc = setH3HeadingStyle(doc);
+    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
+    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Meta information');
     return doc;
 }

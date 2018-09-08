@@ -1,47 +1,4 @@
 ﻿////////////////////////////////////////
-//////   Release headlines
-////////////////////////////////////////
-
-function printReleasePipelineHeading(doc) {
-    doc = setH2HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'RELEASE PIPELINE');
-    doc = drawLine(doc, lineObjectLength.FULL);
-    return doc;
-}
-
-function printReleaseNameHeading(doc, _releaseJson) {
-    doc = setH3HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Release name: ${_releaseJson.name}`);
-    return doc;
-}
-
-function printTriggersHeading(doc) {
-    doc = setH3HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Triggers');
-    return doc;
-}
-
-function printArtifactsHeading(doc) {
-    doc = setH3HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Artifacts');
-    return doc;
-}
-
-
-function printEnvironmentHeading(doc) {
-    doc = setH3HeadingStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, 'Environments');
-    return doc;
-}
-
-
-////////////////////////////////////////
 ////    Release pipeline contents
 ///////////////////////////////////////
 

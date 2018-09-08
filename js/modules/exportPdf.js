@@ -8,9 +8,9 @@ function exportPdf(buildReleaseJson) {
     doc.setProperties({
         title: getFileName(),
         subject: 'Documentation for your VSTS CI/CD pipeline',
-        author: 'CI/CD Docs',
+        author: appName,
         keywords: 'documentation, cicd, devops, vsts',
-        creator: 'CI/CD Docs'
+        creator: appName
     });
 
     // DOCUMENT HEADER
