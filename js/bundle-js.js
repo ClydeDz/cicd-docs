@@ -1922,14 +1922,14 @@ function getSiteLogo() {
 
 function setH1HeadingStyle(doc) {
     doc.setFontSize(pdf.h1FontSize);
-    doc.setTextColor(39, 39, 39);
+    doc.setTextColor(72, 72, 72);
     return doc;
 }
 
 function setH2HeadingStyle(doc) {
     doc.setFontSize(pdf.h2FontSize);
     doc.setFontType('bold');
-    doc.setTextColor(39, 39, 39);
+    doc.setTextColor(72, 72, 72);
     return doc;
 }
 
@@ -2052,7 +2052,7 @@ function addPageFooter(doc) {
 function printDocumentHeader(doc) {
     doc = setH1HeadingStyle(doc);
     doc.addImage(getSiteLogo(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 20, 40, 40);
-    doc.text(pdf.xAxisValue + 45, pdf.yAxisValue + 12, appName);
+    doc.text(pdf.xAxisValue + 50, pdf.yAxisValue + 10, appName);
     return doc;
 }
 
