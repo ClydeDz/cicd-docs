@@ -124,6 +124,13 @@ function printQueueDetails(doc, _buildJson) {
 
 function printPhasesAndSteps(doc, _buildJson) {
     var _phases = _buildJson.process;
+
+    if (_phases.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No phases found.`);
+        return doc;
+    }
+
     for (phaseIndex = 0; phaseIndex < _phases.length; phaseIndex++) {
         var currentPhase = _phases[phaseIndex];
 

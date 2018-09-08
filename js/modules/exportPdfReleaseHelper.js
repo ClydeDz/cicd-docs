@@ -190,8 +190,12 @@ function printReleaseVariables(doc, _releaseJson) {
 
 function printReleaseArtifacts(doc, _releaseJson) {
     doc = setBodyStyle(doc);
-
-    //TODO: if no artifacts, display a message
+    
+    if (!_releaseJson.doeReleaseDefinitionHaveArtifacts) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No artifacts found.`);
+        return doc;
+    }
 
     for (let artifactsIndex = 0; artifactsIndex < _releaseJson.artifacts.length; artifactsIndex++) {
         let currentArtifact = _releaseJson.artifacts[artifactsIndex];
@@ -222,6 +226,12 @@ function printReleaseArtifacts(doc, _releaseJson) {
 
 function printReleaseDefinitionEnvironments(doc, _releaseJson) {
     doc = setBodyStyle(doc);
+
+    if (_releaseJson.environments.length===0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No release definitions found.`);
+        return doc;
+    }
 
     for (let environmentIndex = 0; environmentIndex < _releaseJson.environments.length; environmentIndex++) {
         let currentEnv = _releaseJson.environments[environmentIndex];
@@ -261,6 +271,12 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
     doc = setH5HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phases`);
+
+    if (environment.deploymentPhases.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No deployment phases found.`);
+        return doc;
+    }
 
     doc = setBodyStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -321,6 +337,12 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
 
 function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     doc = setBodyStyle(doc);
+
+    if (phase.steps.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No steps found.`);
+        return doc;
+    }
 
     // Steps
     // Construct a table containing all steps in each phase
@@ -451,6 +473,12 @@ function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
 
     doc = setBodyStyle(doc);
 
+    if (environment.preDeployApprovals.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No pre-deployment approvals found.`);
+        return doc;
+    }
+
     for (let depIndex = 0; depIndex < environment.preDeployApprovals.length; depIndex++) {
         let currentApproval = environment.preDeployApprovals[depIndex];
         let approvalType = currentApproval.isAutomated ? "Automatic approval" : "Manual approval";
@@ -479,6 +507,12 @@ function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Post deployment approvals`);
 
     doc = setBodyStyle(doc);
+
+    if (environment.postDeployApprovals.length === 0) {
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `No post-deployment approvals found.`);
+        return doc;
+    }
 
     for (let depIndex = 0; depIndex < environment.postDeployApprovals.length; depIndex++) {
         let currentApproval = environment.postDeployApprovals[depIndex];
