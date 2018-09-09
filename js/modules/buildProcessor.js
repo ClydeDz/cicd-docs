@@ -167,6 +167,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
             _stepsArray["enabled"] = currentStep.enabled;
             _stepsArray["continueOnError"] = currentStep.continueOnError;
             _stepsArray["id"] = currentStep.task.id;
+            _stepsArray["uniqueId"] = currentStep.task.id+"-"+j;
             _stepsArray["version"] = currentStep.task.versionSpec;
             _stepsArray["icon"] = `/images/extend/tasks/${currentStep.task.id}/icon.png`;
 

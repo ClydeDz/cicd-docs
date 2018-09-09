@@ -319,6 +319,7 @@ function getStepsForEachPhaseInReleaseDefinition(currentPhase) {
         var currentStep = currentPhase.workflowTasks[stepIndex];
 
         stepItem["id"] = currentStep.taskId;
+        stepItem["uniqueId"] = currentStep.taskId + "-" + stepIndex;
         stepItem["taskId"] = currentStep.taskId;
         stepItem["name"] = currentStep.name;
         stepItem["version"] = currentStep.version;

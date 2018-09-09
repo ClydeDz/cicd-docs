@@ -343,7 +343,8 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                         url: _stepIcon,
                         x: cell.textPos.x,
                         y: cell.textPos.y,
-                        id: phase.steps[taskIconIndex].id
+                        id: phase.steps[taskIconIndex].id,
+                        uniqueId: phase.steps[taskIconIndex].uniqueId
                     });
                     taskIconIndex++;
                 }
@@ -364,7 +365,7 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                     var imageNotAlreadyPrinted = true;
                     // Check if current image is already printed
                     for (var printImagesIndex = 0; printImagesIndex < printImages.length; printImagesIndex++) {
-                        if (images[i].id === printImages[printImagesIndex].id) {
+                        if (images[i].uniqueId === printImages[printImagesIndex].uniqueId) {
                             imageNotAlreadyPrinted = false;
                             break;
                         }
@@ -372,7 +373,7 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                     if (imageNotAlreadyPrinted) {
                         // If its not printed, push it to the printed images store
                         printImages.push({
-                            id: images[i].id
+                            uniqueId: images[i].uniqueId
                         });
 
                         doc.addImage(images[i].url, images[i].x, images[i].y, pdf.printIconSize, pdf.printIconSize);
