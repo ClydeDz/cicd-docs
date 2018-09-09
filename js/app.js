@@ -1,12 +1,13 @@
 ﻿$(document).ready(function () {
+   
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        console.log("no qs");
+        //console.log("no qs");
         footerView();
-        importTestData();
+        //importTestData();
         //TODO: uncomment this
-        //uploadScreenView();
+        uploadScreenView();
        
     }
     else {

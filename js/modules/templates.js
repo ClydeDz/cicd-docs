@@ -45,8 +45,10 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
             document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
+            document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
             document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-           
+            $("#buildJsonUploadControlStatus").hide();
+            $("#releaseJsonUploadControlStatus").hide();
         });
     }
     if (templateName === templateNames.VISUALIZE) {
@@ -74,15 +76,7 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
             //animateCards();
-            $('.environment-slider').slick({
-                dots: false,
-                infinite: true,
-                speed: 500,
-                fade: true,
-                cssEase: 'linear',
-                prevArrow: $('.prev'),
-                nextArrow: $('.next')
-            });
+            //loadEnvironmentSlider();
         });
     }
     
@@ -138,6 +132,7 @@ function goToRelease() {
     $("#buildView").hide();
     $("#releaseView").show();
     animateCards();
+    loadEnvironmentSlider();
     //releaseVisualizeScreenView();
 }
 
@@ -147,6 +142,17 @@ function downloadPdf(e) {
     exportPdf(visualizeJson);
 }
 
+function loadEnvironmentSlider() {
+    $('.environment-slider').slick({
+        dots: false,
+        infinite: true,
+        speed: 500,
+        fade: true,
+        cssEase: 'linear',
+        prevArrow: $('.prev'),
+        nextArrow: $('.next')
+    });
+}
 
 function __convertImgToDataURLviaCanvas(url) {
     var img = new Image();

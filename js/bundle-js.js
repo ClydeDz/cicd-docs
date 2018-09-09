@@ -759,8 +759,10 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
             document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
+            document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
             document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-           
+            $("#buildJsonUploadControlStatus").hide();
+            $("#releaseJsonUploadControlStatus").hide();
         });
     }
     if (templateName === templateNames.VISUALIZE) {
@@ -788,15 +790,7 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
             //animateCards();
-            $('.environment-slider').slick({
-                dots: false,
-                infinite: true,
-                speed: 500,
-                fade: true,
-                cssEase: 'linear',
-                prevArrow: $('.prev'),
-                nextArrow: $('.next')
-            });
+            //loadEnvironmentSlider();
         });
     }
     
@@ -852,6 +846,7 @@ function goToRelease() {
     $("#buildView").hide();
     $("#releaseView").show();
     animateCards();
+    loadEnvironmentSlider();
     //releaseVisualizeScreenView();
 }
 
@@ -861,6 +856,17 @@ function downloadPdf(e) {
     exportPdf(visualizeJson);
 }
 
+function loadEnvironmentSlider() {
+    $('.environment-slider').slick({
+        dots: false,
+        infinite: true,
+        speed: 500,
+        fade: true,
+        cssEase: 'linear',
+        prevArrow: $('.prev'),
+        nextArrow: $('.next')
+    });
+}
 
 function __convertImgToDataURLviaCanvas(url) {
     var img = new Image();
@@ -884,6 +890,7 @@ function __convertImgToDataURLviaCanvas(url) {
 function handleBuildFileUpload(e) {
     try {
         _handleJsonFile(e, buildJsonText);
+        $("#buildJsonUploadControlStatus").show();
     }
     catch (err) {
         console.error("Error: handleBuildFileUpload " + err.message);
@@ -893,6 +900,8 @@ function handleBuildFileUpload(e) {
 function handleReleaseFileUpload(e) {
     try {
         _handleJsonFile(e, releaseJsonText);
+        console.log("show rel status");
+        $("#releaseJsonUploadControlStatus").show();
     }
     catch (err) {
         console.error("Error: handleReleaseFileUpload " + err.message);
@@ -902,7 +911,8 @@ function handleReleaseFileUpload(e) {
 function _handleJsonFile(e, type) {
     var isBuildType = (type === buildJsonText);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
-        : document.getElementById('buildJsonUploadControl').value;
+        : document.getElementById('releaseJsonUploadControl').value;
+    console.log(fileName);
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     
     if (!e.target.files[0]) {
@@ -927,9 +937,11 @@ function _handleJsonFile(e, type) {
         }
         else {
             releaseJsonData = JSON.parse(event.target.result);
+            console.log("releaseJsonData");
+            console.log(releaseJsonData);
         }
         //TODO: remove the line below later
-        releaseJsonData = buildJsonData;
+        //releaseJsonData = buildJsonData;
     }
     reader.readAsText(e.target.files[0]);
 }
@@ -982,7 +994,7 @@ function getBuildJson(buildJsonInput) {
     var _buildDef = {
         name: getBuildDefinitionName(buildJsonInput),
         url: getBuildDefinitionUrl(buildJsonInput),
-        buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+        //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
         creationDate: getBuildDefinitionCreationDate(buildJsonInput),
         repository: getBuildDefinitionRepository(buildJsonInput),
         author: getBuildDefinitionAuthor(buildJsonInput),
@@ -2838,17 +2850,17 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     var rows = [];
 
     // Loop thru all the steps/tasks in each phase
-    for (stepsIndex = 0; stepsIndex < phase.steps.length; stepsIndex++) {
-        var currentStep = phase.steps[stepsIndex];
-        var _stepsArray = {};
+    for (let stepsIndex = 0; stepsIndex < phase.steps.length; stepsIndex++) {
+        let currentStep = phase.steps[stepsIndex];
+        let _stepsArray = {};
         _stepsArray["name"] = currentStep.name;
         _stepsArray["version"] = currentStep.version;
         rows.push(_stepsArray);
     }
 
     // Insert all steps into the table and display
-    var images = []; var printImages = []; var enabledStatusIconImages = [];
-    var taskIconIndex = 0; var enabledIconIndex = 0;
+    let images = []; let printImages = []; let enabledStatusIconImages = [];
+    let taskIconIndex = 0; let enabledIconIndex = 0;
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.autoTable(columns, rows,
         {
@@ -2862,6 +2874,8 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                 // Column 1 or index 0 (starts from 0) is 'task icon'
                 if (opts.column.index === 0) {
                     //TODO: add extra checks: currentPhase.steps[i] != undefined
+                    console.log("breaks here");
+                    console.log(phase.steps[taskIconIndex].id);
                     var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${phase.steps[taskIconIndex].id}`), 32, 32);
                     images.push({
                         url: _stepIcon,
@@ -3077,14 +3091,15 @@ $(window).scroll(function (event) {
 
 });
 $(document).ready(function () {
+   
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
     console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        console.log("no qs");
+        //console.log("no qs");
         footerView();
-        importTestData();
+        //importTestData();
         //TODO: uncomment this
-        //uploadScreenView();
+        uploadScreenView();
        
     }
     else {

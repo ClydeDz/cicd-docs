@@ -2,6 +2,7 @@
 function handleBuildFileUpload(e) {
     try {
         _handleJsonFile(e, buildJsonText);
+        $("#buildJsonUploadControlStatus").show();
     }
     catch (err) {
         console.error("Error: handleBuildFileUpload " + err.message);
@@ -11,6 +12,8 @@ function handleBuildFileUpload(e) {
 function handleReleaseFileUpload(e) {
     try {
         _handleJsonFile(e, releaseJsonText);
+        console.log("show rel status");
+        $("#releaseJsonUploadControlStatus").show();
     }
     catch (err) {
         console.error("Error: handleReleaseFileUpload " + err.message);
@@ -20,7 +23,8 @@ function handleReleaseFileUpload(e) {
 function _handleJsonFile(e, type) {
     var isBuildType = (type === buildJsonText);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
-        : document.getElementById('buildJsonUploadControl').value;
+        : document.getElementById('releaseJsonUploadControl').value;
+    console.log(fileName);
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     
     if (!e.target.files[0]) {
@@ -45,9 +49,11 @@ function _handleJsonFile(e, type) {
         }
         else {
             releaseJsonData = JSON.parse(event.target.result);
+            console.log("releaseJsonData");
+            console.log(releaseJsonData);
         }
         //TODO: remove the line below later
-        releaseJsonData = buildJsonData;
+        //releaseJsonData = buildJsonData;
     }
     reader.readAsText(e.target.files[0]);
 }

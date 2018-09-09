@@ -312,17 +312,17 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     var rows = [];
 
     // Loop thru all the steps/tasks in each phase
-    for (stepsIndex = 0; stepsIndex < phase.steps.length; stepsIndex++) {
-        var currentStep = phase.steps[stepsIndex];
-        var _stepsArray = {};
+    for (let stepsIndex = 0; stepsIndex < phase.steps.length; stepsIndex++) {
+        let currentStep = phase.steps[stepsIndex];
+        let _stepsArray = {};
         _stepsArray["name"] = currentStep.name;
         _stepsArray["version"] = currentStep.version;
         rows.push(_stepsArray);
     }
 
     // Insert all steps into the table and display
-    var images = []; var printImages = []; var enabledStatusIconImages = [];
-    var taskIconIndex = 0; var enabledIconIndex = 0;
+    let images = []; let printImages = []; let enabledStatusIconImages = [];
+    let taskIconIndex = 0; let enabledIconIndex = 0;
     doc = addNewBodyLine(doc, lineHeightType.BODY);
     doc.autoTable(columns, rows,
         {
@@ -336,6 +336,8 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                 // Column 1 or index 0 (starts from 0) is 'task icon'
                 if (opts.column.index === 0) {
                     //TODO: add extra checks: currentPhase.steps[i] != undefined
+                    console.log("breaks here");
+                    console.log(phase.steps[taskIconIndex].id);
                     var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${phase.steps[taskIconIndex].id}`), 32, 32);
                     images.push({
                         url: _stepIcon,

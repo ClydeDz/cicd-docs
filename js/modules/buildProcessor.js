@@ -7,7 +7,7 @@ function getBuildJson(buildJsonInput) {
     var _buildDef = {
         name: getBuildDefinitionName(buildJsonInput),
         url: getBuildDefinitionUrl(buildJsonInput),
-        buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+        //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
         creationDate: getBuildDefinitionCreationDate(buildJsonInput),
         repository: getBuildDefinitionRepository(buildJsonInput),
         author: getBuildDefinitionAuthor(buildJsonInput),
