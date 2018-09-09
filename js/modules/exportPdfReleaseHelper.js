@@ -110,7 +110,7 @@ function printReleaseVariables(doc, _releaseJson) {
     doc = setBodyStyle(doc);
 
     if (!_releaseJson.doVariablesExists) {
-        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `No variables found for this release pipeline.`);
         return doc;
     }
@@ -335,29 +335,32 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
             drawCell: function (cell, opts) {
                 // Column 1 or index 0 (starts from 0) is 'task icon'
                 if (opts.column.index === 0) {
-                    //TODO: add extra checks: currentPhase.steps[i] != undefined
-                    console.log("breaks here");
-                    console.log(phase.steps[taskIconIndex].id);
-                    var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${phase.steps[taskIconIndex].id}`), 32, 32);
-                    images.push({
-                        url: _stepIcon,
-                        x: cell.textPos.x,
-                        y: cell.textPos.y,
-                        id: phase.steps[taskIconIndex].id,
-                        uniqueId: phase.steps[taskIconIndex].uniqueId
-                    });
-                    taskIconIndex++;
+                    if (phase.steps[taskIconIndex] != undefined) {
+                        var _stepIcon = getBase64Image(document.getElementById(`stepIcon-${phase.steps[taskIconIndex].id}`), 32, 32);
+                        images.push({
+                            url: _stepIcon,
+                            x: cell.textPos.x,
+                            y: cell.textPos.y,
+                            id: phase.steps[taskIconIndex].id,
+                            uniqueId: phase.steps[taskIconIndex].uniqueId
+                        });
+                        taskIconIndex++;
+                    }
+                    
                 }
 
                 // Column 4 or index 3 (starts from 0) is 'enabled'
                 if (opts.column.index === 3) {
-                    var _enabledIcon = getEnabledDisabledIcon(phase.steps[enabledIconIndex].enabled);
-                    enabledStatusIconImages.push({
-                        url: _enabledIcon,
-                        x: cell.textPos.x,
-                        y: cell.textPos.y
-                    });
-                    enabledIconIndex++;
+                    if (phase.steps[enabledIconIndex] != undefined) {
+                        var _enabledIcon = getEnabledDisabledIcon(phase.steps[enabledIconIndex].enabled);
+                        enabledStatusIconImages.push({
+                            url: _enabledIcon,
+                            x: cell.textPos.x,
+                            y: cell.textPos.y
+                        });
+                        enabledIconIndex++;
+                    }
+                    
                 }
             },
             addPageContent: function () {
