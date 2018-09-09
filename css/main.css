@@ -6786,7 +6786,9 @@ h1, h2, h3, h4,
     max-width: 98%; } }
 
 #releaseView .card, #buildView .card {
-  min-height: 100px; }
+  min-height: 100px;
+  margin-top: 21px;
+  margin-bottom: 21px; }
 
 .the-famous-or {
   font-size: 12vh;

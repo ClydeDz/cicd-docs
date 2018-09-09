@@ -779,7 +779,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#buildView").html(output);
-            animateCards();
+            //animateCards();
         });
     }
     if (templateName === templateNames.RELEASE) {
@@ -787,6 +787,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
+            //animateCards();
             $('.environment-slider').slick({
                 dots: false,
                 infinite: true,
@@ -806,12 +807,20 @@ function _switchTemplate(templateName, jsonData) {
 //////////////////////////////////////////////
 
 function visualization_ViewLoad(combinedJson) {
-    //if (combinedJson.buildDef != null) {
-        buildVisualizeScreenView(); releaseVisualizeScreenView();
-    //}
-    //else {
-       
-    //}
+    let doesBuildDefinitionExist = combinedJson.buildDef != null;
+    let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
+
+    if (doesBuildDefinitionExist) {
+        buildVisualizeScreenView();
+    }
+    if (doesReleaseDefinitionExist) {
+        releaseVisualizeScreenView();
+    }
+
+    if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
+        //$("#releaseView").hide();
+        goToBuild();
+    }
 }
 
 //////////////////////////////////////////////
@@ -822,12 +831,28 @@ function goToVisualization(e) {
     visualizeScreenView();
 }
 
-function goToBuild(e) {
-    buildVisualizeScreenView();
+function goToBuild() {
+    $("#showBuildViewBtn").removeClass("button-inverse");
+    $("#showBuildViewBtn").addClass("button");
+    $("#showReleaseViewBtn").removeClass("button");
+    $("#showReleaseViewBtn").addClass("button-inverse");
+
+    $("#buildView").show();
+    animateCards();
+    $("#releaseView").hide();
+    //buildVisualizeScreenView();
 }
 
-function goToRelease(e) {
-    releaseVisualizeScreenView();
+function goToRelease() {
+    $("#showReleaseViewBtn").removeClass("button-inverse");
+    $("#showReleaseViewBtn").addClass("button");
+    $("#showBuildViewBtn").removeClass("button");
+    $("#showBuildViewBtn").addClass("button-inverse");
+
+    $("#buildView").hide();
+    $("#releaseView").show();
+    animateCards();
+    //releaseVisualizeScreenView();
 }
 
 function downloadPdf(e) {
