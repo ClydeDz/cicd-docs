@@ -132,9 +132,15 @@ function printPhasesAndSteps(doc, _buildJson) {
         doc.autoTable(columns, rows,
             {
                 theme: 'striped',
-                styles: { overflow: 'linebreak' },
+                styles: { overflow: 'linebreak', columnWidth: 'wrap'  },
                 headerStyles: { fillColor: [142, 45, 226] },
                 margin: { left: pdf.xAxisValue },
+                columnStyles: {
+                    icon: { columnWidth: 75 },
+                    name: { columnWidth: 290 },
+                    version: { columnWidth: 75 },
+                    enabled: { columnWidth: 75 }
+                },
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
@@ -272,7 +278,12 @@ function printVariables(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 260 },
+                value: { columnWidth: 255 },
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
@@ -340,7 +351,12 @@ function printRetentionRules(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 260 },
+                value: { columnWidth: 255 },
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;

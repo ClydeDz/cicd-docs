@@ -139,7 +139,13 @@ function printReleaseVariables(doc, _releaseJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 150 },
+                value: { columnWidth: 300 },
+                scope: { columnWidth: 75 }
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
@@ -458,7 +464,7 @@ function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
         }
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.approver.displayName}`);
     }
 
     return doc;
@@ -492,7 +498,7 @@ function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
         }
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.approver.displayName}`);
     }
 
     return doc;

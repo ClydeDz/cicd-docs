@@ -2060,7 +2060,7 @@ function getFileName() {
 
 function isPageAlmostOver(doc, currentYAxisValue) {
     var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    return currentYAxisValue >= (pageHeight - 100);
+    return currentYAxisValue >= (pageHeight - 85); //tested ok with 85
 }
 
 
@@ -2326,9 +2326,15 @@ function printPhasesAndSteps(doc, _buildJson) {
         doc.autoTable(columns, rows,
             {
                 theme: 'striped',
-                styles: { overflow: 'linebreak' },
+                styles: { overflow: 'linebreak', columnWidth: 'wrap'  },
                 headerStyles: { fillColor: [142, 45, 226] },
                 margin: { left: pdf.xAxisValue },
+                columnStyles: {
+                    icon: { columnWidth: 75 },
+                    name: { columnWidth: 290 },
+                    version: { columnWidth: 75 },
+                    enabled: { columnWidth: 75 }
+                },
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
                 drawCell: function (cell, opts) {
@@ -2466,7 +2472,12 @@ function printVariables(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 260 },
+                value: { columnWidth: 255 },
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
@@ -2534,7 +2545,12 @@ function printRetentionRules(doc, _buildJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 260 },
+                value: { columnWidth: 255 },
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
@@ -2684,7 +2700,13 @@ function printReleaseVariables(doc, _releaseJson) {
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
-            showHeader: 'everyPage'
+            showHeader: 'everyPage',
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                key: { columnWidth: 150 },
+                value: { columnWidth: 300 },
+                scope: { columnWidth: 75 }
+            }
         });
     pdf.yAxisValue = doc.autoTable.previous.finalY;
     return doc;
@@ -3003,7 +3025,7 @@ function printPreDeploymentApprovalsForReleaseDefinition(doc, environment) {
         }
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.approver.displayName}`);
     }
 
     return doc;
@@ -3037,7 +3059,7 @@ function printPostDeploymentApprovalsForReleaseDefinition(doc, environment) {
         }
 
         doc = addNewBodyLine(doc, lineHeightType.BODY);
-        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.displayName}`);
+        doc.text(pdf.xAxisValue, pdf.yAxisValue, `Requires approval by: ${currentApproval.approver.displayName}`);
     }
 
     return doc;
