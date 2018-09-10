@@ -143,7 +143,7 @@ function printReleaseVariables(doc, _releaseJson) {
             styles: { overflow: 'linebreak', columnWidth: 'wrap' },
             columnStyles: {
                 key: { columnWidth: 150 },
-                value: { columnWidth: 300 },
+                value: { columnWidth: 290 },
                 scope: { columnWidth: 75 }
             }
         });
@@ -333,7 +333,13 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     doc.autoTable(columns, rows,
         {
             theme: 'striped',
-            styles: { overflow: 'linebreak' },
+            styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+            columnStyles: {
+                icon: { columnWidth: 75 },
+                name: { columnWidth: 290 },
+                version: { columnWidth: 75 },
+                enabled: { columnWidth: 75 }
+            },
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
