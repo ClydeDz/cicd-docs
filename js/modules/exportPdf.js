@@ -4,6 +4,8 @@
 
 
 function exportPdf(buildReleaseJson) {
+    pdf.yAxisValue = 50;
+
     var doc = new jsPDF('p', 'pt', 'a4'); 
     doc.setProperties({
         title: getFileName(),
