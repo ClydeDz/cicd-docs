@@ -9,9 +9,9 @@ function exportPdf(buildReleaseJson) {
     var doc = new jsPDF('p', 'pt', 'a4'); 
     doc.setProperties({
         title: getFileName(),
-        subject: 'Documentation for your VSTS CI/CD pipeline',
+        subject: 'Documentation for your Azure DevOps CI/CD pipeline',
         author: appName,
-        keywords: 'documentation, cicd, devops, vsts',
+        keywords: 'documentation, cicd, devops, vsts, azure devops',
         creator: appName
     });
 

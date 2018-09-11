@@ -704,7 +704,7 @@ var lineObjectLength = {
 // App constants
 const appVersionNumber = "1.0.0";
 const appName = "CI/CD Docs";
-const appUrl = "https://clydedz.github.io/cicd-docs/";
+const appUrl = "http://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
 
 // Other constants
 const buildJsonUrlQueryStringKey = "buildjson";
@@ -1717,9 +1717,9 @@ function exportPdf(buildReleaseJson) {
     var doc = new jsPDF('p', 'pt', 'a4'); 
     doc.setProperties({
         title: getFileName(),
-        subject: 'Documentation for your VSTS CI/CD pipeline',
+        subject: 'Documentation for your Azure DevOps CI/CD pipeline',
         author: appName,
-        keywords: 'documentation, cicd, devops, vsts',
+        keywords: 'documentation, cicd, devops, vsts, azure devops',
         creator: appName
     });
 
@@ -2085,7 +2085,7 @@ function addPageFooter(doc) {
         doc.setPage(pageCounter);
         doc.setFontSize(7);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
+        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Icons by Icon8 | Version ${appVersionNumber}`;
         doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pageCounter} of ${totalPages} | ${footerText}`);
     }
     return doc;

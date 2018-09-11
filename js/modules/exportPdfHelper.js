@@ -265,7 +265,7 @@ function addPageFooter(doc) {
         doc.setPage(pageCounter);
         doc.setFontSize(7);
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Version ${appVersionNumber}`;
+        var footerText = `Generated using ${appName} [${appUrl}] on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} | Icons by Icon8 | Version ${appVersionNumber}`;
         doc.text(pdf.xAxisValue, pageHeight - 15, `Page ${pageCounter} of ${totalPages} | ${footerText}`);
     }
     return doc;
