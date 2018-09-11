@@ -182,6 +182,15 @@ function setBodyStyle(doc) {
     return doc;
 }
 
+function getTableYAxis(doc, yValue) {
+    if (isPageAlmostOver(doc, yValue)) {
+        return 50;
+    }
+    else {
+        return yValue;
+    }
+}
+
 function addNewBodyLine(doc, type) {
     if (isPageAlmostOver(doc, pdf.yAxisValue)) {
         doc.addPage('p', 'pt');

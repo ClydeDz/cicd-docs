@@ -2002,6 +2002,15 @@ function setBodyStyle(doc) {
     return doc;
 }
 
+function getTableYAxis(doc, yValue) {
+    if (isPageAlmostOver(doc, yValue)) {
+        return 50;
+    }
+    else {
+        return yValue;
+    }
+}
+
 function addNewBodyLine(doc, type) {
     if (isPageAlmostOver(doc, pdf.yAxisValue)) {
         doc.addPage('p', 'pt');
@@ -2332,10 +2341,10 @@ function printPhasesAndSteps(doc, _buildJson) {
                 headerStyles: { fillColor: [142, 45, 226] },
                 margin: { left: pdf.xAxisValue },
                 columnStyles: {
-                    icon: { columnWidth: 75 },
-                    name: { columnWidth: 290 },
-                    version: { columnWidth: 75 },
-                    enabled: { columnWidth: 75 }
+                    icon: { columnWidth: 60 },
+                    name: { columnWidth: 345 },
+                    version: { columnWidth: 50 },
+                    enabled: { columnWidth: 60 }
                 },
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
@@ -2826,7 +2835,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
         pdf.yAxisValue = triangle.y2;
-
+        console.log(currentPhase.name+"*****************");
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
@@ -2898,16 +2907,17 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
             theme: 'striped',
             styles: { overflow: 'linebreak', columnWidth: 'wrap' },
             columnStyles: {
-                icon: { columnWidth: 75 },
-                name: { columnWidth: 290 },
-                version: { columnWidth: 75 },
-                enabled: { columnWidth: 75 }
+                icon: { columnWidth: 60 },
+                name: { columnWidth: 345 },
+                version: { columnWidth: 50 },
+                enabled: { columnWidth: 60 }
             },
             headerStyles: { fillColor: [142, 45, 226] },
             margin: { left: pdf.xAxisValue },
             startY: pdf.yAxisValue,
             showHeader: 'everyPage',
             drawCell: function (cell, opts) {
+                
                 // Column 1 or index 0 (starts from 0) is 'task icon'
                 if (opts.column.index === 0) {
                     if (phase.steps[taskIconIndex] != undefined) {
@@ -2921,7 +2931,6 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                         });
                         taskIconIndex++;
                     }
-                    
                 }
 
                 // Column 4 or index 3 (starts from 0) is 'enabled'
@@ -2935,8 +2944,8 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
                         });
                         enabledIconIndex++;
                     }
-                    
                 }
+               
             },
             addPageContent: function () {
                 for (var i = 0; i < images.length; i++) {

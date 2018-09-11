@@ -136,10 +136,10 @@ function printPhasesAndSteps(doc, _buildJson) {
                 headerStyles: { fillColor: [142, 45, 226] },
                 margin: { left: pdf.xAxisValue },
                 columnStyles: {
-                    icon: { columnWidth: 75 },
-                    name: { columnWidth: 290 },
-                    version: { columnWidth: 75 },
-                    enabled: { columnWidth: 75 }
+                    icon: { columnWidth: 60 },
+                    name: { columnWidth: 345 },
+                    version: { columnWidth: 50 },
+                    enabled: { columnWidth: 60 }
                 },
                 startY: pdf.yAxisValue,
                 showHeader: 'everyPage',
