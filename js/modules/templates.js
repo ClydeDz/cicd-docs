@@ -17,8 +17,6 @@ function visualizeScreenView() {
 
 function buildVisualizeScreenView() {
     var visualizeJson = processJson();
-    console.log("buildVisualizeScreenView");
-    console.log(visualizeJson.buildDef);
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
@@ -165,7 +163,6 @@ function __convertImgToDataURLviaCanvas(url) {
         canvas.width = this.width;
         ctx.drawImage(this, 0, 0);
         dataURL = canvas.toDataURL();
-        console.log(dataURL);
         //callback(dataURL);
         canvas = null;
         return dataURL;        

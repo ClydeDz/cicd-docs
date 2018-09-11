@@ -731,8 +731,6 @@ function visualizeScreenView() {
 
 function buildVisualizeScreenView() {
     var visualizeJson = processJson();
-    console.log("buildVisualizeScreenView");
-    console.log(visualizeJson.buildDef);
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
@@ -879,7 +877,6 @@ function __convertImgToDataURLviaCanvas(url) {
         canvas.width = this.width;
         ctx.drawImage(this, 0, 0);
         dataURL = canvas.toDataURL();
-        console.log(dataURL);
         //callback(dataURL);
         canvas = null;
         return dataURL;        
@@ -900,7 +897,6 @@ function handleBuildFileUpload(e) {
 function handleReleaseFileUpload(e) {
     try {
         _handleJsonFile(e, releaseJsonText);
-        console.log("show rel status");
         $("#releaseJsonUploadControlStatus").show();
     }
     catch (err) {
@@ -912,21 +908,20 @@ function _handleJsonFile(e, type) {
     var isBuildType = (type === buildJsonText);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
         : document.getElementById('releaseJsonUploadControl').value;
-    console.log(fileName);
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     
     if (!e.target.files[0]) {
-        console.log("No file uploaded");   
+        console.error("No file uploaded");   
         //TODO: showErrorToast(errorCodes.noFileUploaded, ["" + ext]);
     }
 
     if (e.target.files[0].size > 5242880) {
-        console.log("File size exceeded");        
+        console.error("File size exceeded");        
         //TODO: showErrorToast(errorCodes.fileSizeLimit, [""]);
     }
     
     if (fileExtension !== "json") {
-        console.log("File extension not supported"); 
+        console.error("File extension not supported"); 
         //TODO: showErrorToast(errorCodes.extNotSupported, ["" + ext]);
     }
 
@@ -937,11 +932,7 @@ function _handleJsonFile(e, type) {
         }
         else {
             releaseJsonData = JSON.parse(event.target.result);
-            console.log("releaseJsonData");
-            console.log(releaseJsonData);
         }
-        //TODO: remove the line below later
-        //releaseJsonData = buildJsonData;
     }
     reader.readAsText(e.target.files[0]);
 }
@@ -1690,7 +1681,7 @@ function importTestData() {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
+            console.error("Request Failed: " + err);
         });
 }
 function importTestReleaseData() {
@@ -1702,7 +1693,7 @@ function importTestReleaseData() {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
+            console.error("Request Failed: " + err);
         });
 }
 
@@ -2835,7 +2826,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
         pdf.yAxisValue = triangle.y2;
-        console.log(currentPhase.name+"*****************");
+
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
@@ -3143,9 +3134,7 @@ $(window).scroll(function (event) {
 $(document).ready(function () {
    
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        //console.log("no qs");
         footerView();
         //importTestData();
         //TODO: uncomment this
@@ -3153,7 +3142,7 @@ $(document).ready(function () {
        
     }
     else {
-        console.log("foud qs");
+        // Found query string
     }
     
 });

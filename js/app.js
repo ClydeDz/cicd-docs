@@ -1,9 +1,7 @@
 ﻿$(document).ready(function () {
    
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    console.log(buildJsonUrl);
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        //console.log("no qs");
         footerView();
         //importTestData();
         //TODO: uncomment this
@@ -11,7 +9,7 @@
        
     }
     else {
-        console.log("foud qs");
+        // Found query string
     }
     
 });

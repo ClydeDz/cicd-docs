@@ -263,7 +263,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
         pdf.yAxisValue = triangle.y2;
-        console.log(currentPhase.name+"*****************");
+
         doc = setBodyStyle(doc);
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc = addNewBodyLine(doc, lineHeightType.HALFLINE);

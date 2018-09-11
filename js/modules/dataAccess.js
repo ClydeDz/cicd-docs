@@ -8,7 +8,7 @@ function importTestData() {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
+            console.error("Request Failed: " + err);
         });
 }
 function importTestReleaseData() {
@@ -20,6 +20,6 @@ function importTestReleaseData() {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
+            console.error("Request Failed: " + err);
         });
 }

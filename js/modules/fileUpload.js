@@ -12,7 +12,6 @@ function handleBuildFileUpload(e) {
 function handleReleaseFileUpload(e) {
     try {
         _handleJsonFile(e, releaseJsonText);
-        console.log("show rel status");
         $("#releaseJsonUploadControlStatus").show();
     }
     catch (err) {
@@ -24,21 +23,20 @@ function _handleJsonFile(e, type) {
     var isBuildType = (type === buildJsonText);    
     var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
         : document.getElementById('releaseJsonUploadControl').value;
-    console.log(fileName);
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     
     if (!e.target.files[0]) {
-        console.log("No file uploaded");   
+        console.error("No file uploaded");   
         //TODO: showErrorToast(errorCodes.noFileUploaded, ["" + ext]);
     }
 
     if (e.target.files[0].size > 5242880) {
-        console.log("File size exceeded");        
+        console.error("File size exceeded");        
         //TODO: showErrorToast(errorCodes.fileSizeLimit, [""]);
     }
     
     if (fileExtension !== "json") {
-        console.log("File extension not supported"); 
+        console.error("File extension not supported"); 
         //TODO: showErrorToast(errorCodes.extNotSupported, ["" + ext]);
     }
 
@@ -49,11 +47,7 @@ function _handleJsonFile(e, type) {
         }
         else {
             releaseJsonData = JSON.parse(event.target.result);
-            console.log("releaseJsonData");
-            console.log(releaseJsonData);
         }
-        //TODO: remove the line below later
-        //releaseJsonData = buildJsonData;
     }
     reader.readAsText(e.target.files[0]);
 }
