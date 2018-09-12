@@ -1,0 +1,5 @@
+CI/CD Docs
+-----------
+
+CI/CD Docs (c) 2018 Clyde D'Souza [https://clydedsouza.net]
+Icons by Icon8 [https://icons8.com/icon/new-icons/all]
