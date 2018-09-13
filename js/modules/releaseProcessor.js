@@ -3,6 +3,9 @@
 //////////////////////////////////
 
 function getReleaseJson(releaseJsonInput) {
+    if (isEmpty(releaseJsonInput)) {
+        return null;
+    }
 
     var _releaseDef = {
         name: getReleaseDefinitionName(releaseJsonInput),

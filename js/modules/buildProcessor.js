@@ -3,6 +3,9 @@
 //////////////////////////////////
 
 function getBuildJson(buildJsonInput) {
+    if (isEmpty(buildJsonInput)) {
+        return null;
+    }
 
     var _buildDef = {
         name: getBuildDefinitionName(buildJsonInput),

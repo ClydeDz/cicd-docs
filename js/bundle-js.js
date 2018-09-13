@@ -885,56 +885,59 @@ function __convertImgToDataURLviaCanvas(url) {
 }
 
 function handleBuildFileUpload(e) {
-    try {
-        _handleJsonFile(e, buildJsonText);
-        $("#buildJsonUploadControlStatus").show();
-    }
-    catch (err) {
-        console.error("Error: handleBuildFileUpload " + err.message);
-    }
+    _handleJsonFile(e, buildJsonText); 
 }
 
 function handleReleaseFileUpload(e) {
-    try {
-        _handleJsonFile(e, releaseJsonText);
-        $("#releaseJsonUploadControlStatus").show();
-    }
-    catch (err) {
-        console.error("Error: handleReleaseFileUpload " + err.message);
-    }
+    _handleJsonFile(e, releaseJsonText);   
 }
 
 function _handleJsonFile(e, type) {
-    var isBuildType = (type === buildJsonText);    
-    var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
-        : document.getElementById('releaseJsonUploadControl').value;
-    var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-    
-    if (!e.target.files[0]) {
-        console.error("No file uploaded");   
-        //TODO: showErrorToast(errorCodes.noFileUploaded, ["" + ext]);
-    }
+    try {
+        var isBuildType = (type === buildJsonText);
+        var fileName = isBuildType ? document.getElementById('buildJsonUploadControl').value
+            : document.getElementById('releaseJsonUploadControl').value;
+        var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
-    if (e.target.files[0].size > 5242880) {
-        console.error("File size exceeded");        
-        //TODO: showErrorToast(errorCodes.fileSizeLimit, [""]);
+        if (!e.target.files[0]) {
+            showError("No file detected. Please try uploading a .json file.");
+            return;
+        }
+
+        if (e.target.files[0].size > 5242880) {
+            showError("The uploaded file exceeds the file size limit of 5MB. Please try uploading a smaller file instead.");
+            return;
+        }
+
+        if (fileExtension !== "json") {
+            showError(`${fileExtension} file extension isn't supported at this stage. Please try uploading a .json file instead.`);
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            try {
+                if (isBuildType) {
+                    buildJsonData = JSON.parse(event.target.result);
+                    $("#buildJsonUploadControlStatus").show();
+                }
+                else {
+                    releaseJsonData = JSON.parse(event.target.result);
+                    $("#releaseJsonUploadControlStatus").show();
+                }
+            } catch (error) {
+                showError("An error occured while trying to process the JSON file. Could you please check the file once again and try later?");
+                return;
+            }
+            
+        }
+        reader.readAsText(e.target.files[0]);
+    }
+    catch (error) {
+        showError("An error occured while trying to upload the file. Please try again later.");
+        return;
     }
     
-    if (fileExtension !== "json") {
-        console.error("File extension not supported"); 
-        //TODO: showErrorToast(errorCodes.extNotSupported, ["" + ext]);
-    }
-
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        if (isBuildType) {
-            buildJsonData = JSON.parse(event.target.result);
-        }
-        else {
-            releaseJsonData = JSON.parse(event.target.result);
-        }
-    }
-    reader.readAsText(e.target.files[0]);
 }
 
 
@@ -970,9 +973,12 @@ function getUrlVars() {
 
 
 function processJson() {
+    let isBuildDefinitionUploaded =  !isEmpty(buildJsonData);
+    let isReleaseDefinitionUploaded = !isEmpty(releaseJsonData);
+    
     var combinedJson = {
-        buildDef: getBuildJson(buildJsonData),
-        releaseDef: getReleaseJson(releaseJsonData)
+        buildDef: isBuildDefinitionUploaded ? getBuildJson(buildJsonData) : null,
+        releaseDef: isReleaseDefinitionUploaded ? getReleaseJson(releaseJsonData) : null
     }
     return combinedJson;
 }
@@ -981,6 +987,9 @@ function processJson() {
 //////////////////////////////////
 
 function getBuildJson(buildJsonInput) {
+    if (isEmpty(buildJsonInput)) {
+        return null;
+    }
 
     var _buildDef = {
         name: getBuildDefinitionName(buildJsonInput),
@@ -1206,6 +1215,9 @@ function getStatsForBuildDefinition(buildJsonInput) {
 //////////////////////////////////
 
 function getReleaseJson(releaseJsonInput) {
+    if (isEmpty(releaseJsonInput)) {
+        return null;
+    }
 
     var _releaseDef = {
         name: getReleaseDefinitionName(releaseJsonInput),
@@ -2188,9 +2200,12 @@ function printMetaInformationHeading(doc) {
 
 
 function processJson() {
+    let isBuildDefinitionUploaded =  !isEmpty(buildJsonData);
+    let isReleaseDefinitionUploaded = !isEmpty(releaseJsonData);
+    
     var combinedJson = {
-        buildDef: getBuildJson(buildJsonData),
-        releaseDef: getReleaseJson(releaseJsonData)
+        buildDef: isBuildDefinitionUploaded ? getBuildJson(buildJsonData) : null,
+        releaseDef: isReleaseDefinitionUploaded ? getReleaseJson(releaseJsonData) : null
     }
     return combinedJson;
 }
@@ -3146,5 +3161,18 @@ $(document).ready(function () {
     }
     
 });
+
+function showError(errorMessage) {
+    $("#errorModal").modal("show");
+    $("#errorMessage").html(errorMessage);
+}
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 var jsonObj;
