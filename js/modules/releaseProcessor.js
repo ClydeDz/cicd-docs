@@ -6,26 +6,31 @@ function getReleaseJson(releaseJsonInput) {
     if (isEmpty(releaseJsonInput)) {
         return null;
     }
-
-    var _releaseDef = {
-        name: getReleaseDefinitionName(releaseJsonInput),
-        doesReleaseDefinitionDescriptionExist: doesReleaseDefinitionDescriptionExist(releaseJsonData),
-        description: getReleaseDefinitionDescription(releaseJsonInput),
-        url: getReleaseDefinitionUrl(releaseJsonInput),
-        creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
-        modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
-        releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
-        environments: getReleaseDefinitionEnvironments(releaseJsonInput),
-        doeReleaseDefinitionHaveArtifacts: doeReleaseDefinitionHaveArtifacts(releaseJsonData),
-        artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
-        isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
-        triggers: getReleaseDefinitionTriggers(releaseJsonInput),
-        doVariablesExists: doVariablesExists(releaseJsonInput),
-        variables: getReleaseDefinitionVariables(releaseJsonInput),
-        metaInformation: getReleaseMetaInformation(releaseJsonInput),
-        stats: getStatsForReleaseDefinition(releaseJsonInput)
-    };
-    return _releaseDef;
+    try {
+        var _releaseDef = {
+            name: getReleaseDefinitionName(releaseJsonInput),
+            doesReleaseDefinitionDescriptionExist: doesReleaseDefinitionDescriptionExist(releaseJsonData),
+            description: getReleaseDefinitionDescription(releaseJsonInput),
+            url: getReleaseDefinitionUrl(releaseJsonInput),
+            creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
+            modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
+            releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
+            environments: getReleaseDefinitionEnvironments(releaseJsonInput),
+            doeReleaseDefinitionHaveArtifacts: doeReleaseDefinitionHaveArtifacts(releaseJsonData),
+            artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
+            isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
+            triggers: getReleaseDefinitionTriggers(releaseJsonInput),
+            doVariablesExists: doVariablesExists(releaseJsonInput),
+            variables: getReleaseDefinitionVariables(releaseJsonInput),
+            metaInformation: getReleaseMetaInformation(releaseJsonInput),
+            stats: getStatsForReleaseDefinition(releaseJsonInput)
+        };
+        return _releaseDef;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+   
 }
 
 function getReleaseDefinitionName(releaseJsonInput) {

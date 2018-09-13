@@ -15,13 +15,13 @@ function visualizeScreenView() {
     _switchTemplate(templateNames.VISUALIZE, visualizeJson);
 }
 
-function buildVisualizeScreenView() {
-    var visualizeJson = processJson();
+function buildVisualizeScreenView(visualizeJson) {
+    //var visualizeJson = processJson();
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
-function releaseVisualizeScreenView() {
-    var visualizeJson = processJson();
+function releaseVisualizeScreenView(visualizeJson) {
+    //var visualizeJson = processJson();
     _switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
 }
 
@@ -55,6 +55,7 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
             visualization_ViewLoad(jsonData);
+            document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
             document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
             document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
             document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
@@ -87,12 +88,17 @@ function _switchTemplate(templateName, jsonData) {
 function visualization_ViewLoad(combinedJson) {
     let doesBuildDefinitionExist = combinedJson.buildDef != null;
     let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
+    let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
 
     if (doesBuildDefinitionExist) {
-        buildVisualizeScreenView();
+        buildVisualizeScreenView(combinedJson);
     }
     if (doesReleaseDefinitionExist) {
-        releaseVisualizeScreenView();
+        releaseVisualizeScreenView(combinedJson);
+    }
+
+    if (noBuildNoReleaseDefinition) {
+        alert("No build or rel found");
     }
 
     if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
@@ -108,6 +114,11 @@ function visualization_ViewLoad(combinedJson) {
 function goToVisualization(e) {
     visualizeScreenView();
 }
+
+function goBackToUploadScreen() {
+    uploadScreenView();
+}
+
 
 function goToBuild() {
     $("#showBuildViewBtn").removeClass("button-inverse");

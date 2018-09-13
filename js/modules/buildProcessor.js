@@ -7,23 +7,29 @@ function getBuildJson(buildJsonInput) {
         return null;
     }
 
-    var _buildDef = {
-        name: getBuildDefinitionName(buildJsonInput),
-        url: getBuildDefinitionUrl(buildJsonInput),
-        //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
-        creationDate: getBuildDefinitionCreationDate(buildJsonInput),
-        repository: getBuildDefinitionRepository(buildJsonInput),
-        author: getBuildDefinitionAuthor(buildJsonInput),
-        project: getBuildDefinitionProject(buildJsonInput),
-        triggers: getBuildDefinitionTriggers(buildJsonInput),
-        retention: getBuildDefinitionRetention(buildJsonInput),
-        queue: getBuildDefinitionQueue(buildJsonInput),
-        variables: getBuildDefinitionVariables(buildJsonInput),
-        process: getBuildDefinitionProcess(buildJsonInput),
-        metaInformation: getBuildMetaInformation(buildJsonInput),
-        stats: getStatsForBuildDefinition(buildJsonInput)
-    };
-    return _buildDef;
+    try {
+        var _buildDef = {
+            name: getBuildDefinitionName(buildJsonInput),
+            url: getBuildDefinitionUrl(buildJsonInput),
+            //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+            creationDate: getBuildDefinitionCreationDate(buildJsonInput),
+            repository: getBuildDefinitionRepository(buildJsonInput),
+            author: getBuildDefinitionAuthor(buildJsonInput),
+            project: getBuildDefinitionProject(buildJsonInput),
+            triggers: getBuildDefinitionTriggers(buildJsonInput),
+            retention: getBuildDefinitionRetention(buildJsonInput),
+            queue: getBuildDefinitionQueue(buildJsonInput),
+            variables: getBuildDefinitionVariables(buildJsonInput),
+            process: getBuildDefinitionProcess(buildJsonInput),
+            metaInformation: getBuildMetaInformation(buildJsonInput),
+            stats: getStatsForBuildDefinition(buildJsonInput)
+        };
+        return _buildDef;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+   
 }
 
 ////////////////////////////////////////////////

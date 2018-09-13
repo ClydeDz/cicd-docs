@@ -729,13 +729,13 @@ function visualizeScreenView() {
     _switchTemplate(templateNames.VISUALIZE, visualizeJson);
 }
 
-function buildVisualizeScreenView() {
-    var visualizeJson = processJson();
+function buildVisualizeScreenView(visualizeJson) {
+    //var visualizeJson = processJson();
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
-function releaseVisualizeScreenView() {
-    var visualizeJson = processJson();
+function releaseVisualizeScreenView(visualizeJson) {
+    //var visualizeJson = processJson();
     _switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
 }
 
@@ -769,6 +769,7 @@ function _switchTemplate(templateName, jsonData) {
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
             visualization_ViewLoad(jsonData);
+            document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
             document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
             document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
             document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
@@ -801,12 +802,17 @@ function _switchTemplate(templateName, jsonData) {
 function visualization_ViewLoad(combinedJson) {
     let doesBuildDefinitionExist = combinedJson.buildDef != null;
     let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
+    let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
 
     if (doesBuildDefinitionExist) {
-        buildVisualizeScreenView();
+        buildVisualizeScreenView(combinedJson);
     }
     if (doesReleaseDefinitionExist) {
-        releaseVisualizeScreenView();
+        releaseVisualizeScreenView(combinedJson);
+    }
+
+    if (noBuildNoReleaseDefinition) {
+        alert("No build or rel found");
     }
 
     if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
@@ -822,6 +828,11 @@ function visualization_ViewLoad(combinedJson) {
 function goToVisualization(e) {
     visualizeScreenView();
 }
+
+function goBackToUploadScreen() {
+    uploadScreenView();
+}
+
 
 function goToBuild() {
     $("#showBuildViewBtn").removeClass("button-inverse");
@@ -920,10 +931,12 @@ function _handleJsonFile(e, type) {
                 if (isBuildType) {
                     buildJsonData = JSON.parse(event.target.result);
                     $("#buildJsonUploadControlStatus").show();
+                    $("#fileUploadGo").prop('disabled', false);
                 }
                 else {
                     releaseJsonData = JSON.parse(event.target.result);
                     $("#releaseJsonUploadControlStatus").show();
+                    $("#fileUploadGo").prop('disabled', false);
                 }
             } catch (error) {
                 showError("An error occured while trying to process the JSON file. Could you please check the file once again and try later?");
@@ -991,23 +1004,29 @@ function getBuildJson(buildJsonInput) {
         return null;
     }
 
-    var _buildDef = {
-        name: getBuildDefinitionName(buildJsonInput),
-        url: getBuildDefinitionUrl(buildJsonInput),
-        //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
-        creationDate: getBuildDefinitionCreationDate(buildJsonInput),
-        repository: getBuildDefinitionRepository(buildJsonInput),
-        author: getBuildDefinitionAuthor(buildJsonInput),
-        project: getBuildDefinitionProject(buildJsonInput),
-        triggers: getBuildDefinitionTriggers(buildJsonInput),
-        retention: getBuildDefinitionRetention(buildJsonInput),
-        queue: getBuildDefinitionQueue(buildJsonInput),
-        variables: getBuildDefinitionVariables(buildJsonInput),
-        process: getBuildDefinitionProcess(buildJsonInput),
-        metaInformation: getBuildMetaInformation(buildJsonInput),
-        stats: getStatsForBuildDefinition(buildJsonInput)
-    };
-    return _buildDef;
+    try {
+        var _buildDef = {
+            name: getBuildDefinitionName(buildJsonInput),
+            url: getBuildDefinitionUrl(buildJsonInput),
+            //buildStatusBadge: getBuildDefinitionBadge(buildJsonInput),
+            creationDate: getBuildDefinitionCreationDate(buildJsonInput),
+            repository: getBuildDefinitionRepository(buildJsonInput),
+            author: getBuildDefinitionAuthor(buildJsonInput),
+            project: getBuildDefinitionProject(buildJsonInput),
+            triggers: getBuildDefinitionTriggers(buildJsonInput),
+            retention: getBuildDefinitionRetention(buildJsonInput),
+            queue: getBuildDefinitionQueue(buildJsonInput),
+            variables: getBuildDefinitionVariables(buildJsonInput),
+            process: getBuildDefinitionProcess(buildJsonInput),
+            metaInformation: getBuildMetaInformation(buildJsonInput),
+            stats: getStatsForBuildDefinition(buildJsonInput)
+        };
+        return _buildDef;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+   
 }
 
 ////////////////////////////////////////////////
@@ -1218,26 +1237,31 @@ function getReleaseJson(releaseJsonInput) {
     if (isEmpty(releaseJsonInput)) {
         return null;
     }
-
-    var _releaseDef = {
-        name: getReleaseDefinitionName(releaseJsonInput),
-        doesReleaseDefinitionDescriptionExist: doesReleaseDefinitionDescriptionExist(releaseJsonData),
-        description: getReleaseDefinitionDescription(releaseJsonInput),
-        url: getReleaseDefinitionUrl(releaseJsonInput),
-        creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
-        modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
-        releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
-        environments: getReleaseDefinitionEnvironments(releaseJsonInput),
-        doeReleaseDefinitionHaveArtifacts: doeReleaseDefinitionHaveArtifacts(releaseJsonData),
-        artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
-        isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
-        triggers: getReleaseDefinitionTriggers(releaseJsonInput),
-        doVariablesExists: doVariablesExists(releaseJsonInput),
-        variables: getReleaseDefinitionVariables(releaseJsonInput),
-        metaInformation: getReleaseMetaInformation(releaseJsonInput),
-        stats: getStatsForReleaseDefinition(releaseJsonInput)
-    };
-    return _releaseDef;
+    try {
+        var _releaseDef = {
+            name: getReleaseDefinitionName(releaseJsonInput),
+            doesReleaseDefinitionDescriptionExist: doesReleaseDefinitionDescriptionExist(releaseJsonData),
+            description: getReleaseDefinitionDescription(releaseJsonInput),
+            url: getReleaseDefinitionUrl(releaseJsonInput),
+            creationInformation: getReleaseDefinitionCreationDate(releaseJsonInput),
+            modificationInformation: getReleaseDefinitionModificationDate(releaseJsonInput),
+            releaseDefinitonHasMultipleEnvironments: releaseDefinitonHasMultipleEnvironments(releaseJsonInput),
+            environments: getReleaseDefinitionEnvironments(releaseJsonInput),
+            doeReleaseDefinitionHaveArtifacts: doeReleaseDefinitionHaveArtifacts(releaseJsonData),
+            artifacts: getReleaseDefinitionArtifacts(releaseJsonInput),
+            isTriggerSetupForReleaseDefinition: isTriggerSetupForReleaseDefinition(releaseJsonInput),
+            triggers: getReleaseDefinitionTriggers(releaseJsonInput),
+            doVariablesExists: doVariablesExists(releaseJsonInput),
+            variables: getReleaseDefinitionVariables(releaseJsonInput),
+            metaInformation: getReleaseMetaInformation(releaseJsonInput),
+            stats: getStatsForReleaseDefinition(releaseJsonInput)
+        };
+        return _releaseDef;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+   
 }
 
 function getReleaseDefinitionName(releaseJsonInput) {

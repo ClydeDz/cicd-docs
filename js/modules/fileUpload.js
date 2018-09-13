@@ -35,10 +35,12 @@ function _handleJsonFile(e, type) {
                 if (isBuildType) {
                     buildJsonData = JSON.parse(event.target.result);
                     $("#buildJsonUploadControlStatus").show();
+                    $("#fileUploadGo").prop('disabled', false);
                 }
                 else {
                     releaseJsonData = JSON.parse(event.target.result);
                     $("#releaseJsonUploadControlStatus").show();
+                    $("#fileUploadGo").prop('disabled', false);
                 }
             } catch (error) {
                 showError("An error occured while trying to process the JSON file. Could you please check the file once again and try later?");
