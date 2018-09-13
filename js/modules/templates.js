@@ -47,6 +47,7 @@ function _switchTemplate(templateName, jsonData) {
             document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
             $("#buildJsonUploadControlStatus").hide();
             $("#releaseJsonUploadControlStatus").hide();
+            animateCards();
         });
     }
     if (templateName === templateNames.VISUALIZE) {
