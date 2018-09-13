@@ -9,27 +9,27 @@
                             <p>Upload a .json file from your computer. You either upload the build and release json file or any one.</p>
                         </div>
                     </div>                    
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <input type="file" class="btn button hidden" id="buildJsonUploadControl" name="buildJsonUploadControl" />
-                            <label for="buildJsonUploadControl" class="btn button">
-                                Upload build definition from my Computer
-                            </label>
-                            <img src="../images/icons/checkmark.png" width="24" alt="Build file upload status" id="buildJsonUploadControlStatus"  />
+                    <div class="file-upload-control">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <input type="file" class="btn button hidden" id="buildJsonUploadControl" name="buildJsonUploadControl" />
+                                <label for="buildJsonUploadControl" class="btn button">
+                                    Upload build definition
+                                </label>
+                                <img src="../images/icons/checkmark.png" width="24" alt="Build file upload status" id="buildJsonUploadControlStatus" />
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <input type="file" class="btn button hidden" id="releaseJsonUploadControl" name="releaseJsonUploadControl" />
+                                <label for="releaseJsonUploadControl" class="btn button">
+                                    Upload release definition
+                                </label>
+                                <img src="../images/icons/checkmark.png" width="24" alt="Release file upload status" id="releaseJsonUploadControlStatus" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <input type="file" class="btn button hidden" id="releaseJsonUploadControl" name="releaseJsonUploadControl" />
-                            <label for="releaseJsonUploadControl" class="btn button">
-                                Upload release definition from my Computer
-                            </label>
-                            <img src="../images/icons/checkmark.png" width="24" alt="Release file upload status" id="releaseJsonUploadControlStatus"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <input type="submit" value="Go" class="btn button" id="fileUploadGo" disabled />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <input type="submit" value="Go" class="btn button" id="fileUploadGo" disabled />
+                            </div>
                         </div>
                     </div>
                 </div>

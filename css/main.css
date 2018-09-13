@@ -6921,6 +6921,11 @@ h1, h2, h3, h4,
   to {
     transform: translateY(0); } }
 
+.file-upload-control {
+  padding: 9px 0; }
+  .file-upload-control #fileUploadGo {
+    margin-top: 9px; }
+
 /* Specific CSS */
 /*
  * colors must contain color variable and general site wide
