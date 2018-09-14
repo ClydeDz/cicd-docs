@@ -712,9 +712,9 @@ const releaseJsonUrlQueryStringKey = "releasejson";
 const buildJsonText = "build";
 const releaseJsonText = "release";
 
-//////////////////////////////////////////
-/////////    Template update starters
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////
+/////////   Methods to initiate switch templates/views 
+///////////////////////////////////////////////////////////
 
 function footerView() {
     _switchTemplate(templateNames.FOOTER, { "version": appVersionNumber });
@@ -730,18 +730,16 @@ function visualizeScreenView() {
 }
 
 function buildVisualizeScreenView(visualizeJson) {
-    //var visualizeJson = processJson();
     _switchTemplate(templateNames.BUILD, visualizeJson.buildDef);
 }
 
 function releaseVisualizeScreenView(visualizeJson) {
-    //var visualizeJson = processJson();
     _switchTemplate(templateNames.RELEASE, visualizeJson.releaseDef);
 }
 
-//////////////////////////////////////
-/////////    Template changer
-/////////////////////////////////////
+////////////////////////////////////////////////
+/////////    Method that switches template
+///////////////////////////////////////////////
 
 function _switchTemplate(templateName, jsonData) {
     if (templateName === templateNames.FOOTER) {
@@ -756,12 +754,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('uploadPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
-            document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
-            document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
-            document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-            $("#buildJsonUploadControlStatus").hide();
-            $("#releaseJsonUploadControlStatus").hide();
-            animateCards();
+			upload_ViewLoad();
         });
     }
     if (templateName === templateNames.VISUALIZE) {
@@ -769,11 +762,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('visualizePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#view").html(output);
-            visualization_ViewLoad(jsonData);
-            document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
-            document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
-            document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
-            document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
+            visualization_ViewLoad(jsonData);            
         });
     }
     if (templateName === templateNames.BUILD) {
@@ -781,7 +770,6 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#buildView").html(output);
-            //animateCards();
         });
     }
     if (templateName === templateNames.RELEASE) {
@@ -789,18 +777,36 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
-            //animateCards();
-            //loadEnvironmentSlider();
         });
-    }
-    
+    }    
 }
 
-///////////////////////////////////////////////
-/////////    View loads (like page loads)
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+/////////    Methods for each template/view loads (like page loads)
+///////////////////////////////////////////////////////////////////////
+
+function upload_ViewLoad() {
+	// Attach event listeners for buttons
+	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
+	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
+	document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+
+	// Hide the status icons in the beginning
+	$("#buildJsonUploadControlStatus").hide();
+	$("#releaseJsonUploadControlStatus").hide();
+
+	// Animate the UI to make an entrance
+	animateCards();
+}
 
 function visualization_ViewLoad(combinedJson) {
+	// Attach event listeners for buttons
+	document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
+	document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
+	document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
+	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
+
+	// Based on if we have the build and release definitions uploaded, decide how the UI appears
     let doesBuildDefinitionExist = combinedJson.buildDef != null;
     let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
     let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
@@ -834,30 +840,49 @@ function goBackToUploadScreen() {
     uploadScreenView();
 }
 
-
 function goToBuild() {
-    $("#showBuildViewBtn").removeClass("button-inverse");
+	// Add focus on the build button
+	$("#showBuildViewBtn").removeClass("button-inverse");
     $("#showBuildViewBtn").addClass("button");
     $("#showReleaseViewBtn").removeClass("button");
     $("#showReleaseViewBtn").addClass("button-inverse");
 
+	// Show the build view
     $("#buildView").show();
-    animateCards();
-    $("#releaseView").hide();
-    //buildVisualizeScreenView();
+	$("#releaseView").hide();
+
+	// Animate the entrance of the cards 
+	animateCards();    
 }
 
 function goToRelease() {
+	// Add focus on the release button
     $("#showReleaseViewBtn").removeClass("button-inverse");
     $("#showReleaseViewBtn").addClass("button");
     $("#showBuildViewBtn").removeClass("button");
     $("#showBuildViewBtn").addClass("button-inverse");
 
-    $("#buildView").hide();
-    $("#releaseView").show();
-    animateCards();
+	// Show the release view
+	$("#releaseView").show();
+	$("#buildView").hide();
+
+	// Animate the entrance of the cards 
+	animateCards();
+
+	// The environments are a slider component, so lets initiate that here
     loadEnvironmentSlider();
-    //releaseVisualizeScreenView();
+}
+
+function loadEnvironmentSlider() {
+	$('.environment-slider').slick({
+		dots: false,
+		infinite: true,
+		speed: 500,
+		fade: true,
+		cssEase: 'linear',
+		prevArrow: $('.prev'),
+		nextArrow: $('.next')
+	});
 }
 
 function downloadPdf(e) {
@@ -866,35 +891,12 @@ function downloadPdf(e) {
     exportPdf(visualizeJson);
 }
 
-function loadEnvironmentSlider() {
-    $('.environment-slider').slick({
-        dots: false,
-        infinite: true,
-        speed: 500,
-        fade: true,
-        cssEase: 'linear',
-        prevArrow: $('.prev'),
-        nextArrow: $('.next')
-    });
-}
 
-function __convertImgToDataURLviaCanvas(url) {
-    var img = new Image();
-    img.crossOrigin = 'Anonymous';
-    var dataURL;
-    img.onload = function () {
-        var canvas = document.createElement('CANVAS');
-        var ctx = canvas.getContext('2d');      
-        canvas.height = this.height;
-        canvas.width = this.width;
-        ctx.drawImage(this, 0, 0);
-        dataURL = canvas.toDataURL();
-        //callback(dataURL);
-        canvas = null;
-        return dataURL;        
-    };
-    img.src = url;
-}
+
+///////////////////////////////////////////////////
+/////////    Methods to handle file upload
+///////////////////////////////////////////////////
+
 
 function handleBuildFileUpload(e) {
     _handleJsonFile(e, buildJsonText); 
@@ -971,6 +973,11 @@ function xhrUpload() {
         });
     });
 }
+///////////////////////////////////////////
+//////   Methods to handle URL upload
+///////////////////////////////////////////
+
+
 function getUrlVars() {
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -985,12 +992,11 @@ function getUrlVars() {
 /////////    Process
 //////////////////////////////////
 
-
 function processJson() {
     let isBuildDefinitionUploaded =  !isEmpty(buildJsonData);
     let isReleaseDefinitionUploaded = !isEmpty(releaseJsonData);
     
-    var combinedJson = {
+    let combinedJson = {
         buildDef: isBuildDefinitionUploaded ? getBuildJson(buildJsonData) : null,
         releaseDef: isReleaseDefinitionUploaded ? getReleaseJson(releaseJsonData) : null
     }
@@ -1754,11 +1760,14 @@ function exportPdf(buildReleaseJson) {
     // DOCUMENT HEADER
     doc = printDocumentHeader(doc);
 
+	let doesDataContainBuildDefinition = buildReleaseJson.buildDef !== null;
+	let doesDataContainReleaseDefinition = buildReleaseJson.releaseDef !== null;
+
     ////////////////////////
     //////   BUILD
     ////////////////////////
 
-    if (buildReleaseJson.buildDef !== null) {
+	if (doesDataContainBuildDefinition) {
         var _buildJson = buildReleaseJson.buildDef;
 
         // BUILD PIPELINE SECTION
@@ -1796,7 +1805,7 @@ function exportPdf(buildReleaseJson) {
     //////   RELEASE
     ////////////////////////
 
-    if (buildReleaseJson.releaseDef !== null) {
+	if (doesDataContainReleaseDefinition) {
         var _releaseJson = buildReleaseJson.releaseDef;
 
         // RELEASE PIPELINE SECTION
@@ -1824,27 +1833,25 @@ function exportPdf(buildReleaseJson) {
         // ENVIRONMENTS, PHASES AND TASKS
         doc = printEnvironmentHeading(doc);
         doc = printReleaseDefinitionEnvironments(doc, _releaseJson);
-    }
+	}
+
+	///////////////////////////////////////
+    //////   NO BUILD AND NO RELEASE
+	///////////////////////////////////////
+	if (!doesDataContainBuildDefinition && !doesDataContainReleaseDefinition) {
+		doc = printNoBuildNoRelease(doc);
+	}
         
     doc = addPageFooter(doc);
-    //doc = addDocumentFooter(doc);
     doc.save(`${getFileName()}.pdf`);
 }
 
+function printNoBuildNoRelease(doc) {
+	doc = setBodyStyle(doc);		
+	doc = addNewBodyLine(doc, lineHeightType.BODY);	
+	doc.text(pdf.xAxisValue, pdf.yAxisValue, `No build and release definition found. Please try uploading the file again?`);
 
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-function random_rgba() {
-    let o = Math.round, r = Math.random, s = 255;
-    return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+	return doc;
 }
 ////////////////////////////////////////
 //////   Image processing and icons
@@ -2223,12 +2230,11 @@ function printMetaInformationHeading(doc) {
 /////////    Process
 //////////////////////////////////
 
-
 function processJson() {
     let isBuildDefinitionUploaded =  !isEmpty(buildJsonData);
     let isReleaseDefinitionUploaded = !isEmpty(releaseJsonData);
     
-    var combinedJson = {
+    let combinedJson = {
         buildDef: isBuildDefinitionUploaded ? getBuildJson(buildJsonData) : null,
         releaseDef: isReleaseDefinitionUploaded ? getReleaseJson(releaseJsonData) : null
     }
@@ -3171,6 +3177,35 @@ $(window).scroll(function (event) {
     });
 
 });
+function showError(errorMessage) {
+	$("#errorModal").modal("show");
+	$("#errorMessage").html(errorMessage);
+}
+///////////////////////////////////////////////
+//////   Contains generic helper methods 
+///////////////////////////////////////////////
+
+function isEmpty(obj) {
+	for (var key in obj) {
+		if (obj.hasOwnProperty(key))
+			return false;
+	}
+	return true;
+}
+
+function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
+
+function random_rgba() {
+	let o = Math.round, r = Math.random, s = 255;
+	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+}
 $(document).ready(function () {
    
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
@@ -3187,17 +3222,5 @@ $(document).ready(function () {
     
 });
 
-function showError(errorMessage) {
-    $("#errorModal").modal("show");
-    $("#errorMessage").html(errorMessage);
-}
-
-function isEmpty(obj) {
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key))
-            return false;
-    }
-    return true;
-}
 
 var jsonObj;

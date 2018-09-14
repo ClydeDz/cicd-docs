@@ -18,11 +18,14 @@ function exportPdf(buildReleaseJson) {
     // DOCUMENT HEADER
     doc = printDocumentHeader(doc);
 
+	let doesDataContainBuildDefinition = buildReleaseJson.buildDef !== null;
+	let doesDataContainReleaseDefinition = buildReleaseJson.releaseDef !== null;
+
     ////////////////////////
     //////   BUILD
     ////////////////////////
 
-    if (buildReleaseJson.buildDef !== null) {
+	if (doesDataContainBuildDefinition) {
         var _buildJson = buildReleaseJson.buildDef;
 
         // BUILD PIPELINE SECTION
@@ -60,7 +63,7 @@ function exportPdf(buildReleaseJson) {
     //////   RELEASE
     ////////////////////////
 
-    if (buildReleaseJson.releaseDef !== null) {
+	if (doesDataContainReleaseDefinition) {
         var _releaseJson = buildReleaseJson.releaseDef;
 
         // RELEASE PIPELINE SECTION
@@ -88,25 +91,23 @@ function exportPdf(buildReleaseJson) {
         // ENVIRONMENTS, PHASES AND TASKS
         doc = printEnvironmentHeading(doc);
         doc = printReleaseDefinitionEnvironments(doc, _releaseJson);
-    }
+	}
+
+	///////////////////////////////////////
+    //////   NO BUILD AND NO RELEASE
+	///////////////////////////////////////
+	if (!doesDataContainBuildDefinition && !doesDataContainReleaseDefinition) {
+		doc = printNoBuildNoRelease(doc);
+	}
         
     doc = addPageFooter(doc);
-    //doc = addDocumentFooter(doc);
     doc.save(`${getFileName()}.pdf`);
 }
 
+function printNoBuildNoRelease(doc) {
+	doc = setBodyStyle(doc);		
+	doc = addNewBodyLine(doc, lineHeightType.BODY);	
+	doc.text(pdf.xAxisValue, pdf.yAxisValue, `No build and release definition found. Please try uploading the file again?`);
 
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-function random_rgba() {
-    let o = Math.round, r = Math.random, s = 255;
-    return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+	return doc;
 }

@@ -1,26 +1,28 @@
 [
   {
     "outputFileName": "js/bundle-js.js",
-    "inputFiles": [
-      "js/vendor/jquery-1.10.2.min.js",
-      "js/vendor/bootstrap.min.js",
-      "js/vendor/mustache.js",
-      "js/vendor/slick.min.js",
-      "js/modules/globalSettings.js",
-      "js/modules/templates.js",
-      "js/modules/fileUpload.js",
-      "js/modules/urlHandler.js",
-      "js/modules/buildReleaseProcessor.js",
-      "js/modules/buildProcessor.js",
-      "js/modules/releaseProcessor.js",
-      "js/modules/dataAccess.js",
-      "js/modules/exportPdf.js",
-      "js/modules/exportPdfHelper.js",
-      "js/modules/buildReleaseProcessor.js",
-      "js/modules/exportPdfBuildHelper.js",
-      "js/modules/exportPdfReleaseHelper.js",
-      "js/modules/cardAnimations.js",
-      "js/app.js"
-    ]
+			"inputFiles": [
+				"js/vendor/jquery-1.10.2.min.js",
+				"js/vendor/bootstrap.min.js",
+				"js/vendor/mustache.js",
+				"js/vendor/slick.min.js",
+				"js/modules/globalSettings.js",
+				"js/modules/templates.js",
+				"js/modules/fileUpload.js",
+				"js/modules/urlHandler.js",
+				"js/modules/buildReleaseProcessor.js",
+				"js/modules/buildProcessor.js",
+				"js/modules/releaseProcessor.js",
+				"js/modules/dataAccess.js",
+				"js/modules/exportPdf.js",
+				"js/modules/exportPdfHelper.js",
+				"js/modules/buildReleaseProcessor.js",
+				"js/modules/exportPdfBuildHelper.js",
+				"js/modules/exportPdfReleaseHelper.js",
+				"js/modules/cardAnimations.js",
+				"js/modules/errorHandler.js",
+				"js/modules/miscHelper.js",
+				"js/app.js"
+			]
   }
 ]
