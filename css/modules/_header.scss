@@ -4,7 +4,7 @@
     background-color: white;
 
     div.row {
-        div:first-child {
+        div.brand:first-child {
             div {
                 display: inline-block;
                 vertical-align: middle;
@@ -14,9 +14,16 @@
                 }
             }
         }
+
         div:last-child {
             div.row {
                 margin-top: 6px;
+
+                a {
+                    img {
+                        margin:3px 12px 0 -2px;
+                    }
+                }
             }
         }
     }

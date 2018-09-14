@@ -6708,13 +6708,15 @@ h1, h2, h3, h4,
   padding: 8px 27px;
   margin-bottom: 18px;
   background-color: white; }
-  .nav div.row div:first-child div {
+  .nav div.row div.brand:first-child div {
     display: inline-block;
     vertical-align: middle; }
-    .nav div.row div:first-child div img {
+    .nav div.row div.brand:first-child div img {
       margin-right: 9px; }
   .nav div.row div:last-child div.row {
     margin-top: 6px; }
+    .nav div.row div:last-child div.row a img {
+      margin: 3px 12px 0 -2px; }
 
 footer div {
   position: absolute;
