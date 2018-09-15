@@ -64,16 +64,24 @@ function _handleJsonFile(e, type) {
 function startFileUploadFromUrl() {
     try {
         resetBuildReleaseJsonData();
-
         let buildDefUrl = $('#buildJsonUrlUploadControl').val();
-        if (buildDefUrl != "") {
-            xhrUpload(buildDefUrl, buildJsonText);
-        }
-
         let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
-        if (releaseDefUrl != "") {
-            xhrUpload(releaseDefUrl, releaseJsonText);
+        let doesBuildDefinitionExist = buildDefUrl != "";
+        let doesReleaseDefinitionExist = releaseDefUrl != "";
+
+        if (!doesBuildDefinitionExist && !doesReleaseDefinitionExist) {
+            showError("Please enter the URL for the build and/or release definition.");
+            return;
         }
+        
+        if (doesBuildDefinitionExist) {
+            // 3rd parameter = if release def exists don't initiate callback yet, if doesn't exists then initiate callback now
+            xhrUpload(buildDefUrl, buildJsonText, !doesReleaseDefinitionExist); 
+        }
+                
+        if (doesReleaseDefinitionExist) {
+            xhrUpload(releaseDefUrl, releaseJsonText, true);
+        }        
 
     } catch (e) {
         showError("An error occured while trying to upload the file. Please try again later.");
@@ -81,7 +89,7 @@ function startFileUploadFromUrl() {
     }
 }
 
-function xhrUpload(urlValue, type) {
+function xhrUpload(urlValue, type, callbackCode) {
     let isBuildType = (type === buildJsonText);
 
     $.getJSON(urlValue)
@@ -90,7 +98,9 @@ function xhrUpload(urlValue, type) {
                 buildJsonData = returnedData;
             }
             else {
-                releaseJsonData = returnedData;
+                releaseJsonData = returnedData;                
+            }
+            if (callbackCode) {
                 visualizeScreenView();
             }
         })
