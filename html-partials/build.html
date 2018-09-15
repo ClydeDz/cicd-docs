@@ -233,16 +233,18 @@
                                             Variable value
                                         </div>
                                     </div>
-                                    {{#variables}}
-                                    <div class="row modal-table-row">
-                                        <div class="col-xs-6">
-                                            {{ key }}
+                                    <div class="modal-table-body">
+                                        {{#variables}}
+                                        <div class="row modal-table-row">
+                                            <div class="col-xs-6">
+                                                {{ key }}
+                                            </div>
+                                            <div class="col-xs-6">
+                                                {{ value }}
+                                            </div>
                                         </div>
-                                        <div class="col-xs-6">
-                                            {{ value }}
-                                        </div>
+                                        {{/variables}}
                                     </div>
-                                    {{/variables}}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn button-dark" data-dismiss="modal">Close</button>
@@ -268,16 +270,18 @@
                                             Minimum good builds to keep
                                         </div>
                                     </div>
-                                    {{#retention}}
-                                    <div class="row modal-table-row">
-                                        <div class="col-xs-6">
-                                            {{ daysToKeep }} day(s)
+                                    <div class="modal-table-body">
+                                        {{#retention}}
+                                        <div class="row modal-table-row">
+                                            <div class="col-xs-6">
+                                                {{ daysToKeep }} day(s)
+                                            </div>
+                                            <div class="col-xs-6">
+                                                {{ minimumToKeep }} good build
+                                            </div>
                                         </div>
-                                        <div class="col-xs-6">
-                                            {{ minimumToKeep }} good build
-                                        </div>
+                                        {{/retention}}
                                     </div>
-                                    {{/retention}}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn button-dark" data-dismiss="modal">Close</button>

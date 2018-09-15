@@ -179,6 +179,7 @@
                                         </div>
                                         {{/steps}}
                                     </div>
+                                    <br /><br />
                                 </div>
                                 {{/deploymentPhases}}
                             </div>
@@ -407,29 +408,31 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row modal-table-header bg-gradient">
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-4">
                                             Name
                                         </div>
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-5">
                                             Value
                                         </div>
                                         <div class="col-xs-3">
                                             Scope
                                         </div>
                                     </div>
-                                    {{#variables}}
-                                    <div class="row modal-table-row">
-                                        <div class="col-xs-3">
-                                            {{ key }}
+                                    <div class="modal-table-body">
+                                        {{#variables}}
+                                        <div class="row modal-table-row">
+                                            <div class="col-xs-4">
+                                                {{ key }}
+                                            </div>
+                                            <div class="col-xs-5">
+                                                {{ value }}
+                                            </div>
+                                            <div class="col-xs-3">
+                                                {{ scope }}
+                                            </div>
                                         </div>
-                                        <div class="col-xs-3">
-                                            {{ value }}
-                                        </div>
-                                        <div class="col-xs-3">
-                                            {{ scope }}
-                                        </div>
+                                        {{/variables}}
                                     </div>
-                                    {{/variables}}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn button-dark" data-dismiss="modal">Close</button>

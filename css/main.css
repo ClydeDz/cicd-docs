@@ -6765,6 +6765,15 @@ h1, h2, h3, h4,
 .modal h2 {
   color: #8e2de2; }
 
+.modal .modal-table-body {
+  max-height: 50vh;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden; }
+
+.modal .modal-table-row > div {
+  word-break: break-word; }
+
 .card-sq {
   background-color: white;
   padding: 18px;

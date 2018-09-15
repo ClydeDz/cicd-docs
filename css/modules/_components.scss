@@ -32,6 +32,19 @@
     h2 {
         color: $purple;
     }
+
+    .modal-table-body {
+        max-height: 50vh;
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .modal-table-row {
+        & > div {
+            word-break: break-word;
+        }
+    }
 }
 
 .card-sq {
