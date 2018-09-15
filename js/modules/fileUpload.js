@@ -61,11 +61,9 @@ function _handleJsonFile(e, type) {
     
 }
 
-function startFileUploadFromUrl() {
+function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
     try {
         resetBuildReleaseJsonData();
-        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
-        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
         let doesBuildDefinitionExist = buildDefUrl != "";
         let doesReleaseDefinitionExist = releaseDefUrl != "";
 

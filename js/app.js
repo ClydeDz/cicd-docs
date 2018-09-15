@@ -1,13 +1,14 @@
 ﻿$(document).ready(function () {
    
-    var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    var buildJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
-    if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        footerView();
-        uploadScreenView();
+    let buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
+    let releaseJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
+    if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
+        // Found query string
+        startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
     }
     else {
-        // Found query string
+        footerView();
+        uploadScreenView();      
     }
     
 });
@@ -16,5 +17,9 @@ $("#siteLogo").click(function () {
     goBackToUploadScreen();
 });
 
+
+function urlExists(url) {
+    return !(url === "" || url === undefined);
+}
 var jsonObj;
 

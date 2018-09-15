@@ -791,7 +791,12 @@ function upload_ViewLoad() {
 	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
 	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
     document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-    document.getElementById('urlUploadGo').addEventListener('click', startFileUploadFromUrl, false);
+    document.getElementById('urlUploadGo').addEventListener(
+        'click',
+        function () {
+            startFileUploadFromUrl($('#buildJsonUrlUploadControl').val(), $('#releaseJsonUrlUploadControl').val());
+        },
+        false);
 
 	// Hide the status icons in the beginning
 	$("#buildJsonUploadControlStatus").hide();
@@ -800,7 +805,7 @@ function upload_ViewLoad() {
     $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").change(function () {
         let buildDefUrl = $('#buildJsonUrlUploadControl').val();
         let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
-        console.log("change");
+        
         if (buildDefUrl != "" || releaseDefUrl != "") {
             $("#urlUploadGo").prop('disabled', false);
         }
@@ -846,7 +851,6 @@ function visualization_ViewLoad(combinedJson) {
         goToBuild();
     }
     else if (!doesBuildDefinitionExist && doesReleaseDefinitionExist) {
-        console.log("u dont want to be here");
         goToRelease();
     }
     else {
@@ -980,11 +984,9 @@ function _handleJsonFile(e, type) {
     
 }
 
-function startFileUploadFromUrl() {
+function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
     try {
         resetBuildReleaseJsonData();
-        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
-        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
         let doesBuildDefinitionExist = buildDefUrl != "";
         let doesReleaseDefinitionExist = releaseDefUrl != "";
 
@@ -3287,14 +3289,15 @@ function activateReleaseButton() {
 }
 $(document).ready(function () {
    
-    var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    var buildJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
-    if (buildJsonUrl === "" || buildJsonUrl === undefined) {
-        footerView();
-        uploadScreenView();
+    let buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
+    let releaseJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
+    if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
+        // Found query string
+        startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
     }
     else {
-        // Found query string
+        footerView();
+        uploadScreenView();      
     }
     
 });
@@ -3303,4 +3306,8 @@ $("#siteLogo").click(function () {
     goBackToUploadScreen();
 });
 
+
+function urlExists(url) {
+    return !(url === "" || url === undefined);
+}
 var jsonObj;

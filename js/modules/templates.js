@@ -77,7 +77,12 @@ function upload_ViewLoad() {
 	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
 	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
     document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-    document.getElementById('urlUploadGo').addEventListener('click', startFileUploadFromUrl, false);
+    document.getElementById('urlUploadGo').addEventListener(
+        'click',
+        function () {
+            startFileUploadFromUrl($('#buildJsonUrlUploadControl').val(), $('#releaseJsonUrlUploadControl').val());
+        },
+        false);
 
 	// Hide the status icons in the beginning
 	$("#buildJsonUploadControlStatus").hide();
@@ -86,7 +91,7 @@ function upload_ViewLoad() {
     $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").change(function () {
         let buildDefUrl = $('#buildJsonUrlUploadControl').val();
         let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
-        console.log("change");
+        
         if (buildDefUrl != "" || releaseDefUrl != "") {
             $("#urlUploadGo").prop('disabled', false);
         }
@@ -132,7 +137,6 @@ function visualization_ViewLoad(combinedJson) {
         goToBuild();
     }
     else if (!doesBuildDefinitionExist && doesReleaseDefinitionExist) {
-        console.log("u dont want to be here");
         goToRelease();
     }
     else {
