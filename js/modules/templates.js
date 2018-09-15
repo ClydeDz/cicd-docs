@@ -63,6 +63,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
+            release_ViewLoad();          
         });
     }    
 }
@@ -108,7 +109,6 @@ function visualization_ViewLoad(combinedJson) {
 	// Based on if we have the build and release definitions uploaded, decide how the UI appears
     let doesBuildDefinitionExist = !isEmpty(combinedJson.buildDef);
     let doesReleaseDefinitionExist = !isEmpty(combinedJson.releaseDef);
-    let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
 
     if (doesBuildDefinitionExist) {
         buildVisualizeScreenView(combinedJson);
@@ -124,15 +124,25 @@ function visualization_ViewLoad(combinedJson) {
     else {
         $("#showReleaseViewBtn").prop('disabled', true);
     }
-
-    if (noBuildNoReleaseDefinition) {
-        alert("No build or rel found");
-    }
-
+    
     if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
-        //$("#releaseView").hide();
         goToBuild();
     }
+    else if (doesBuildDefinitionExist && !doesReleaseDefinitionExist) {
+        goToBuild();
+    }
+    else if (!doesBuildDefinitionExist && doesReleaseDefinitionExist) {
+        console.log("u dont want to be here");
+        goToRelease();
+    }
+    else {
+        alert("No build or rel found");
+    }
+}
+
+function release_ViewLoad() {
+    // The environments are a slider component, so lets initiate that here
+    loadEnvironmentSlider();
 }
 
 //////////////////////////////////////////////
@@ -169,10 +179,7 @@ function goToRelease() {
 	$("#buildView").hide();
 
 	// Animate the entrance of the cards 
-	animateCards();
-
-	// The environments are a slider component, so lets initiate that here
-    loadEnvironmentSlider();
+	animateCards();	
 }
 
 function loadEnvironmentSlider() {
@@ -183,7 +190,8 @@ function loadEnvironmentSlider() {
 		fade: true,
 		cssEase: 'linear',
 		prevArrow: $('.prev'),
-		nextArrow: $('.next')
+        nextArrow: $('.next'),
+        adaptiveHeight: true
 	});
 }
 

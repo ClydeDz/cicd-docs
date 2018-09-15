@@ -241,7 +241,9 @@
                             <img src="../images/icons/email.png" width="32" />
                         </div>
                         <div class="col-xs-11">
-                            {{creationInformation.createdByEmail}}
+                            <a href="mailto:{{creationInformation.createdByEmail}}">
+                                {{creationInformation.createdByEmail}}
+                            </a>                           
                         </div>
                     </div>
                     <div class="row">
@@ -268,7 +270,9 @@
                             <img src="../images/icons/email.png" width="32" />
                         </div>
                         <div class="col-xs-11">
-                            {{modificationInformation.modifiedByEmail}}
+                            <a href="mailto:{{modificationInformation.modifiedByEmail}}">
+                                {{modificationInformation.modifiedByEmail}}
+                            </a>                           
                         </div>
                     </div>
                     <div class="row">
