@@ -6717,6 +6717,8 @@ h1, h2, h3, h4,
     margin-top: 6px; }
     .nav div.row div:last-child div.row a img {
       margin: 3px 12px 0 -2px; }
+  .nav #siteLogo {
+    cursor: pointer; }
 
 footer div {
   position: absolute;

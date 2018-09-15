@@ -3,10 +3,7 @@
     var buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
     if (buildJsonUrl === "" || buildJsonUrl === undefined) {
         footerView();
-        //importTestData();
-        //TODO: uncomment this
         uploadScreenView();
-       
     }
     else {
         // Found query string
@@ -14,6 +11,9 @@
     
 });
 
+$("#siteLogo").click(function () {
+    goBackToUploadScreen();
+});
 
 var jsonObj;
 
