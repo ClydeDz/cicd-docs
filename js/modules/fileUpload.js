@@ -61,20 +61,42 @@ function _handleJsonFile(e, type) {
     
 }
 
+function startFileUploadFromUrl() {
+    try {
+        resetBuildReleaseJsonData();
 
-function xhrUpload() {
-    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
-    $.getJSON(flickerAPI, {
-        tags: "mount rainier",
-        tagmode: "any",
-        format: "json"
-    })
-    .done(function (data) {
-        $.each(data.items, function (i, item) {
-            $("<img>").attr("src", item.media.m).appendTo("#images");
-            if (i === 3) {
-                return false;
-            }
-        });
-    });
+        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
+        if (buildDefUrl != "") {
+            xhrUpload(buildDefUrl, buildJsonText);
+        }
+
+        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
+        if (releaseDefUrl != "") {
+            xhrUpload(releaseDefUrl, releaseJsonText);
+        }
+
+    } catch (e) {
+        showError("An error occured while trying to upload the file. Please try again later.");
+        return;
+    }
 }
+
+function xhrUpload(urlValue, type) {
+    let isBuildType = (type === buildJsonText);
+
+    $.getJSON(urlValue)
+        .done(function (returnedData) {
+            if (isBuildType) {
+                buildJsonData = returnedData;
+            }
+            else {
+                releaseJsonData = returnedData;
+                visualizeScreenView();
+            }
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.error("Request Failed: " + err);
+        });
+}
+

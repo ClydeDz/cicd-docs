@@ -6923,10 +6923,23 @@ h1, h2, h3, h4,
   to {
     transform: translateY(0); } }
 
-.file-upload-control {
+.upload-partial .file-upload-control {
   padding: 9px 0; }
-  .file-upload-control #fileUploadGo {
+  .upload-partial .file-upload-control div.row div.col-lg-6 label[for='buildJsonUploadControl'] {
+    padding: 10px 21px; }
+  @media (min-width: 992px) {
+    .upload-partial .file-upload-control div.row div.col-lg-6:first-child {
+      padding-right: 0; }
+    .upload-partial .file-upload-control div.row div.col-lg-6:last-child {
+      padding-left: 0; } }
+  @media (max-width: 992px) {
+    .upload-partial .file-upload-control div.row div.col-lg-6 label {
+      margin: 6px 0; } }
+  .upload-partial .file-upload-control input[type=submit] {
     margin-top: 9px; }
+  .upload-partial .file-upload-control label.text-muted {
+    font-size: smaller;
+    font-weight: 100; }
 
 /* Specific CSS */
 /*

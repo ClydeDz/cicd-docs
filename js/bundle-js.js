@@ -789,11 +789,24 @@ function upload_ViewLoad() {
 	// Attach event listeners for buttons
 	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
 	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
-	document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+    document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+    document.getElementById('urlUploadGo').addEventListener('click', startFileUploadFromUrl, false);
 
 	// Hide the status icons in the beginning
 	$("#buildJsonUploadControlStatus").hide();
-	$("#releaseJsonUploadControlStatus").hide();
+    $("#releaseJsonUploadControlStatus").hide();
+
+    $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").change(function () {
+        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
+        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
+        console.log("change");
+        if (buildDefUrl != "" || releaseDefUrl != "") {
+            $("#urlUploadGo").prop('disabled', false);
+        }
+        else {
+            $("#urlUploadGo").prop('disabled', true);
+        }
+    });
 
 	// Animate the UI to make an entrance
 	animateCards();
@@ -807,15 +820,23 @@ function visualization_ViewLoad(combinedJson) {
 	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
 
 	// Based on if we have the build and release definitions uploaded, decide how the UI appears
-    let doesBuildDefinitionExist = combinedJson.buildDef != null;
-    let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
+    let doesBuildDefinitionExist = !isEmpty(combinedJson.buildDef);
+    let doesReleaseDefinitionExist = !isEmpty(combinedJson.releaseDef);
     let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
 
     if (doesBuildDefinitionExist) {
         buildVisualizeScreenView(combinedJson);
+        activateBuildButton();
+    }
+    else {
+        $("#showBuildViewBtn").prop('disabled', true);
     }
     if (doesReleaseDefinitionExist) {
         releaseVisualizeScreenView(combinedJson);
+        activateReleaseButton();
+    }
+    else {
+        $("#showReleaseViewBtn").prop('disabled', true);
     }
 
     if (noBuildNoReleaseDefinition) {
@@ -838,14 +859,12 @@ function goToVisualization(e) {
 
 function goBackToUploadScreen() {
     uploadScreenView();
+    resetBuildReleaseJsonData();
 }
 
 function goToBuild() {
 	// Add focus on the build button
-	$("#showBuildViewBtn").removeClass("button-inverse");
-    $("#showBuildViewBtn").addClass("button");
-    $("#showReleaseViewBtn").removeClass("button");
-    $("#showReleaseViewBtn").addClass("button-inverse");
+    activateBuildButton();
 
 	// Show the build view
     $("#buildView").show();
@@ -857,10 +876,7 @@ function goToBuild() {
 
 function goToRelease() {
 	// Add focus on the release button
-    $("#showReleaseViewBtn").removeClass("button-inverse");
-    $("#showReleaseViewBtn").addClass("button");
-    $("#showBuildViewBtn").removeClass("button");
-    $("#showBuildViewBtn").addClass("button-inverse");
+    activateReleaseButton();
 
 	// Show the release view
 	$("#releaseView").show();
@@ -956,23 +972,46 @@ function _handleJsonFile(e, type) {
     
 }
 
+function startFileUploadFromUrl() {
+    try {
+        resetBuildReleaseJsonData();
 
-function xhrUpload() {
-    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
-    $.getJSON(flickerAPI, {
-        tags: "mount rainier",
-        tagmode: "any",
-        format: "json"
-    })
-    .done(function (data) {
-        $.each(data.items, function (i, item) {
-            $("<img>").attr("src", item.media.m).appendTo("#images");
-            if (i === 3) {
-                return false;
-            }
-        });
-    });
+        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
+        if (buildDefUrl != "") {
+            xhrUpload(buildDefUrl, buildJsonText);
+        }
+
+        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
+        if (releaseDefUrl != "") {
+            xhrUpload(releaseDefUrl, releaseJsonText);
+        }
+
+    } catch (e) {
+        showError("An error occured while trying to upload the file. Please try again later.");
+        return;
+    }
 }
+
+function xhrUpload(urlValue, type) {
+    let isBuildType = (type === buildJsonText);
+
+    $.getJSON(urlValue)
+        .done(function (returnedData) {
+            if (isBuildType) {
+                buildJsonData = returnedData;
+            }
+            else {
+                releaseJsonData = returnedData;
+                visualizeScreenView();
+            }
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.error("Request Failed: " + err);
+        });
+}
+
+
 ///////////////////////////////////////////
 //////   Methods to handle URL upload
 ///////////////////////////////////////////
@@ -2106,7 +2145,7 @@ function getFileName() {
 
 function isPageAlmostOver(doc, currentYAxisValue) {
     var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    return currentYAxisValue >= (pageHeight - 85); //tested ok with 85
+    return currentYAxisValue >= (pageHeight - 85); 
 }
 
 
@@ -2869,7 +2908,6 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
         doc = setH5HeadingStyle(doc);
-        doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
         pdf.yAxisValue = triangle.y2;
 
@@ -3186,6 +3224,10 @@ function showError(errorMessage) {
 ///////////////////////////////////////////////
 
 function isEmpty(obj) {
+    if (obj == null) {
+        return true;
+    }
+
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key))
 			return false;
@@ -3205,6 +3247,25 @@ function getRandomColor() {
 function random_rgba() {
 	let o = Math.round, r = Math.random, s = 255;
 	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+}
+
+function resetBuildReleaseJsonData() {
+    buildJsonData = null;
+    releaseJsonData = null;
+}
+
+function activateBuildButton() {
+    $("#showBuildViewBtn").removeClass("button-inverse");
+    $("#showBuildViewBtn").addClass("button");
+    $("#showReleaseViewBtn").removeClass("button");
+    $("#showReleaseViewBtn").addClass("button-inverse");
+}
+
+function activateReleaseButton() {
+    $("#showReleaseViewBtn").removeClass("button-inverse");
+    $("#showReleaseViewBtn").addClass("button");
+    $("#showBuildViewBtn").removeClass("button");
+    $("#showBuildViewBtn").addClass("button-inverse");
 }
 $(document).ready(function () {
    

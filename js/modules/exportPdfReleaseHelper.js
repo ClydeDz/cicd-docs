@@ -260,7 +260,6 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         doc.setFillColor(0);
         doc.triangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3, triangle.fill);
         doc = setH5HeadingStyle(doc);
-        doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
         doc.text(triangle.x3 + 7, triangle.y3 + (triangle.y2 - triangle.y3), `Phase ${deploymentPhasesIndex+1}: ${currentPhase.name}`);
         pdf.yAxisValue = triangle.y2;
 

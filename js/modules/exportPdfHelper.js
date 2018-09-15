@@ -251,7 +251,7 @@ function getFileName() {
 
 function isPageAlmostOver(doc, currentYAxisValue) {
     var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-    return currentYAxisValue >= (pageHeight - 85); //tested ok with 85
+    return currentYAxisValue >= (pageHeight - 85); 
 }
 
 

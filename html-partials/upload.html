@@ -1,5 +1,5 @@
 ﻿<script id="uploadPartial" type="text/x-mustache">
-    <div class="container container-fluid">
+    <div class="container container-fluid upload-partial">
         <div class="row">
             <div class="col-xs-12 col-md-5">
                 <div class="card">
@@ -11,14 +11,14 @@
                     </div>                    
                     <div class="file-upload-control">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-xs-12 col-lg-6">
                                 <input type="file" class="btn button hidden" id="buildJsonUploadControl" name="buildJsonUploadControl" />
                                 <label for="buildJsonUploadControl" class="btn button">
                                     Upload build definition
                                 </label>
                                 <img src="../images/icons/checkmark.png" width="24" alt="Build file upload status" id="buildJsonUploadControlStatus" />
                             </div>
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-xs-12 col-lg-6">
                                 <input type="file" class="btn button hidden" id="releaseJsonUploadControl" name="releaseJsonUploadControl" />
                                 <label for="releaseJsonUploadControl" class="btn button">
                                     Upload release definition
@@ -39,16 +39,31 @@
             </div>
             <div class="col-xs-12 col-md-5 vcenter">
                 <div class="card">
-                    <h2>Upload a .json file via a URL</h2>
-                    <label for="buildJsonUrlUploadControl" class="text-muted">
-                        Upload build definition from a URL
-                    </label>
-                    <input type="url" class="form-control" id="buildJsonUrlUploadControl" name="buildJsonUrlUploadControl" />
-                    <label for="releaseJsonUrlUploadControl" class="text-muted">
-                        Upload release definition from a URL
-                    </label>
-                    <input type="url" class="form-control" id="releaseJsonUrlUploadControl" name="releaseJsonUrlUploadControl" />
-                    <input type="submit" value="Upload & go" class="btn button"/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Upload via URL</h2>
+                            <p>Upload a .json file from your computer. You either upload the build and release json file or any one.</p>
+                        </div>
+                    </div>
+                    <div class="file-upload-control">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="buildJsonUrlUploadControl" class="text-muted">
+                                    Upload build definition from a URL
+                                </label>
+                                <input type="url" class="form-control" id="buildJsonUrlUploadControl" name="buildJsonUrlUploadControl" />
+                                <label for="releaseJsonUrlUploadControl" class="text-muted">
+                                    Upload release definition from a URL
+                                </label>
+                                <input type="url" class="form-control" id="releaseJsonUrlUploadControl" name="releaseJsonUrlUploadControl" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <input type="submit" value="Upload & go" id="urlUploadGo" class="btn button" disabled />
+                            </div>
+                        </div>
+                    </div>                 
                 </div>
             </div>
         </div>

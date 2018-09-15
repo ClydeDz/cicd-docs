@@ -75,11 +75,24 @@ function upload_ViewLoad() {
 	// Attach event listeners for buttons
 	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
 	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
-	document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+    document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
+    document.getElementById('urlUploadGo').addEventListener('click', startFileUploadFromUrl, false);
 
 	// Hide the status icons in the beginning
 	$("#buildJsonUploadControlStatus").hide();
-	$("#releaseJsonUploadControlStatus").hide();
+    $("#releaseJsonUploadControlStatus").hide();
+
+    $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").change(function () {
+        let buildDefUrl = $('#buildJsonUrlUploadControl').val();
+        let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
+        console.log("change");
+        if (buildDefUrl != "" || releaseDefUrl != "") {
+            $("#urlUploadGo").prop('disabled', false);
+        }
+        else {
+            $("#urlUploadGo").prop('disabled', true);
+        }
+    });
 
 	// Animate the UI to make an entrance
 	animateCards();
@@ -93,15 +106,23 @@ function visualization_ViewLoad(combinedJson) {
 	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
 
 	// Based on if we have the build and release definitions uploaded, decide how the UI appears
-    let doesBuildDefinitionExist = combinedJson.buildDef != null;
-    let doesReleaseDefinitionExist = combinedJson.releaseDef != null;
+    let doesBuildDefinitionExist = !isEmpty(combinedJson.buildDef);
+    let doesReleaseDefinitionExist = !isEmpty(combinedJson.releaseDef);
     let noBuildNoReleaseDefinition = !doesBuildDefinitionExist && !doesReleaseDefinitionExist; 
 
     if (doesBuildDefinitionExist) {
         buildVisualizeScreenView(combinedJson);
+        activateBuildButton();
+    }
+    else {
+        $("#showBuildViewBtn").prop('disabled', true);
     }
     if (doesReleaseDefinitionExist) {
         releaseVisualizeScreenView(combinedJson);
+        activateReleaseButton();
+    }
+    else {
+        $("#showReleaseViewBtn").prop('disabled', true);
     }
 
     if (noBuildNoReleaseDefinition) {
@@ -124,14 +145,12 @@ function goToVisualization(e) {
 
 function goBackToUploadScreen() {
     uploadScreenView();
+    resetBuildReleaseJsonData();
 }
 
 function goToBuild() {
 	// Add focus on the build button
-	$("#showBuildViewBtn").removeClass("button-inverse");
-    $("#showBuildViewBtn").addClass("button");
-    $("#showReleaseViewBtn").removeClass("button");
-    $("#showReleaseViewBtn").addClass("button-inverse");
+    activateBuildButton();
 
 	// Show the build view
     $("#buildView").show();
@@ -143,10 +162,7 @@ function goToBuild() {
 
 function goToRelease() {
 	// Add focus on the release button
-    $("#showReleaseViewBtn").removeClass("button-inverse");
-    $("#showReleaseViewBtn").addClass("button");
-    $("#showBuildViewBtn").removeClass("button");
-    $("#showBuildViewBtn").addClass("button-inverse");
+    activateReleaseButton();
 
 	// Show the release view
 	$("#releaseView").show();
