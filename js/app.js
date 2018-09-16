@@ -1,9 +1,9 @@
 ﻿$(document).ready(function () {
    
-    let buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    let releaseJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
+    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+
     if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
-        // Found query string
         startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
     }
     else {
@@ -20,6 +20,10 @@ $("#siteLogo").click(function () {
 
 function urlExists(url) {
     return !(url === "" || url === undefined);
+}
+
+function sanityCheckUrl(url) {
+    return url === undefined ? "" : url;
 }
 var jsonObj;
 

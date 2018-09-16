@@ -770,6 +770,7 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('buildPartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#buildView").html(output);
+            animateCards();    
         });
     }
     if (templateName === templateNames.RELEASE) {
@@ -777,7 +778,8 @@ function _switchTemplate(templateName, jsonData) {
             var contents = document.getElementById('releasePartial').innerHTML;
             var output = Mustache.render(contents, jsonData);
             $("#releaseView").html(output);
-            release_ViewLoad();          
+            release_ViewLoad();    
+            animateCards();    
         });
     }    
 }
@@ -994,15 +996,21 @@ function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
             showError("Please enter the URL for the build and/or release definition.");
             return;
         }
-        
-        if (doesBuildDefinitionExist) {
-            // 3rd parameter = if release def exists don't initiate callback yet, if doesn't exists then initiate callback now
-            xhrUpload(buildDefUrl, buildJsonText, !doesReleaseDefinitionExist); 
+        else if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
+            xhrUpload(buildDefUrl, buildJsonText, {
+                "releaseDefUrl": releaseDefUrl
+            });
         }
-                
-        if (doesReleaseDefinitionExist) {
-            xhrUpload(releaseDefUrl, releaseJsonText, true);
-        }        
+        else if (doesBuildDefinitionExist && !doesReleaseDefinitionExist) {
+            xhrUpload(buildDefUrl, buildJsonText, {
+                "releaseDefUrl": ""
+            });
+        }
+        else {
+            xhrUpload(releaseDefUrl, releaseJsonText, {
+                "releaseDefUrl": ""
+            });
+        }      
 
     } catch (e) {
         showError("An error occured while trying to upload the file. Please try again later.");
@@ -1016,19 +1024,28 @@ function xhrUpload(urlValue, type, callbackCode) {
     $.getJSON(urlValue)
         .done(function (returnedData) {
             if (isBuildType) {
-                buildJsonData = returnedData;
+                buildJsonData = returnedData;                
             }
             else {
-                releaseJsonData = returnedData;                
+                releaseJsonData = returnedData;  
             }
-            if (callbackCode) {
-                visualizeScreenView();
-            }
+            xhrUploadCallback(callbackCode);
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
             console.error("Request Failed: " + err);
+            xhrUploadCallback(callbackCode);
         });
+}
+
+function xhrUploadCallback(callbackCode) {
+    if (callbackCode.releaseDefUrl != "") {
+        xhrUpload(callbackCode.releaseDefUrl, releaseJsonText, {
+            "releaseDefUrl": ""
+        });
+    } else {
+        visualizeScreenView();
+    }
 }
 
 
@@ -3289,10 +3306,10 @@ function activateReleaseButton() {
 }
 $(document).ready(function () {
    
-    let buildJsonUrl = getUrlVars()[buildJsonUrlQueryStringKey];
-    let releaseJsonUrl = getUrlVars()[releaseJsonUrlQueryStringKey];
+    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+
     if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
-        // Found query string
         startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
     }
     else {
@@ -3309,5 +3326,9 @@ $("#siteLogo").click(function () {
 
 function urlExists(url) {
     return !(url === "" || url === undefined);
+}
+
+function sanityCheckUrl(url) {
+    return url === undefined ? "" : url;
 }
 var jsonObj;
