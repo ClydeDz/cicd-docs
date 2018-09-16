@@ -13,14 +13,14 @@
                         <div class="row">
                             <div class="col-xs-12 col-lg-6">
                                 <input type="file" class="btn button hidden" id="buildJsonUploadControl" name="buildJsonUploadControl" />
-                                <label for="buildJsonUploadControl" class="btn button">
+                                <label for="buildJsonUploadControl" class="btn button" tabindex="1">
                                     Upload build definition
                                 </label>
                                 <img src="../images/icons/checkmark.png" width="24" alt="Build file upload status" id="buildJsonUploadControlStatus" />
                             </div>
                             <div class="col-xs-12 col-lg-6">
                                 <input type="file" class="btn button hidden" id="releaseJsonUploadControl" name="releaseJsonUploadControl" />
-                                <label for="releaseJsonUploadControl" class="btn button">
+                                <label for="releaseJsonUploadControl" class="btn button" tabindex="2">
                                     Upload release definition
                                 </label>
                                 <img src="../images/icons/checkmark.png" width="24" alt="Release file upload status" id="releaseJsonUploadControlStatus" />
@@ -28,7 +28,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <input type="submit" value="Go" class="btn button" id="fileUploadGo" disabled />
+                                <input type="submit" value="Go" class="btn button" id="fileUploadGo" disabled tabindex="3"/>
                             </div>
                         </div>
                     </div>
@@ -51,16 +51,16 @@
                                 <label for="buildJsonUrlUploadControl" class="text-muted">
                                     URL for the build definition
                                 </label>
-                                <input type="url" class="form-control" id="buildJsonUrlUploadControl" name="buildJsonUrlUploadControl" />
+                                <input type="url" class="form-control" id="buildJsonUrlUploadControl" name="buildJsonUrlUploadControl" tabindex="4" />
                                 <label for="releaseJsonUrlUploadControl" class="text-muted">
                                     URL for the release definition
                                 </label>
-                                <input type="url" class="form-control" id="releaseJsonUrlUploadControl" name="releaseJsonUrlUploadControl" />
+                                <input type="url" class="form-control" id="releaseJsonUrlUploadControl" name="releaseJsonUrlUploadControl" tabindex="5" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <input type="submit" value="Upload & go" id="urlUploadGo" class="btn button" disabled />
+                                <input type="submit" value="Upload & go" id="urlUploadGo" class="btn button" disabled tabindex="6" />
                             </div>
                         </div>
                     </div>                 

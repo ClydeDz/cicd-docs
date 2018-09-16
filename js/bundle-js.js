@@ -804,7 +804,7 @@ function upload_ViewLoad() {
 	$("#buildJsonUploadControlStatus").hide();
     $("#releaseJsonUploadControlStatus").hide();
 
-    $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").change(function () {
+    $("#buildJsonUrlUploadControl, #releaseJsonUrlUploadControl").keyup(function () {
         let buildDefUrl = $('#buildJsonUrlUploadControl').val();
         let releaseDefUrl = $('#releaseJsonUrlUploadControl').val();
         

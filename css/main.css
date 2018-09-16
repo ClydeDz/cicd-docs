@@ -6732,7 +6732,7 @@ footer p {
   font-size: 12px;
   opacity: .9;
   color: white; }
-  footer p a, footer p a:hover {
+  footer p a, footer p a:hover, footer p a:focus {
     color: white; }
 
 /*
