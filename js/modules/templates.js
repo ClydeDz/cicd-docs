@@ -162,6 +162,7 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
+    window.history.replaceState({}, document.title, "/"); // removes query string from URL
 }
 
 function goToBuild() {

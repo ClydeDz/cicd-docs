@@ -3,6 +3,8 @@
     let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
     let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
 
+    footerView();
+
     if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
         startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
     }

@@ -876,6 +876,7 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
+    window.history.replaceState({}, document.title, "/"); // removes query string from URL
 }
 
 function goToBuild() {
@@ -3308,6 +3309,8 @@ $(document).ready(function () {
    
     let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
     let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+
+    footerView();
 
     if (urlExists(buildJsonUrl) || urlExists(releaseJsonUrl)) {
         startFileUploadFromUrl(buildJsonUrl, releaseJsonUrl);
