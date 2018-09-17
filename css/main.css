@@ -6730,7 +6730,7 @@ footer div {
 
 footer p {
   font-size: 12px;
-  opacity: .9;
+  opacity: .8;
   color: white; }
   footer p a, footer p a:hover, footer p a:focus {
     color: white; }
@@ -6947,7 +6947,7 @@ h1, h2, h3, h4,
     .upload-partial .file-upload-control div.row div.col-lg-6 label {
       margin: 6px 0; } }
   .upload-partial .file-upload-control input[type=submit] {
-    margin-top: 9px; }
+    margin-top: 12px; }
   .upload-partial .file-upload-control label.text-muted {
     font-size: smaller;
     font-weight: 100; }

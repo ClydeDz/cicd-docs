@@ -1717,46 +1717,42 @@ function getPreDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
     return preDeploymentApprovals;
 }
 
-function getConditonsForReleaseDefinition(currentEnvironment) {   
-    let isConditionSetToManual = () => {
-        return currentEnvironment.conditions.length === 0
-    };   
-    let isConditionsSetToAfterEnvironment = () => {
-        if (currentEnvironment.conditions[0] === undefined) {
-            return false;
-        }
-        return currentEnvironment.conditions[0].conditionType === 6;
-    };
-    let getConditionDisplayName = () => {
-        if (currentEnvironment.conditions[0] === undefined) {
-            return "Manual Only";
-        }
-        return currentEnvironment.conditions[0].conditionType === 6 ? "After Environment" : "After Release";
-    };
-    let getEnvironmentNamesFromCondition = () => {
-        let envs = [];
+function getConditonsForReleaseDefinition(currentEnvironment) {  
+    let conditions = [];
 
-        if (!isConditionsSetToAfterEnvironment()) {
-            return envs;
-        }
+    let isConditionSetToManual = currentEnvironment.conditions.length === 0;
+    if (isConditionSetToManual) {
+        let item = {};
+        item["displayName"] = "Manual only";
+        item["isConditionTypeIsAfterRelease"] = false; 
+        item["isConditionTypeIsAfterEnvironment"] = false;
+        item["isConditionTypeIsArtifact"] = false;
+        item["isConditionTypeManual"] = true;
+        conditions.push(item);
+        return conditions;
+    }
 
-        for (let conditionIndex = 0; conditionIndex < currentEnvironment.conditions.length; conditionIndex++) {
-            envs.push(currentEnvironment.conditions[conditionIndex].name);
-        }
+    for (let conditionsIndex = 0; conditionsIndex < currentEnvironment.conditions.length; conditionsIndex++) {
+        let isConditionsSetToAfterRelease = currentEnvironment.conditions[conditionsIndex].conditionType === 1;
+        let isConditionsSetToAfterEnvironment = currentEnvironment.conditions[conditionsIndex].conditionType === 2;
+        let isConditionsSetToArtifact = currentEnvironment.conditions[conditionsIndex].conditionType === 4;
 
-        return envs;
-    };
+        let getConditionDisplayName = () => {
+            let conditionName = currentEnvironment.conditions[conditionsIndex].name;
+            return isConditionsSetToAfterEnvironment ? `After stage: ${conditionName}`
+                : (isConditionsSetToArtifact ? `Artifact filters: ${conditionName}` : "After release");
+        };
 
-    let conditions = {
-        displayName: getConditionDisplayName(),
-        isConditionTypeIsAfterRelease: !isConditionsSetToAfterEnvironment(), // defaults to false, which is after release
-        isConditionTypeIsAfterEnvironment: isConditionsSetToAfterEnvironment(),
-        isConditionTypeManual: isConditionSetToManual(),
-        environments: getEnvironmentNamesFromCondition()
-    };
-
+        let item = {};                
+        item["displayName"] = getConditionDisplayName();
+        item["isConditionTypeIsAfterRelease"] = isConditionsSetToAfterRelease;
+        item["isConditionTypeIsAfterEnvironment"] = isConditionsSetToAfterEnvironment;
+        item["isConditionTypeIsArtifact"] = isConditionsSetToArtifact;
+        item["isConditionTypeManual"] = false;
+        conditions.push(item);        
+    }
+    
     return conditions;
-
 }
 
 
@@ -2920,6 +2916,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
     doc = setH5HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phases`);
+    doc = setBodyStyle(doc);
 
     if (environment.deploymentPhases.length === 0) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -2927,11 +2924,9 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         return doc;
     }
 
-    doc = setBodyStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-
     for (let deploymentPhasesIndex = 0; deploymentPhasesIndex < environment.deploymentPhases.length; deploymentPhasesIndex++) {
         let currentPhase = environment.deploymentPhases[deploymentPhasesIndex];
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
 
         // Triangle co-ords
         var triangle = {
@@ -2989,6 +2984,7 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     if (phase.steps.length === 0) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `No steps found.`);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         return doc;
     }
 
@@ -3092,37 +3088,30 @@ function printReleaseDefinitionEnvironmentConditions(doc, environment) {
     doc = setH5HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environment triggers`);
-
     doc = setBodyStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    let getEnvConditionIcon = () => {
-        if (environment.conditions.isConditionTypeIsAfterRelease) {
-            return getAfterReleaseIcon();
-        }
-        if (environment.conditions.isConditionTypeIsAfterEnvironment) {
-            return getAfterEnvironmentIcon();
-        }
-        if (environment.conditions.isConditionTypeManual) {
-            return getManualIcon();
-        }
-    };
-    doc.addImage(getEnvConditionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
-    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${environment.conditions.displayName}`);
 
-    // If after environment, then return back as this is the only information that is printed.
-    // If not, then continue as there is more info required to be printed.
-    if (!environment.conditions.isConditionTypeIsAfterEnvironment) {
-        return doc;
+    for (let conditionIndex = 0; conditionIndex < environment.conditions.length; conditionIndex++) {
+        let currentCondition = environment.conditions[conditionIndex];
+      
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        let getEnvConditionIcon = () => {
+            if (currentCondition.isConditionTypeIsAfterRelease) {
+                return getAfterReleaseIcon();
+            }
+            if (currentCondition.isConditionTypeIsAfterEnvironment) {
+                return getAfterEnvironmentIcon();
+            }
+            if (currentCondition.isConditionTypeManual) {
+                return getManualIcon();
+            }
+            if (currentCondition.isConditionTypeIsArtifact) {
+                return getArtifactIcon();
+            }
+        };
+        doc.addImage(getEnvConditionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${currentCondition.displayName}`);
     }
-
-    let environments = "";
-    for (let envIndex = 0; envIndex < environment.conditions.environments.length; envIndex++) {
-        let selectedEnvironment = environment.conditions.environments[envIndex];
-        let isLastOption = envIndex + 1 === environment.conditions.environments.length;
-        environments += isLastOption ? selectedEnvironment : selectedEnvironment + ", ";
-    }
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environments selected: ${environments}`);
+    
     return doc;
 }
 

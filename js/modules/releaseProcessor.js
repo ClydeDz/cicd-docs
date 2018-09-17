@@ -402,46 +402,42 @@ function getPreDeploymentApprovalsForReleaseDefinition(currentEnvironment) {
     return preDeploymentApprovals;
 }
 
-function getConditonsForReleaseDefinition(currentEnvironment) {   
-    let isConditionSetToManual = () => {
-        return currentEnvironment.conditions.length === 0
-    };   
-    let isConditionsSetToAfterEnvironment = () => {
-        if (currentEnvironment.conditions[0] === undefined) {
-            return false;
-        }
-        return currentEnvironment.conditions[0].conditionType === 6;
-    };
-    let getConditionDisplayName = () => {
-        if (currentEnvironment.conditions[0] === undefined) {
-            return "Manual Only";
-        }
-        return currentEnvironment.conditions[0].conditionType === 6 ? "After Environment" : "After Release";
-    };
-    let getEnvironmentNamesFromCondition = () => {
-        let envs = [];
+function getConditonsForReleaseDefinition(currentEnvironment) {  
+    let conditions = [];
 
-        if (!isConditionsSetToAfterEnvironment()) {
-            return envs;
-        }
+    let isConditionSetToManual = currentEnvironment.conditions.length === 0;
+    if (isConditionSetToManual) {
+        let item = {};
+        item["displayName"] = "Manual only";
+        item["isConditionTypeIsAfterRelease"] = false; 
+        item["isConditionTypeIsAfterEnvironment"] = false;
+        item["isConditionTypeIsArtifact"] = false;
+        item["isConditionTypeManual"] = true;
+        conditions.push(item);
+        return conditions;
+    }
 
-        for (let conditionIndex = 0; conditionIndex < currentEnvironment.conditions.length; conditionIndex++) {
-            envs.push(currentEnvironment.conditions[conditionIndex].name);
-        }
+    for (let conditionsIndex = 0; conditionsIndex < currentEnvironment.conditions.length; conditionsIndex++) {
+        let isConditionsSetToAfterRelease = currentEnvironment.conditions[conditionsIndex].conditionType === 1;
+        let isConditionsSetToAfterEnvironment = currentEnvironment.conditions[conditionsIndex].conditionType === 2;
+        let isConditionsSetToArtifact = currentEnvironment.conditions[conditionsIndex].conditionType === 4;
 
-        return envs;
-    };
+        let getConditionDisplayName = () => {
+            let conditionName = currentEnvironment.conditions[conditionsIndex].name;
+            return isConditionsSetToAfterEnvironment ? `After stage: ${conditionName}`
+                : (isConditionsSetToArtifact ? `Artifact filters: ${conditionName}` : "After release");
+        };
 
-    let conditions = {
-        displayName: getConditionDisplayName(),
-        isConditionTypeIsAfterRelease: !isConditionsSetToAfterEnvironment(), // defaults to false, which is after release
-        isConditionTypeIsAfterEnvironment: isConditionsSetToAfterEnvironment(),
-        isConditionTypeManual: isConditionSetToManual(),
-        environments: getEnvironmentNamesFromCondition()
-    };
-
+        let item = {};                
+        item["displayName"] = getConditionDisplayName();
+        item["isConditionTypeIsAfterRelease"] = isConditionsSetToAfterRelease;
+        item["isConditionTypeIsAfterEnvironment"] = isConditionsSetToAfterEnvironment;
+        item["isConditionTypeIsArtifact"] = isConditionsSetToArtifact;
+        item["isConditionTypeManual"] = false;
+        conditions.push(item);        
+    }
+    
     return conditions;
-
 }
 
 

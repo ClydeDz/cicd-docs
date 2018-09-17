@@ -59,15 +59,22 @@
                                     <div class="row env-meta">
                                         <div class="col-xs-12">
                                             <h4>Environment Triggers</h4>
-                                            {{#conditions.isConditionTypeIsAfterRelease}}
-                                            <div>  <img src="../images/icons/after-release.png" width="32" class="page-icon" />   {{ conditions.displayName }}</div>
-                                            {{/conditions.isConditionTypeIsAfterRelease}}
-                                            {{#conditions.isConditionTypeManual}}
-                                            <div>  <img src="../images/icons/manual.png" width="32" class="page-icon" />  {{ conditions.displayName }}</div>
-                                            {{/conditions.isConditionTypeManual}}
-                                            {{#conditions.isConditionTypeIsAfterEnvironment}}
-                                            <div>  <img src="../images/icons/after-environment.png" width="32" class="page-icon" />   {{ conditions.displayName }}</div>
-                                            {{/conditions.isConditionTypeIsAfterEnvironment}}
+                                            {{#conditions}}
+                                            <div>
+                                                {{#isConditionTypeIsAfterRelease}}
+                                                <div>  <img src="../images/icons/after-release.png" width="32" class="page-icon" alt="After release icon"/>   {{ displayName }}</div>
+                                                {{/isConditionTypeIsAfterRelease}}
+                                                {{#isConditionTypeManual}}
+                                                <div>  <img src="../images/icons/manual.png" width="32" class="page-icon" alt="Manual only icon"/>  {{ displayName }}</div>
+                                                {{/isConditionTypeManual}}
+                                                {{#isConditionTypeIsAfterEnvironment}}
+                                                <div>  <img src="../images/icons/after-environment.png" width="32" class="page-icon" alt="After stage icon"/>   {{ displayName }}</div>
+                                                {{/isConditionTypeIsAfterEnvironment}}
+                                                {{#isConditionTypeIsArtifact}}
+                                                <div>  <img src="../images/icons/artifact.png" width="32" class="page-icon" alt="Artifact icon"/>   {{ displayName }}</div>
+                                                {{/isConditionTypeIsArtifact}}
+                                            </div>
+                                            {{/conditions}}
                                         </div>
                                     </div>
                                     <div class="row env-meta">
@@ -91,7 +98,12 @@
                                             </p>
                                             <p>
                                                 {{^isAutomated}}
-                                                Needs approval by: {{ approver.displayName }} | {{ approver.uniqueName }}
+                                                {{#approver.isApproverHuman}}
+                                                Needs approval by: <a href="mailto:{{ approver.uniqueName }}">{{ approver.displayName }}</a>
+                                                {{/approver.isApproverHuman}}
+                                                {{^approver.isApproverHuman}}
+                                                Needs approval by: {{ approver.displayName }}
+                                                {{/approver.isApproverHuman}}
                                                 {{/isAutomated}}
                                             </p>
                                             {{/preDeployApprovals}}

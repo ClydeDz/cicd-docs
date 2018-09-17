@@ -234,6 +234,7 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
     doc = setH5HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Phases`);
+    doc = setBodyStyle(doc);
 
     if (environment.deploymentPhases.length === 0) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
@@ -241,11 +242,9 @@ function printReleaseDefinitonTasksAndPhases(doc, environment) {
         return doc;
     }
 
-    doc = setBodyStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-
     for (let deploymentPhasesIndex = 0; deploymentPhasesIndex < environment.deploymentPhases.length; deploymentPhasesIndex++) {
         let currentPhase = environment.deploymentPhases[deploymentPhasesIndex];
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
 
         // Triangle co-ords
         var triangle = {
@@ -303,6 +302,7 @@ function printTasksForEachPhaseInReleaseDefinition(doc, phase) {
     if (phase.steps.length === 0) {
         doc = addNewBodyLine(doc, lineHeightType.BODY);
         doc.text(pdf.xAxisValue, pdf.yAxisValue, `No steps found.`);
+        doc = addNewBodyLine(doc, lineHeightType.HALFLINE);
         return doc;
     }
 
@@ -406,37 +406,30 @@ function printReleaseDefinitionEnvironmentConditions(doc, environment) {
     doc = setH5HeadingStyle(doc);
     doc = addNewBodyLine(doc, lineHeightType.SUBHEADING);
     doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environment triggers`);
-
     doc = setBodyStyle(doc);
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    let getEnvConditionIcon = () => {
-        if (environment.conditions.isConditionTypeIsAfterRelease) {
-            return getAfterReleaseIcon();
-        }
-        if (environment.conditions.isConditionTypeIsAfterEnvironment) {
-            return getAfterEnvironmentIcon();
-        }
-        if (environment.conditions.isConditionTypeManual) {
-            return getManualIcon();
-        }
-    };
-    doc.addImage(getEnvConditionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
-    doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${environment.conditions.displayName}`);
 
-    // If after environment, then return back as this is the only information that is printed.
-    // If not, then continue as there is more info required to be printed.
-    if (!environment.conditions.isConditionTypeIsAfterEnvironment) {
-        return doc;
+    for (let conditionIndex = 0; conditionIndex < environment.conditions.length; conditionIndex++) {
+        let currentCondition = environment.conditions[conditionIndex];
+      
+        doc = addNewBodyLine(doc, lineHeightType.BODY);
+        let getEnvConditionIcon = () => {
+            if (currentCondition.isConditionTypeIsAfterRelease) {
+                return getAfterReleaseIcon();
+            }
+            if (currentCondition.isConditionTypeIsAfterEnvironment) {
+                return getAfterEnvironmentIcon();
+            }
+            if (currentCondition.isConditionTypeManual) {
+                return getManualIcon();
+            }
+            if (currentCondition.isConditionTypeIsArtifact) {
+                return getArtifactIcon();
+            }
+        };
+        doc.addImage(getEnvConditionIcon(), 'JPEG', pdf.xAxisValue, pdf.yAxisValue - 11, pdf.printIconSize, pdf.printIconSize);
+        doc.text(pdf.xAxisValue + pdf.printIconSize + 5, pdf.yAxisValue, `${currentCondition.displayName}`);
     }
-
-    let environments = "";
-    for (let envIndex = 0; envIndex < environment.conditions.environments.length; envIndex++) {
-        let selectedEnvironment = environment.conditions.environments[envIndex];
-        let isLastOption = envIndex + 1 === environment.conditions.environments.length;
-        environments += isLastOption ? selectedEnvironment : selectedEnvironment + ", ";
-    }
-    doc = addNewBodyLine(doc, lineHeightType.BODY);
-    doc.text(pdf.xAxisValue, pdf.yAxisValue, `Environments selected: ${environments}`);
+    
     return doc;
 }
 
