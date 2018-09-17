@@ -704,7 +704,7 @@ var lineObjectLength = {
 // App constants
 const appVersionNumber = "1.0.0";
 const appName = "CI/CD Docs";
-const appUrl = "http://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
+const appUrl = "https://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
 
 // Other constants
 const buildJsonUrlQueryStringKey = "buildjson";
