@@ -1,4 +1,10 @@
 ﻿<script id="footerPartial" type="text/x-mustache">
     <!-- Version of the website -->
-    <span>Version {{version}}</span>
+    <span>
+        <a href="https://cicd-docs.gitbook.io/docs/" 
+           target="_blank"
+           title="Documentation for CI/CD Docs. Opens in a new tab."
+           onclick="sendCTAClickData('documentation', 'documentation website click from the footer');">Documentation</a> 
+        / Version {{version}}
+    </span>
 </script>
