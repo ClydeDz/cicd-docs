@@ -171,7 +171,8 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
-    window.history.replaceState({}, document.title, "/"); // removes query string from URL
+    let cleanUrl = window.location.hostname == "localhost" ? "/" : "https://clydedz.github.io/cicd-docs/";
+    window.history.replaceState({}, document.title, cleanUrl); // removes query string from URL
 }
 
 function goToBuild() {
