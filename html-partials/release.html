@@ -34,169 +34,175 @@
                             {{/releaseDefinitonHasMultipleEnvironments}}
                         </div>
                     </div>
-                    <div class="environment-slider">
-                        {{#environments}}
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h3>{{ name }}</h3>
+                    <div class="row">
+                        <div>
+                            <div class="environment-slider col-xs-12">
+                                {{#environments}}
                                 <div>
-                                    <div class="row env-meta">
+                                    <div class="row">
                                         <div class="col-xs-12">
-                                            {{#isOwnerHuman}}
-                                            <img src="../images/icons/user.png" width="32" />
-                                            <a href="mailto:{{ownerEmail}}">
-                                                {{ ownerName }}
-                                            </a>
-                                            {{/isOwnerHuman}}
-                                            {{^isOwnerHuman}}
-                                            <img src="../images/icons/user-group.png" width="32" />
-                                            {{ ownerName }}
-                                            {{/isOwnerHuman}}
-                                            <div class="buffer"></div>
-                                            <img src="../images/icons/notification.png" width="32" /> {{emailRecipients}}
-                                        </div>
-                                    </div>
-                                    <div class="row env-meta">
-                                        <div class="col-xs-12">
-                                            <h4>Environment Triggers</h4>
-                                            {{#conditions}}
+                                            <h3>{{ name }}</h3>
                                             <div>
-                                                {{#isConditionTypeIsAfterRelease}}
-                                                <div>  <img src="../images/icons/after-release.png" width="32" class="page-icon" alt="After release icon"/>   {{ displayName }}</div>
-                                                {{/isConditionTypeIsAfterRelease}}
-                                                {{#isConditionTypeManual}}
-                                                <div>  <img src="../images/icons/manual.png" width="32" class="page-icon" alt="Manual only icon"/>  {{ displayName }}</div>
-                                                {{/isConditionTypeManual}}
-                                                {{#isConditionTypeIsAfterEnvironment}}
-                                                <div>  <img src="../images/icons/after-environment.png" width="32" class="page-icon" alt="After stage icon"/>   {{ displayName }}</div>
-                                                {{/isConditionTypeIsAfterEnvironment}}
-                                                {{#isConditionTypeIsArtifact}}
-                                                <div>  <img src="../images/icons/artifact.png" width="32" class="page-icon" alt="Artifact icon"/>   {{ displayName }}</div>
-                                                {{/isConditionTypeIsArtifact}}
+                                                <div class="row env-meta">
+                                                    <div class="col-xs-12">
+                                                        {{#isOwnerHuman}}
+                                                        <img src="../images/icons/user.png" width="32" />
+                                                        <a href="mailto:{{ownerEmail}}">
+                                                            {{ ownerName }}
+                                                        </a>
+                                                        {{/isOwnerHuman}}
+                                                        {{^isOwnerHuman}}
+                                                        <img src="../images/icons/user-group.png" width="32" />
+                                                        {{ ownerName }}
+                                                        {{/isOwnerHuman}}
+                                                        <div class="buffer"></div>
+                                                        <img src="../images/icons/notification.png" width="32" /> {{emailRecipients}}
+                                                    </div>
+                                                </div>
+                                                <div class="row env-meta">
+                                                    <div class="col-xs-12">
+                                                        <h4>Environment Triggers</h4>
+                                                        {{#conditions}}
+                                                        <div>
+                                                            {{#isConditionTypeIsAfterRelease}}
+                                                            <div>  <img src="../images/icons/after-release.png" width="32" class="page-icon" alt="After release icon" />   {{ displayName }}</div>
+                                                            {{/isConditionTypeIsAfterRelease}}
+                                                            {{#isConditionTypeManual}}
+                                                            <div>  <img src="../images/icons/manual.png" width="32" class="page-icon" alt="Manual only icon" />  {{ displayName }}</div>
+                                                            {{/isConditionTypeManual}}
+                                                            {{#isConditionTypeIsAfterEnvironment}}
+                                                            <div>  <img src="../images/icons/after-environment.png" width="32" class="page-icon" alt="After stage icon" />   {{ displayName }}</div>
+                                                            {{/isConditionTypeIsAfterEnvironment}}
+                                                            {{#isConditionTypeIsArtifact}}
+                                                            <div>  <img src="../images/icons/artifact.png" width="32" class="page-icon" alt="Artifact icon" />   {{ displayName }}</div>
+                                                            {{/isConditionTypeIsArtifact}}
+                                                        </div>
+                                                        {{/conditions}}
+                                                    </div>
+                                                </div>
+                                                <div class="row env-meta">
+                                                    <div class="col-xs-12">
+                                                        <h4>Pre-deployment approvals</h4>
+                                                        {{#preDeployApprovals}}
+                                                        <p>
+                                                            {{#isAutomated}}
+                                                            <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated
+                                                            {{/isAutomated}}
+                                                            {{^isAutomated}}
+                                                            <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual
+                                                            {{/isAutomated}}
+                                                            <span class="buffer"></span>
+                                                            {{#isNotificationOn}}
+                                                            <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
+                                                            {{/isNotificationOn}}
+                                                            {{^isNotificationOn}}
+                                                            <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
+                                                            {{/isNotificationOn}}
+                                                        </p>
+                                                        <p>
+                                                            {{^isAutomated}}
+                                                            {{#approver.isApproverHuman}}
+                                                            Needs approval by: <a href="mailto:{{ approver.uniqueName }}">{{ approver.displayName }}</a>
+                                                            {{/approver.isApproverHuman}}
+                                                            {{^approver.isApproverHuman}}
+                                                            Needs approval by: {{ approver.displayName }}
+                                                            {{/approver.isApproverHuman}}
+                                                            {{/isAutomated}}
+                                                        </p>
+                                                        {{/preDeployApprovals}}
+                                                    </div>
+                                                </div>
+                                                <div class="row env-meta">
+                                                    <div class="col-xs-12">
+                                                        <h4>Post-deployment approvals</h4>
+                                                        {{#postDeployApprovals}}
+                                                        <p>
+                                                            {{#isAutomated}}
+                                                            <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated
+                                                            {{/isAutomated}}
+                                                            {{^isAutomated}}
+                                                            <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual
+                                                            {{/isAutomated}}
+                                                            <span class="buffer"></span>
+                                                            {{#isNotificationOn}}
+                                                            <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
+                                                            {{/isNotificationOn}}
+                                                            {{^isNotificationOn}}
+                                                            <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
+                                                            {{/isNotificationOn}}
+                                                        </p>
+                                                        <p>
+                                                            {{^isAutomated}}
+                                                            Needs approval by: {{ approver.displayName }} | {{ approver.uniqueName }}
+                                                            {{/isAutomated}}
+                                                        </p>
+                                                        {{/postDeployApprovals}}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            {{/conditions}}
                                         </div>
-                                    </div>
-                                    <div class="row env-meta">
-                                        <div class="col-xs-12">
-                                            <h4>Pre-deployment approvals</h4>
-                                            {{#preDeployApprovals}}
-                                            <p>
-                                                {{#isAutomated}}
-                                                <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated
-                                                {{/isAutomated}}
-                                                {{^isAutomated}}
-                                                <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual
-                                                {{/isAutomated}}
-                                                <span class="buffer"></span>
-                                                {{#isNotificationOn}}
-                                                <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
-                                                {{/isNotificationOn}}
-                                                {{^isNotificationOn}}
-                                                <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
-                                                {{/isNotificationOn}}
-                                            </p>
-                                            <p>
-                                                {{^isAutomated}}
-                                                {{#approver.isApproverHuman}}
-                                                Needs approval by: <a href="mailto:{{ approver.uniqueName }}">{{ approver.displayName }}</a>
-                                                {{/approver.isApproverHuman}}
-                                                {{^approver.isApproverHuman}}
-                                                Needs approval by: {{ approver.displayName }}
-                                                {{/approver.isApproverHuman}}
-                                                {{/isAutomated}}
-                                            </p>
-                                            {{/preDeployApprovals}}
-                                        </div>
-                                    </div>
-                                    <div class="row env-meta">
-                                        <div class="col-xs-12">
-                                            <h4>Post-deployment approvals</h4>
-                                            {{#postDeployApprovals}}
-                                            <p>
-                                                {{#isAutomated}}
-                                                <img src="../images/icons/ci.png" width="32" class="page-icon" /> Automated
-                                                {{/isAutomated}}
-                                                {{^isAutomated}}
-                                                <img src="../images/icons/manual.png" width="32" class="page-icon" /> Manual
-                                                {{/isAutomated}}
-                                                <span class="buffer"></span>
-                                                {{#isNotificationOn}}
-                                                <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
-                                                {{/isNotificationOn}}
-                                                {{^isNotificationOn}}
-                                                <img src="../images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
-                                                {{/isNotificationOn}}
-                                            </p>
-                                            <p>
-                                                {{^isAutomated}}
-                                                Needs approval by: {{ approver.displayName }} | {{ approver.uniqueName }}
-                                                {{/isAutomated}}
-                                            </p>
-                                            {{/postDeployApprovals}}
+                                        <div>
+                                            {{#deploymentPhases}}
+                                            <div class="col-xs-12 phase">
+                                                <h3>Phase: {{ name }}</h3>
+                                                <div class="row phase-meta">
+                                                    <div class="col-xs-12">
+                                                        {{#isPhaseAgentful}}
+                                                        <small>  <img src="../images/icons/agent.png" width="26" class="page-icon" />  Runs on agent</small>
+                                                        {{/isPhaseAgentful}}
+
+                                                        {{#isPhaseAgentless}}
+                                                        <small>  <img src="../images/icons/server.png" width="26" class="page-icon" />  Runs on server</small>
+                                                        {{/isPhaseAgentless}}
+
+                                                        {{#isDeploymentGroup}}
+                                                        <small>  <img src="../images/icons/deployment-group.png" width="26" class="page-icon" />  Deployment group phase</small>
+                                                        {{/isDeploymentGroup}}
+                                                    </div>
+                                                </div>
+                                                <!-- steps -->
+                                                <div class="steps highlight-div" style="border-left-color:{{colorHexCode}};">
+                                                    {{#steps}}
+                                                    <div id="step-{{id}}" class="row">
+                                                        <div class="col-xs-1">
+                                                            <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                                        </div>
+                                                        <div class="col-xs-9">
+                                                            {{ name }}<br />
+                                                            <small class="text-muted">Version: {{ version }}</small>
+                                                        </div>
+                                                        <div class="col-xs-1">
+                                                            {{#enabled}}
+                                                            <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
+                                                            <img src="../images/icons/checkmark.png" width="32" />
+                                                            {{/enabled}}
+                                                            {{^enabled}}
+                                                            <img src="../images/icons/disabled.png" width="32" />
+                                                            <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
+                                                            {{/enabled}}
+                                                        </div>
+                                                        <div class="col-xs-1">
+                                                            {{#continueOnError}}
+                                                            <img src="../images/icons/error.png" width="32" />
+                                                            <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
+                                                            {{/continueOnError}}
+                                                            {{^continueOnError}}
+                                                            <img src="../images/icons/error-disabled.png" width="32" />
+                                                            <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
+                                                            {{/continueOnError}}
+                                                        </div>
+                                                    </div>
+                                                    {{/steps}}
+                                                </div>
+                                                <br /><br />
+                                            </div>
+                                            {{/deploymentPhases}}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                {{#deploymentPhases}}
-                                <div class="col-xs-12 phase">
-                                    <h3>Phase: {{ name }}</h3>
-                                    <div class="row phase-meta">
-                                        <div class="col-xs-12">
-                                            {{#isPhaseAgentful}}
-                                            <small>  <img src="../images/icons/agent.png" width="26" class="page-icon" />  Runs on agent</small>
-                                            {{/isPhaseAgentful}}
-
-                                            {{#isPhaseAgentless}}
-                                            <small>  <img src="../images/icons/server.png" width="26" class="page-icon" />  Runs on server</small>
-                                            {{/isPhaseAgentless}}
-
-                                            {{#isDeploymentGroup}}
-                                            <small>  <img src="../images/icons/deployment-group.png" width="26" class="page-icon" />  Deployment group phase</small>
-                                            {{/isDeploymentGroup}}
-                                        </div>
-                                    </div>
-                                    <!-- steps -->
-                                    <div class="steps highlight-div" style="border-left-color:{{colorHexCode}};">
-                                        {{#steps}}
-                                        <div id="step-{{id}}" class="row">
-                                            <div class="col-xs-1">
-                                                <img alt="{{ name }}" src="{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
-                                            </div>
-                                            <div class="col-xs-9">
-                                                {{ name }}<br />
-                                                <small class="text-muted">Version: {{ version }}</small>
-                                            </div>
-                                            <div class="col-xs-1">
-                                                {{#enabled}}
-                                                <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
-                                                <img src="../images/icons/checkmark.png" width="32" />
-                                                {{/enabled}}
-                                                {{^enabled}}
-                                                <img src="../images/icons/disabled.png" width="32" />
-                                                <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
-                                                {{/enabled}}
-                                            </div>
-                                            <div class="col-xs-1">
-                                                {{#continueOnError}}
-                                                <img src="../images/icons/error.png" width="32" />
-                                                <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
-                                                {{/continueOnError}}
-                                                {{^continueOnError}}
-                                                <img src="../images/icons/error-disabled.png" width="32" />
-                                                <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
-                                                {{/continueOnError}}
-                                            </div>
-                                        </div>
-                                        {{/steps}}
-                                    </div>
-                                    <br /><br />
-                                </div>
-                                {{/deploymentPhases}}
+                                {{/environments}}
                             </div>
                         </div>
-                        {{/environments}}
                     </div>
                 </div>
             </div>

@@ -824,7 +824,13 @@ function visualization_ViewLoad(combinedJson) {
 	// Attach event listeners for buttons
 	document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
 	document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
-	document.getElementById('showReleaseViewBtn').addEventListener('click', goToRelease, false);
+    document.getElementById('showReleaseViewBtn').addEventListener('click', function () {
+        goToRelease();
+        setTimeout(
+            function () {
+                $('.environment-slider').slick('refresh');
+            }, 200);
+    }, false);
 	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
 
 	// Based on if we have the build and release definitions uploaded, decide how the UI appears
@@ -857,12 +863,15 @@ function visualization_ViewLoad(combinedJson) {
     }
     else {
         alert("No build or rel found");
-    }
+    } 
 }
 
 function release_ViewLoad() {
     // The environments are a slider component, so lets initiate that here
-    loadEnvironmentSlider();
+    setTimeout(
+        function () {
+            loadEnvironmentSlider();
+        }, 1500);
 }
 
 //////////////////////////////////////////////
@@ -898,13 +907,13 @@ function goToRelease() {
 	// Show the release view
 	$("#releaseView").show();
 	$("#buildView").hide();
-
-	// Animate the entrance of the cards 
-	animateCards();	
+    
+    // Animate the entrance of the cards 
+    animateCards();
 }
 
 function loadEnvironmentSlider() {
-	$('.environment-slider').slick({
+    $('.environment-slider').not('.slick-initialized').slick({
 		dots: false,
 		infinite: true,
 		speed: 500,
