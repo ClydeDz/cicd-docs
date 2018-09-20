@@ -11,11 +11,11 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 row-padding">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/revision-version.png" width="32" /> Revision number: {{metaInformation.version}}
                             <div class="buffer"></div>
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/name-format.png" width="32" /> Release version format: {{metaInformation.releaseNameFormat}}
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/name-format.png" width="32" /> Release version format: {{metaInformation.releaseNameFormat}}
                             <div class="buffer"></div>
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/external-link.png" width="32" /> <a href="{{ url }}">Open online</a>
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/external-link.png" width="32" /> <a href="{{ url }}">Open online</a>
                         </div>
                     </div>
                 </div>
@@ -46,17 +46,17 @@
                                                 <div class="row env-meta">
                                                     <div class="col-xs-12">
                                                         {{#isOwnerHuman}}
-                                                        <img src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
+                                                        <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
                                                         <a href="mailto:{{ownerEmail}}">
                                                             {{ ownerName }}
                                                         </a>
                                                         {{/isOwnerHuman}}
                                                         {{^isOwnerHuman}}
-                                                        <img src="https://clydedz.github.io/cicd-docs/images/icons/user-group.png" width="32" />
+                                                        <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user-group.png" width="32" />
                                                         {{ ownerName }}
                                                         {{/isOwnerHuman}}
                                                         <div class="buffer"></div>
-                                                        <img src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" /> {{emailRecipients}}
+                                                        <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" /> {{emailRecipients}}
                                                     </div>
                                                 </div>
                                                 <div class="row env-meta">
@@ -65,16 +65,16 @@
                                                         {{#conditions}}
                                                         <div>
                                                             {{#isConditionTypeIsAfterRelease}}
-                                                            <div>  <img src="https://clydedz.github.io/cicd-docs/images/icons/after-release.png" width="32" class="page-icon" alt="After release icon" />   {{ displayName }}</div>
+                                                            <div>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/after-release.png" width="32" class="page-icon" alt="After release icon" />   {{ displayName }}</div>
                                                             {{/isConditionTypeIsAfterRelease}}
                                                             {{#isConditionTypeManual}}
-                                                            <div>  <img src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" alt="Manual only icon" />  {{ displayName }}</div>
+                                                            <div>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" alt="Manual only icon" />  {{ displayName }}</div>
                                                             {{/isConditionTypeManual}}
                                                             {{#isConditionTypeIsAfterEnvironment}}
-                                                            <div>  <img src="https://clydedz.github.io/cicd-docs/images/icons/after-environment.png" width="32" class="page-icon" alt="After stage icon" />   {{ displayName }}</div>
+                                                            <div>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/after-environment.png" width="32" class="page-icon" alt="After stage icon" />   {{ displayName }}</div>
                                                             {{/isConditionTypeIsAfterEnvironment}}
                                                             {{#isConditionTypeIsArtifact}}
-                                                            <div>  <img src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" class="page-icon" alt="Artifact icon" />   {{ displayName }}</div>
+                                                            <div>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" class="page-icon" alt="Artifact icon" />   {{ displayName }}</div>
                                                             {{/isConditionTypeIsArtifact}}
                                                         </div>
                                                         {{/conditions}}
@@ -86,17 +86,17 @@
                                                         {{#preDeployApprovals}}
                                                         <p>
                                                             {{#isAutomated}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/ci.png" width="32" class="page-icon" /> Automated
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/ci.png" width="32" class="page-icon" /> Automated
                                                             {{/isAutomated}}
                                                             {{^isAutomated}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" /> Manual
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" /> Manual
                                                             {{/isAutomated}}
                                                             <span class="buffer"></span>
                                                             {{#isNotificationOn}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
                                                             {{/isNotificationOn}}
                                                             {{^isNotificationOn}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
                                                             {{/isNotificationOn}}
                                                         </p>
                                                         <p>
@@ -118,17 +118,17 @@
                                                         {{#postDeployApprovals}}
                                                         <p>
                                                             {{#isAutomated}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/ci.png" width="32" class="page-icon" /> Automated
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/ci.png" width="32" class="page-icon" /> Automated
                                                             {{/isAutomated}}
                                                             {{^isAutomated}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" /> Manual
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/manual.png" width="32" class="page-icon" /> Manual
                                                             {{/isAutomated}}
                                                             <span class="buffer"></span>
                                                             {{#isNotificationOn}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned on
                                                             {{/isNotificationOn}}
                                                             {{^isNotificationOn}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/notification.png" width="32" class="page-icon" /> Notification turned off
                                                             {{/isNotificationOn}}
                                                         </p>
                                                         <p>
@@ -148,15 +148,15 @@
                                                 <div class="row phase-meta">
                                                     <div class="col-xs-12">
                                                         {{#isPhaseAgentful}}
-                                                        <small>  <img src="https://clydedz.github.io/cicd-docs/images/icons/agent.png" width="26" class="page-icon" />  Runs on agent</small>
+                                                        <small>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/agent.png" width="26" class="page-icon" />  Runs on agent</small>
                                                         {{/isPhaseAgentful}}
 
                                                         {{#isPhaseAgentless}}
-                                                        <small>  <img src="https://clydedz.github.io/cicd-docs/images/icons/server.png" width="26" class="page-icon" />  Runs on server</small>
+                                                        <small>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/server.png" width="26" class="page-icon" />  Runs on server</small>
                                                         {{/isPhaseAgentless}}
 
                                                         {{#isDeploymentGroup}}
-                                                        <small>  <img src="https://clydedz.github.io/cicd-docs/images/icons/deployment-group.png" width="26" class="page-icon" />  Deployment group phase</small>
+                                                        <small>  <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/deployment-group.png" width="26" class="page-icon" />  Deployment group phase</small>
                                                         {{/isDeploymentGroup}}
                                                     </div>
                                                 </div>
@@ -165,7 +165,7 @@
                                                     {{#steps}}
                                                     <div id="step-{{id}}" class="row">
                                                         <div class="col-xs-1">
-                                                            <img alt="{{ name }}" src="https://clydedz.github.io/cicd-docs{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
+                                                            <img crossorigin="anonymous" alt="{{ name }}" src="https://clydedz.github.io/cicd-docs{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
                                                         </div>
                                                         <div class="col-xs-9">
                                                             {{ name }}<br />
@@ -174,20 +174,20 @@
                                                         <div class="col-xs-1">
                                                             {{#enabled}}
                                                             <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/checkmark.png" width="32" />
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/checkmark.png" width="32" />
                                                             {{/enabled}}
                                                             {{^enabled}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/disabled.png" width="32" />
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/disabled.png" width="32" />
                                                             <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
                                                             {{/enabled}}
                                                         </div>
                                                         <div class="col-xs-1">
                                                             {{#continueOnError}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/error.png" width="32" />
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/error.png" width="32" />
                                                             <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
                                                             {{/continueOnError}}
                                                             {{^continueOnError}}
-                                                            <img src="https://clydedz.github.io/cicd-docs/images/icons/error-disabled.png" width="32" />
+                                                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/error-disabled.png" width="32" />
                                                             <!--<i class="mdi mdi-alert-circle mdi-24px text-muted"></i>-->
                                                             {{/continueOnError}}
                                                         </div>
@@ -214,21 +214,21 @@
                         <div class="row text-center">
                             <div class="col-xs-4">
                                 <div class="text-center">
-                                    <img src="https://clydedz.github.io/cicd-docs/images/icons/environments.png" width="40" alt="Number of environments" />
+                                    <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/environments.png" width="40" alt="Number of environments" />
                                     <span>{{stats.environments}}</span>
                                 </div>
                                 <div class="text-center"><small>Environments</small></div>
                             </div>
                             <div class="col-xs-4">
                                 <div class="text-center">
-                                    <img src="https://clydedz.github.io/cicd-docs/images/icons/tasks.png" width="40" alt="Number of tasks" />
+                                    <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/tasks.png" width="40" alt="Number of tasks" />
                                     <span> {{stats.tasks}}</span>
                                 </div>
                                 <div class="text-center"><small>Tasks</small></div>
                             </div>
                             <div class="col-xs-4">
                                 <div class="text-center">
-                                    <img src="https://clydedz.github.io/cicd-docs/images/icons/variables.png" width="40" alt="Number of variables" />
+                                    <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/variables.png" width="40" alt="Number of variables" />
                                     <span>{{stats.variables}}</span>
                                 </div>
                                 <div class="text-center"><small>Variables</small></div>
@@ -237,7 +237,7 @@
                         <div class="row text-center">
                             <div class="col-xs-12">
                                 <div class="text-center">
-                                    <img src="https://clydedz.github.io/cicd-docs/images/icons/phases.png" width="40" alt="Number of phases" />
+                                    <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/phases.png" width="40" alt="Number of phases" />
                                     <span> {{stats.phases}}</span>
                                 </div>
                                 <div class="text-center"><small>Phases</small></div>
@@ -249,7 +249,7 @@
                     <h2>Created by</h2>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             {{creationInformation.createdBy}}
@@ -257,7 +257,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             <a href="mailto:{{creationInformation.createdByEmail}}">
@@ -267,7 +267,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             {{creationInformation.createdOn}}
@@ -278,7 +278,7 @@
                     <h2>Modified by</h2>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             {{modificationInformation.modifiedBy}}
@@ -286,7 +286,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             <a href="mailto:{{modificationInformation.modifiedByEmail}}">
@@ -296,7 +296,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             {{modificationInformation.modifiedOn}}
@@ -309,7 +309,7 @@
                     <div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/build.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/build.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 Artifact type: Build
@@ -317,7 +317,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 {{artifactAlias}}
@@ -325,7 +325,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/project.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/project.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 {{project}}
@@ -333,7 +333,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 {{source}}
@@ -341,7 +341,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/version.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/version.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 {{defaultVersion}}
@@ -356,7 +356,7 @@
                     {{#triggers}}
                     <div class="row">
                         <div class="col-xs-1">
-                            <img src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
+                            <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
                         </div>
                         <div class="col-xs-11">
                             {{artifactAlias}}
@@ -366,7 +366,7 @@
                         {{#isTriggerTypeContinuousDeployment}}
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/continuous-delivery.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/continuous-delivery.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 Continuous deployment
@@ -376,7 +376,7 @@
                         {{#isTriggerTypePullRequest}}
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/pull-request.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/pull-request.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 Pull request
@@ -388,7 +388,7 @@
                     <div class="trigger-conditions">
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/code.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/code.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 Branch: {{sourceBranch}}
@@ -396,7 +396,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-1">
-                                <img src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
+                                <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
                             </div>
                             <div class="col-xs-11">
                                 Use build definition branch: {{useBuildDefinitionBranch}}

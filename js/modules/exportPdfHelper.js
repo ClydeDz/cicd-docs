@@ -8,7 +8,7 @@ function getBase64Image(img, oImageWidth, oImageHeight) {
     canvas.height = (oImageHeight || img.height);
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
+    var dataURL = canvas.toDataURL("image/png"); 
     return dataURL;
 }
 

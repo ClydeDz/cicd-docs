@@ -173,12 +173,7 @@ function getReleaseDefinitionVariables(releaseJsonInput) {
         _item["key"] = _key;
         _item["scope"] = "Release";
         _item["isSecret"] = _variables[_key].isSecret;
-        if (_variables[_key].isSecret) {
-            _item["value"] = "******";
-        }
-        else {
-            _item["value"] = _variables[_key].value;           
-        }
+        _item["value"] = _variables[_key].isSecret ? "******" : _variables[_key].value;
  
         _variablesJson.push(_item);
     }

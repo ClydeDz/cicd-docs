@@ -1228,7 +1228,7 @@ function getBuildDefinitionVariables(buildJsonInput) {
         var _item = {};
         _item["id"] = i;
         _item["key"] = _key;
-        _item["value"] = _variables[_key].value;
+        _item["value"] = _variables[_key].isSecret ? "******": _variables[_key].value;
         _variablesJson.push(_item);
     }
 
@@ -1497,12 +1497,7 @@ function getReleaseDefinitionVariables(releaseJsonInput) {
         _item["key"] = _key;
         _item["scope"] = "Release";
         _item["isSecret"] = _variables[_key].isSecret;
-        if (_variables[_key].isSecret) {
-            _item["value"] = "******";
-        }
-        else {
-            _item["value"] = _variables[_key].value;           
-        }
+        _item["value"] = _variables[_key].isSecret ? "******" : _variables[_key].value;
  
         _variablesJson.push(_item);
     }
@@ -1945,7 +1940,7 @@ function getBase64Image(img, oImageWidth, oImageHeight) {
     canvas.height = (oImageHeight || img.height);
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
+    var dataURL = canvas.toDataURL("image/png"); 
     return dataURL;
 }
 

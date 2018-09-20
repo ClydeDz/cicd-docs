@@ -138,7 +138,7 @@ function getBuildDefinitionVariables(buildJsonInput) {
         var _item = {};
         _item["id"] = i;
         _item["key"] = _key;
-        _item["value"] = _variables[_key].value;
+        _item["value"] = _variables[_key].isSecret ? "******": _variables[_key].value;
         _variablesJson.push(_item);
     }
 
