@@ -790,15 +790,17 @@ function _switchTemplate(templateName, jsonData) {
 
 function upload_ViewLoad() {
 	// Attach event listeners for buttons
-	document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
-	document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
+    document.getElementById('buildJsonUploadControl').addEventListener('change', handleBuildFileUpload, false);
+    document.getElementById('buildJsonUploadControl').addEventListener('click', handleClickOnBuildFileUpload, false);
+
+    document.getElementById('releaseJsonUploadControl').addEventListener('change', handleReleaseFileUpload, false);
+    document.getElementById('releaseJsonUploadControl').addEventListener('click', handleClickOnReleaseFileUpload, false);
+
     document.getElementById('fileUploadGo').addEventListener('click', goToVisualization, false);
-    document.getElementById('urlUploadGo').addEventListener(
-        'click',
-        function () {
+    document.getElementById('urlUploadGo').addEventListener('click', function () {
+            sendInteractionClickData('upload via url button', 'clicked from upload view');
             startFileUploadFromUrl($('#buildJsonUrlUploadControl').val(), $('#releaseJsonUrlUploadControl').val());
-        },
-        false);
+        }, false);
 
 	// Hide the status icons in the beginning
 	$("#buildJsonUploadControlStatus").hide();
@@ -826,8 +828,7 @@ function visualization_ViewLoad(combinedJson) {
 	document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
     document.getElementById('showReleaseViewBtn').addEventListener('click', function () {
         goToRelease();
-        setTimeout(
-            function () {
+        setTimeout(function () {
                 $('.environment-slider').slick('refresh');
             }, 200);
     }, false);
@@ -879,6 +880,7 @@ function release_ViewLoad() {
 /////////////////////////////////////////////
 
 function goToVisualization(e) {
+    sendInteractionClickData('file upload button', 'clicked from upload view');
     visualizeScreenView();
 }
 
@@ -887,6 +889,8 @@ function goBackToUploadScreen() {
     resetBuildReleaseJsonData();
     let cleanUrl = window.location.hostname == "localhost" ? "/" : "https://clydedz.github.io/cicd-docs/";
     window.history.replaceState({}, document.title, cleanUrl); // removes query string from URL
+
+    sendInteractionClickData('back to upload screen button','clicked from visualize view');
 }
 
 function goToBuild() {
@@ -900,7 +904,7 @@ function goToBuild() {
 	// Animate the entrance of the cards 
     animateCards();   
 
-    
+    sendInteractionClickData('build view button', 'clicked from visualize view');
 }
 
 function goToRelease() {
@@ -913,6 +917,8 @@ function goToRelease() {
     
     // Animate the entrance of the cards 
     animateCards();
+
+    sendInteractionClickData('release view button', 'clicked from visualize view');
 }
 
 function loadEnvironmentSlider() {
@@ -932,6 +938,7 @@ function downloadPdf(e) {
     e.preventDefault();
     var visualizeJson = processJson();
     exportPdf(visualizeJson);
+    sendInteractionClickData('export pdf button', 'clicked from visualize view');
 }
 
 
@@ -942,12 +949,23 @@ function downloadPdf(e) {
 
 
 function handleBuildFileUpload(e) {
-    _handleJsonFile(e, buildJsonText); 
+    _handleJsonFile(e, buildJsonText);
+    sendInteractionClickData('build file uploaded', 'file has uploaded after clicking the upload button');
+}
+
+function handleClickOnBuildFileUpload(e) {
+    sendInteractionClickData('build file upload button clicked', 'clicked from the upload view');
 }
 
 function handleReleaseFileUpload(e) {
     _handleJsonFile(e, releaseJsonText);   
+    sendInteractionClickData('release file uploaded', 'file has uploaded after clicking the upload button');
 }
+
+function handleClickOnReleaseFileUpload(e) {
+    sendInteractionClickData('release file upload button clicked', 'clicked from the upload view');
+}
+
 
 function _handleJsonFile(e, type) {
     try {
@@ -3308,6 +3326,10 @@ function sendShareClickData(action, label) {
 
 function sendCTAClickData(action, label) {
     sendEventData('CTA', action, label); 
+}
+
+function sendInteractionClickData(action, label) {
+    sendEventData('Interaction', action, label);
 }
 
 function sendEventData(category, action, label) {

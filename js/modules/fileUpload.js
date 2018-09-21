@@ -4,12 +4,23 @@
 
 
 function handleBuildFileUpload(e) {
-    _handleJsonFile(e, buildJsonText); 
+    _handleJsonFile(e, buildJsonText);
+    sendInteractionClickData('build file uploaded', 'file has uploaded after clicking the upload button');
+}
+
+function handleClickOnBuildFileUpload(e) {
+    sendInteractionClickData('build file upload button clicked', 'clicked from the upload view');
 }
 
 function handleReleaseFileUpload(e) {
     _handleJsonFile(e, releaseJsonText);   
+    sendInteractionClickData('release file uploaded', 'file has uploaded after clicking the upload button');
 }
+
+function handleClickOnReleaseFileUpload(e) {
+    sendInteractionClickData('release file upload button clicked', 'clicked from the upload view');
+}
+
 
 function _handleJsonFile(e, type) {
     try {
