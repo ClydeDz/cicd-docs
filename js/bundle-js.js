@@ -825,12 +825,16 @@ function upload_ViewLoad() {
 function visualization_ViewLoad(combinedJson) {
 	// Attach event listeners for buttons
 	document.getElementById('goBackBtn').addEventListener('click', goBackToUploadScreen, false);
-	document.getElementById('showBuildViewBtn').addEventListener('click', goToBuild, false);
+    document.getElementById('showBuildViewBtn').addEventListener('click', function () {
+        sendInteractionClickData('build view button', 'clicked from visualize view');
+        goToBuild();        
+    }, false);
     document.getElementById('showReleaseViewBtn').addEventListener('click', function () {
+        sendInteractionClickData('release view button', 'clicked from visualize view');
         goToRelease();
         setTimeout(function () {
-                $('.environment-slider').slick('refresh');
-            }, 200);
+            $('.environment-slider').slick('refresh');
+        }, 200);
     }, false);
 	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
 
@@ -902,9 +906,7 @@ function goToBuild() {
 	$("#releaseView").hide();
 
 	// Animate the entrance of the cards 
-    animateCards();   
-
-    sendInteractionClickData('build view button', 'clicked from visualize view');
+    animateCards();  
 }
 
 function goToRelease() {
@@ -917,8 +919,6 @@ function goToRelease() {
     
     // Animate the entrance of the cards 
     animateCards();
-
-    sendInteractionClickData('release view button', 'clicked from visualize view');
 }
 
 function loadEnvironmentSlider() {
