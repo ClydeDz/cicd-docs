@@ -1,0 +1,32 @@
+﻿<script id="nothingFoundPartial" type="text/x-mustache">
+    <div class="container container-fluid nothingFound-partial">
+        <div class="card">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2>Sorry, we couldn't find a build and/or release definition</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-1 text-center">
+                    <img src="../images/icons/rocket.png" width="64" alt="Content not found"/>
+                </div>
+                <div class="col-xs-12 col-md-10">
+                   <p>This might have happened because...</p>
+                   <p>
+                       <ul style="list-style-type:disc; padding-left:22px;">
+                           <li>If you're tring to upload via a dynamic URL, the URL parameters may contain invalid URLs for the build and/or release definition.</li>
+                           <li>You may have uploaded the release file when asked to upload the build definition and vice versa (don't worry, that happens to us too!).</li>
+                           <li>Or for other reason (which we don't know yet) the files uploaded was treated as invalid. 
+                           In this case, feel free to 
+                           <a href="https://github.com/ClydeDz/cicd-docs/issues" 
+                              target="_blank" 
+                              onclick="sendCTAClickData('ci/cd docs github issues', 'clicked from something went wrong view');">create a new ticket</a> 
+                           and let us know the details.</li>
+                       </ul>
+                   </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</script>

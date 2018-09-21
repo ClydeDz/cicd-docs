@@ -647,7 +647,8 @@ var templateNames = {
     BUILD: "BUILD",
     RELEASE: "RELEASE",
     OUTPUT: "OUTPUT",
-    FOOTER: "FOOTER"
+    FOOTER: "FOOTER",
+    NOTHINGFOUND: "NOTHINGFOUND"
 }
 
 // Export functionality variables
@@ -720,6 +721,10 @@ function footerView() {
     _switchTemplate(templateNames.FOOTER, { "version": appVersionNumber });
 }
 
+function nothingFoundView() {
+    _switchTemplate(templateNames.NOTHINGFOUND, {});
+}
+
 function uploadScreenView() {
     _switchTemplate(templateNames.UPLOAD, {});
 }
@@ -781,7 +786,15 @@ function _switchTemplate(templateName, jsonData) {
             release_ViewLoad();    
             animateCards();    
         });
-    }    
+    }
+    if (templateName === templateNames.NOTHINGFOUND) {
+        $("#viewTemplateHolder").load("html-partials/nothingFound.html #nothingFoundPartial", function () {
+            var contents = document.getElementById('nothingFoundPartial').innerHTML;
+            var output = Mustache.render(contents, jsonData);
+            $("#view").html(output);
+            animateCards();   
+        });
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -867,7 +880,7 @@ function visualization_ViewLoad(combinedJson) {
         goToRelease();
     }
     else {
-        alert("No build or rel found");
+        nothingFoundView();
     } 
 }
 

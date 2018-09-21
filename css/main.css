@@ -6952,6 +6952,13 @@ h1, h2, h3, h4,
     font-size: smaller;
     font-weight: 100; }
 
+.nothingFound-partial img {
+  padding-top: 9px;
+  padding-bottom: 9px; }
+  @media (min-width: 768px) {
+    .nothingFound-partial img {
+      margin-top: 9px; } }
+
 /* Specific CSS */
 /*
  * colors must contain color variable and general site wide

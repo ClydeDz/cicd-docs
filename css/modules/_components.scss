@@ -275,3 +275,15 @@
         }
     }
 }
+
+.nothingFound-partial {
+    img {
+        padding:{
+            top:9px;
+            bottom: 9px;
+        }
+        @media (min-width: 768px) {
+            margin-top: 9px;
+        }
+    }
+}
