@@ -199,17 +199,17 @@ function getBuildMetaInformation(buildJsonInput) {
 }
 
 function errorLoadingImage(e) {
-    e.src = "/images/logo/logo-sq.png";
+    e.src = "https://clydedz.github.io/cicd-docs/images/logo/logo-sq.png";
     console.clear();  
 }
 
 function errorLoadingQueueIcon(e) {
-    e.src = "/images/extend/queue/0/icon.png";
+    e.src = "https://clydedz.github.io/cicd-docs/images/extend/queue/0/icon.png";
     console.clear();
 }
 
 function errorLoadingRepositoryIcon(e) {
-    e.src = "/images/extend/repository/Other/icon.png";
+    e.src = "https://clydedz.github.io/cicd-docs/images/extend/repository/Other/icon.png";
     console.clear();
 }
 
