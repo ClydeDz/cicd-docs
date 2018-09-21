@@ -119,7 +119,7 @@ function visualization_ViewLoad(combinedJson) {
         sendInteractionClickData('release view button', 'clicked from visualize view');
         goToRelease();
         setTimeout(function () {
-            $('.environment-slider').slick('refresh');
+            $('.environment-slider').slick('refresh'); // at times the environment slider doesn't display contents in the UI well, a refresh solves the issue
         }, 200);
     }, false);
 	document.getElementById('downloadPdf').addEventListener('click', downloadPdf, false);
