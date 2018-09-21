@@ -184,7 +184,9 @@ function goToBuild() {
 	$("#releaseView").hide();
 
 	// Animate the entrance of the cards 
-	animateCards();    
+    animateCards();   
+
+    
 }
 
 function goToRelease() {
