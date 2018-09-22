@@ -52,12 +52,14 @@ body {
     }
 
     .steps {
-        
-
         .row {
             padding: 9px 0;
             border-top: 1px dashed #f3f3f3;
-            margin: 0 4px;
+            margin: 0 4px 0 0;
+
+            @media (min-width: 768px) {
+                margin: 0 4px;
+            }
 
             &:last-child {
                 border-bottom: 1px dashed #f3f3f3;
@@ -81,10 +83,15 @@ body {
 }
 
 .environment-slider {
-    .phase{
-        margin-left:18px;
+    .phase {
+        margin-left: 18px;
     }
-    .steps{
-        width:94%;
+
+    .steps {
+        width: 89%;
+
+        @media (min-width: 768px) {
+            width: 94%;
+        }
     }
 }

@@ -1,7 +1,11 @@
 ﻿.nav {
-    padding: 8px 27px;
+    padding: 8px 15px;
     margin-bottom: 18px;
     background-color: white;
+
+    @media (min-width: 768px) {
+        padding: 8px 27px;
+    }
 
     div.row {
         div.brand:first-child {
@@ -11,7 +15,17 @@
 
                 img {
                     margin-right: 9px;
+
+                    @media (max-width: 767px) {
+                        width: 55px;
+                    }
                 }
+            }
+        }
+
+        .brand {
+            @media (max-width: 767px) {
+             padding-top:2px;
             }
         }
 
@@ -28,7 +42,7 @@
         }
     }
 
-    #siteLogo{
+    #siteLogo {
         cursor: pointer;
     }
 }

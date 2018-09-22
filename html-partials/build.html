@@ -59,14 +59,14 @@
                             <div class="steps highlight-div" style="border-left-color:{{colorHexCode}};">
                                 {{#steps}}
                                 <div id="step-{{id}}" class="row">
-                                    <div class="col-xs-1">
+                                    <div class="col-xs-2 col-sm-1">
                                         <img alt="{{ name }}" src="https://clydedz.github.io/cicd-docs{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" crossorigin="anonymous" />
                                     </div>
-                                    <div class="col-xs-9">
+                                    <div class="col-xs-6 col-sm-9">
                                         {{ name }}<br />
                                         <small class="text-muted">Version: {{ version }}</small>
                                     </div>
-                                    <div class="col-xs-1">
+                                    <div class="col-xs-2 col-sm-1">
                                         {{#enabled}}
                                         <img src="https://clydedz.github.io/cicd-docs/images/icons/checkmark.png" width="32" alt="Enabled" title="Enabled" crossorigin="anonymous"/>                                        
                                         {{/enabled}}
@@ -74,7 +74,7 @@
                                         <img src="https://clydedz.github.io/cicd-docs/images/icons/disabled.png" width="30" alt="Disabled" title="Disabled" crossorigin="anonymous"/>
                                         {{/enabled}}
                                     </div>
-                                    <div class="col-xs-1">
+                                    <div class="col-xs-2 col-sm-1">
                                         {{#continueOnError}}
                                         <img src="https://clydedz.github.io/cicd-docs/images/icons/error.png" width="32" alt="Continue on error" title="Continue on error: enabled" crossorigin="anonymous"/>
                                         {{/continueOnError}}
@@ -123,26 +123,26 @@
                 <div class="card card-content">
                     <h2>Author</h2>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{ author.displayName }}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             <a href="mailto:{{ author.email }}">{{ author.email }}</a>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{ creationDate }}
                         </div>
                     </div>
@@ -150,18 +150,18 @@
                 <div class="card card-content">
                     <h2>Queue &amp; triggers</h2>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs{{ queue.icon }}" alt="{{ queue.name }}" id="queueAgentIcon" onerror="errorLoadingQueueIcon(this);" width="24"  crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{ queue.displayName }}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/hosted.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{#queue.isHosted}}
                             Is hosted
                             {{/queue.isHosted}}
@@ -172,49 +172,52 @@
                     </div>
                     {{#triggers.continousIntegration}}
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/ci.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             Continous integration enabled
                         </div>
                     </div>                       
                     {{/triggers.continousIntegration}}
                     {{^triggers.continousIntegration}}
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/ci-disabled.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             Continous integration disabled
                         </div>
                     </div>
                     {{/triggers.continousIntegration}}
                     {{#triggers.batchChanges}}
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/batch-changes.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             Batch changes enabled while a build is in progress
                         </div>
                     </div>
                     {{/triggers.batchChanges}}
                     {{^triggers.batchChanges}}
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img src="https://clydedz.github.io/cicd-docs/images/icons/batch-changes-disabled.png" width="32" crossorigin="anonymous"/>
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             Batch changes disabled
                         </div>
                     </div>
                     {{/triggers.batchChanges}}
                 </div>
-                <div>
+                <div class="container">
                     <!-- Variables and retention rule button -->
-                    <button type="button" class="btn button-inverse" data-toggle="modal" data-target="#myModal">Variables</button>
-                    <button type="button" class="btn button-inverse" data-toggle="modal" data-target="#buildRetentionRules">Retention rules</button>
+                    <div class="row">
+                        <button type="button" class="btn button-inverse col-xs-5" data-toggle="modal" data-target="#myModal">Variables</button>
+                        <div class="buffer col-xs-1 col-sm-0"></div>
+                        <button type="button" class="btn button-inverse col-xs-5" data-toggle="modal" data-target="#buildRetentionRules">Retention rules</button>
+                    </div>
                     <!-- Variables modal -->
                     <div id="myModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">

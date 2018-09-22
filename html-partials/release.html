@@ -164,14 +164,14 @@
                                                 <div class="steps highlight-div" style="border-left-color:{{colorHexCode}};">
                                                     {{#steps}}
                                                     <div id="step-{{id}}" class="row">
-                                                        <div class="col-xs-1">
+                                                        <div class="col-xs-2 col-sm-1">
                                                             <img crossorigin="anonymous" alt="{{ name }}" src="https://clydedz.github.io/cicd-docs{{icon}}" id="stepIcon-{{id}}" width="32" onerror="errorLoadingImage(this);" />
                                                         </div>
-                                                        <div class="col-xs-9">
+                                                        <div class="col-xs-6 col-sm-9">
                                                             {{ name }}<br />
                                                             <small class="text-muted">Version: {{ version }}</small>
                                                         </div>
-                                                        <div class="col-xs-1">
+                                                        <div class="col-xs-2 col-sm-1">
                                                             {{#enabled}}
                                                             <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-success"></i>-->
                                                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/checkmark.png" width="32" />
@@ -181,7 +181,7 @@
                                                             <!--<i class="mdi mdi-checkbox-marked-circle mdi-24px text-muted"></i>-->
                                                             {{/enabled}}
                                                         </div>
-                                                        <div class="col-xs-1">
+                                                        <div class="col-xs-2 col-sm-1">
                                                             {{#continueOnError}}
                                                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/error.png" width="32" />
                                                             <!--<i class="mdi mdi-alert-circle mdi-24px text-danger"></i>-->
@@ -248,28 +248,28 @@
                 <div class="card card-content">
                     <h2>Created by</h2>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{creationInformation.createdBy}}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             <a href="mailto:{{creationInformation.createdByEmail}}">
                                 {{creationInformation.createdByEmail}}
                             </a>                           
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{creationInformation.createdOn}}
                         </div>
                     </div>
@@ -280,25 +280,25 @@
                         <div class="col-xs-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/user.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{modificationInformation.modifiedBy}}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/email.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             <a href="mailto:{{modificationInformation.modifiedByEmail}}">
                                 {{modificationInformation.modifiedByEmail}}
                             </a>                           
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/time.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{modificationInformation.modifiedOn}}
                         </div>
                     </div>
@@ -308,42 +308,42 @@
                     {{#artifacts}}
                     <div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/build.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 Artifact type: Build
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 {{artifactAlias}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/project.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 {{project}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 {{source}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/version.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 {{defaultVersion}}
                             </div>
                         </div>
@@ -355,30 +355,30 @@
                     {{#isTriggerSetupForReleaseDefinition}}
                     {{#triggers}}
                     <div class="row">
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 col-sm-1">
                             <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/artifact.png" width="32" />
                         </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-10 col-sm-11">
                             {{artifactAlias}}
                         </div>
                     </div>
                     <div>
                         {{#isTriggerTypeContinuousDeployment}}
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/continuous-delivery.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 Continuous deployment
                             </div>
                         </div>
                         {{/isTriggerTypeContinuousDeployment}}
                         {{#isTriggerTypePullRequest}}
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/pull-request.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 Pull request
                             </div>
                         </div>
@@ -387,18 +387,18 @@
                     {{#triggerConditions}}
                     <div class="trigger-conditions">
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/code.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 Branch: {{sourceBranch}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-1">
+                            <div class="col-xs-1 col-sm-1">
                                 <img crossorigin="anonymous" src="https://clydedz.github.io/cicd-docs/images/icons/source.png" width="32" />
                             </div>
-                            <div class="col-xs-11">
+                            <div class="col-xs-10 col-sm-11">
                                 Use build definition branch: {{useBuildDefinitionBranch}}
                             </div>
                         </div>
@@ -413,7 +413,7 @@
                 <div>
                     <!-- Trigger the modal with a button -->
                     {{#doVariablesExists}}
-                    <button type="button" class="btn button-inverse" data-toggle="modal" data-target="#releaseDefVariables">Variables</button>
+                    <button type="button" class="btn button-inverse col-xs-12 col-sm-6" data-toggle="modal" data-target="#releaseDefVariables">Variables</button>
                     {{/doVariablesExists}}
                     <!-- Variables modal -->
                     <div id="releaseDefVariables" class="modal fade" role="dialog">

@@ -77,10 +77,11 @@
 }
 
 #releaseView, #buildView {
+    margin-top:21px;
+
     .card {
         min-height: 100px;
         margin: {
-            top:21px;
             bottom:21px;
         } 
     }
