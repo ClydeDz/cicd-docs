@@ -1,6 +1,6 @@
 CI/CD Docs
 -----------
-Document your Azure DevOps pipeline
+Documenting your Azure DevOps pipeline has never been easier! Visit: [CI/CD Docs](https://bit.ly/cicd-docs)
 
 CI/CD Docs (c) 2018 Clyde D'Souza [https://clydedsouza.net]
-Icons by Icon8 [https://icons8.com/icon/new-icons/all]
+More credits can be found [here](https://cicd-docs.gitbook.io/docs/credits). 
