@@ -3,7 +3,7 @@ Documenting your Azure DevOps pipeline has never been easier! Visit: [CI/CD Docs
 
 
 ## What is CI/CD Docs?   
-How does one document the Azure DevOps pipeline one just created? With CI/CD Docs - now you can! Documenting your Azure pipeline was never easier - export, upload and go. Just upload your build and/or release definition file (which is a JSON file) and see the magic happen.   
+How does one document the Azure DevOps (formerly VSTS) pipeline one just created? With CI/CD Docs - now you can! Documenting your Azure DevOps pipeline was never easier - export, upload and go. Just upload your build and/or release definition file (which is a JSON file) and see the magic happen.   
 
 [Try it yourself!](https://bit.ly/cicd-docs)
 
