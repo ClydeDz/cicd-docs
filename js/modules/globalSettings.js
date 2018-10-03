@@ -69,7 +69,7 @@ var lineObjectLength = {
 ////////////////////////////////////////
 
 // App constants
-const appVersionNumber = "1.0.0";
+const appVersionNumber = "1.0.1";
 const appName = "CI/CD Docs";
 const appUrl = "https://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
 
