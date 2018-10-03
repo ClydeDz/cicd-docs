@@ -199,7 +199,7 @@ function getBuildMetaInformation(buildJsonInput) {
 }
 
 function errorLoadingImage(e) {
-    e.src = "https://clydedz.github.io/cicd-docs/images/logo/logo-sq.png";
+    e.src = "https://clydedz.github.io/cicd-docs/images/logo/cicd-docs-logo-32px.png";
     console.clear();  
 }
 

@@ -703,7 +703,7 @@ var lineObjectLength = {
 ////////////////////////////////////////
 
 // App constants
-const appVersionNumber = "1.0.0";
+const appVersionNumber = "1.0.1";
 const appName = "CI/CD Docs";
 const appUrl = "https://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
 
@@ -1323,7 +1323,7 @@ function getBuildMetaInformation(buildJsonInput) {
 }
 
 function errorLoadingImage(e) {
-    e.src = "https://clydedz.github.io/cicd-docs/images/logo/logo-sq.png";
+    e.src = "https://clydedz.github.io/cicd-docs/images/logo/cicd-docs-logo-32px.png";
     console.clear();  
 }
 
