@@ -26,7 +26,9 @@ function getBuildJson(buildJsonInput) {
         };
         return _buildDef;
     } catch (e) {
-        console.log(e);
+        airbrake.notify({
+            error: e, context: { component: 'getBuildJson()', version: appVersionNumber }
+        });
         return null;
     }
    
