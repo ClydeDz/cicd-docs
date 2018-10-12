@@ -1,0 +1,18 @@
+﻿{
+  "Framework": "jasmine",
+  "References": [
+    { "Path": "../../vendor/jquery-1.10.2.min.js" },
+    { "Path": "../../vendor/bootstrap.min.js" },
+    { "Path": "../../vendor/mustache.js" },
+    { "Path": "../../vendor/slick.min.js" },
+    {
+      "Path": "../",
+      "Includes": [ "*.js" ] //Includes all .js files in the js folder
+    }
+  ],
+  "Tests": [
+    {
+      "Includes": [ "*.test.js" ]
+    }
+  ]
+}
