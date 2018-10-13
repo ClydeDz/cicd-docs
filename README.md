@@ -11,6 +11,9 @@ How does one document the Azure DevOps (formerly VSTS) pipeline one just created
 ## Documentation
 Documentation is maintained [here](http://bit.ly/cicd-docs-docs).
 
+## Feel like contributing?
+Fantastic! Jump on-board and read the [contributing guidelines here](CONTRIBUTING.md).
+
 ## Credits  
 CI/CD Docs (c) 2018 [Clyde D'Souza](https://clydedsouza.net)   
 More credits can be found [here](https://cicd-docs.gitbook.io/docs/credits).  
