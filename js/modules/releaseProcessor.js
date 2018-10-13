@@ -27,7 +27,9 @@ function getReleaseJson(releaseJsonInput) {
         };
         return _releaseDef;
     } catch (e) {
-        console.log(e);
+        airbrake.notify({
+            error: e, context: { component: 'getReleaseJson()', version: appVersionNumber }
+        });
         return null;
     }
    

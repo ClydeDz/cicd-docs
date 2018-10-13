@@ -30,17 +30,29 @@ function _handleJsonFile(e, type) {
         var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
         if (!e.target.files[0]) {
-            showError("No file detected. Please try uploading a .json file.");
+            let errorMessage = "No file detected. Please try uploading a .json file.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
         if (e.target.files[0].size > 5242880) {
-            showError("The uploaded file exceeds the file size limit of 5MB. Please try uploading a smaller file instead.");
+            let errorMessage = "The uploaded file exceeds the file size limit of 5MB. Please try uploading a smaller file instead.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
         if (fileExtension !== "json") {
-            showError(`${fileExtension} file extension isn't supported at this stage. Please try uploading a .json file instead.`);
+            let errorMessage = `${fileExtension} file extension isn't supported at this stage. Please try uploading a .json file instead.`;
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
@@ -58,7 +70,11 @@ function _handleJsonFile(e, type) {
                     $("#fileUploadGo").prop('disabled', false);
                 }
             } catch (error) {
-                showError("An error occured while trying to process the JSON file. Could you please check the file once again and try later?");
+                let errorMessage = "An error occured while trying to process the JSON file. Could you please check the file once again and try later?";
+                showError(errorMessage);
+                airbrake.notify({
+                    error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+                });
                 return;
             }
             
@@ -66,7 +82,11 @@ function _handleJsonFile(e, type) {
         reader.readAsText(e.target.files[0]);
     }
     catch (error) {
-        showError("An error occured while trying to upload the file. Please try again later.");
+        let errorMessage = "An error occured while trying to upload the file. Please try again later.";
+        showError(errorMessage);
+        airbrake.notify({
+            error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+        });
         return;
     }
     
@@ -79,7 +99,11 @@ function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
         let doesReleaseDefinitionExist = releaseDefUrl != "";
 
         if (!doesBuildDefinitionExist && !doesReleaseDefinitionExist) {
-            showError("Please enter the URL for the build and/or release definition.");
+            let errorMessage = "Please enter the URL for the build and/or release definition.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: 'startFileUploadFromUrl()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
         else if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
@@ -99,7 +123,11 @@ function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
         }      
 
     } catch (e) {
-        showError("An error occured while trying to upload the file. Please try again later.");
+        let errorMessage = "An error occured while trying to upload the file. Please try again later.";
+        showError(errorMessage);
+        airbrake.notify({
+            error: errorMessage, context: { component: 'startFileUploadFromUrl()', version: appVersionNumber, severity: 'warning' }
+        });
         return;
     }
 }
@@ -119,7 +147,9 @@ function xhrUpload(urlValue, type, callbackCode) {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.error("Request Failed: " + err);
+            airbrake.notify({
+                error: err, context: { component: 'xhrUpload()', version: appVersionNumber }
+            });
             xhrUploadCallback(callbackCode);
         });
 }
