@@ -4,6 +4,6 @@ describe("Test checker", function () {
         expect(true).toBe(false);
     });
     it("Returns another true", function () {
-        expect(true).toBe(false);
+        expect(true).toBe(true);
     });
 });
