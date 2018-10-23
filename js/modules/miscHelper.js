@@ -20,6 +20,10 @@ function getRandomRGBA() {
 	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
 }
 
+function isDevUrl(windowHostname) {
+    return windowHostname === "localhost" ? "/" : fullAppUrl;
+}
+
 function resetBuildReleaseJsonData() {
     buildJsonData = null;
     releaseJsonData = null;
