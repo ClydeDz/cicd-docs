@@ -165,7 +165,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
         _phasesArray["phaseType"] = currentPhase.target.type;
         _phasesArray["isPhaseAgentful"] = currentPhase.target.type===1;
         _phasesArray["isPhaseAgentless"] = currentPhase.target.type === 2;
-        _phasesArray["colorHexCode"] = random_rgba();
+        _phasesArray["colorHexCode"] = getRandomRGBA();
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        

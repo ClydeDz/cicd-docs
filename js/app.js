@@ -5,8 +5,8 @@
 
 $(document).ready(function () {
    
-    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
-    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+    let buildJsonUrl = sanityCheckUrl(getUrlVars(window)[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars(window)[releaseJsonUrlQueryStringKey]);
 
     footerView();
 

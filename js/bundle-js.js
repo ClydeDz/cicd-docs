@@ -706,6 +706,7 @@ var lineObjectLength = {
 const appVersionNumber = "1.0.2";
 const appName = "CI/CD Docs";
 const appUrl = "https://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
+const fullAppUrl = "https://clydedz.github.io/cicd-docs/";
 
 // Other constants
 const buildJsonUrlQueryStringKey = "buildjson";
@@ -904,7 +905,7 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
-    let cleanUrl = window.location.hostname == "localhost" ? "/" : "https://clydedz.github.io/cicd-docs/";
+    let cleanUrl = isDevUrl(window.location.hostname);
     window.history.replaceState({}, document.title, cleanUrl); // removes query string from URL
 
     sendInteractionClickData('back to upload screen button','clicked from visualize view');
@@ -1127,12 +1128,15 @@ function xhrUploadCallback(callbackCode) {
 //////   Methods to handle URL upload
 ///////////////////////////////////////////
 
-
-function getUrlVars() {
-    try{
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for (var i = 0; i < hashes.length; i++) {
+function getUrlVars(window) {
+    try {
+        if (window === null || (window.location.href === "" || window.location.href === null)) {
+            return [];
+        }
+        
+        let vars = [], hash;
+        let hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (let i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
             vars[hash[0]] = hash[1];
@@ -1144,7 +1148,10 @@ function getUrlVars() {
         });
         return [];
     }
-    
+}
+
+function splitIndividualQueryStringKeys(windowUrl) {
+    return windowUrl.slice(windowUrl.indexOf('?') + 1).split('&');
 }
 //////////////////////////////////
 /////////    Process
@@ -1327,7 +1334,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
         _phasesArray["phaseType"] = currentPhase.target.type;
         _phasesArray["isPhaseAgentful"] = currentPhase.target.type===1;
         _phasesArray["isPhaseAgentless"] = currentPhase.target.type === 2;
-        _phasesArray["colorHexCode"] = random_rgba();
+        _phasesArray["colorHexCode"] = getRandomRGBA();
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        
@@ -1663,7 +1670,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
-        item["colorHexCode"] = random_rgba();
+        item["colorHexCode"] = getRandomRGBA();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;
@@ -3336,24 +3343,20 @@ function isEmpty(obj) {
     }
 
 	for (var key in obj) {
-		if (obj.hasOwnProperty(key))
-			return false;
+        if (obj.hasOwnProperty(key)) {
+            return false;
+        }
 	}
 	return true;
 }
 
-function getRandomColor() {
-	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
-}
-
-function random_rgba() {
+function getRandomRGBA() {
 	let o = Math.round, r = Math.random, s = 255;
 	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+}
+
+function isDevUrl(windowHostname) {
+    return windowHostname === "localhost" ? "/" : fullAppUrl;
 }
 
 function resetBuildReleaseJsonData() {
@@ -3400,8 +3403,8 @@ var airbrake = new airbrakeJs.Client({
 
 $(document).ready(function () {
    
-    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
-    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+    let buildJsonUrl = sanityCheckUrl(getUrlVars(window)[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars(window)[releaseJsonUrlQueryStringKey]);
 
     footerView();
 

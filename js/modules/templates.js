@@ -189,7 +189,7 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
-    let cleanUrl = window.location.hostname == "localhost" ? "/" : "https://clydedz.github.io/cicd-docs/";
+    let cleanUrl = isDevUrl(window.location.hostname);
     window.history.replaceState({}, document.title, cleanUrl); // removes query string from URL
 
     sendInteractionClickData('back to upload screen button','clicked from visualize view');

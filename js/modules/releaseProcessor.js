@@ -265,7 +265,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
-        item["colorHexCode"] = random_rgba();
+        item["colorHexCode"] = getRandomRGBA();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;

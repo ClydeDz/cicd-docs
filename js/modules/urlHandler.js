@@ -2,12 +2,15 @@
 //////   Methods to handle URL upload
 ///////////////////////////////////////////
 
-
-function getUrlVars() {
-    try{
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for (var i = 0; i < hashes.length; i++) {
+function getUrlVars(window) {
+    try {
+        if (window === null || (window.location.href === "" || window.location.href === null)) {
+            return [];
+        }
+        
+        let vars = [], hash;
+        let hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (let i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
             vars[hash[0]] = hash[1];
@@ -19,5 +22,8 @@ function getUrlVars() {
         });
         return [];
     }
-    
+}
+
+function splitIndividualQueryStringKeys(windowUrl) {
+    return windowUrl.slice(windowUrl.indexOf('?') + 1).split('&');
 }
