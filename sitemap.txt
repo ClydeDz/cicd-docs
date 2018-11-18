@@ -1,1 +1,4 @@
 https://clydedz.github.io/cicd-docs/
+https://clydedz.github.io/cicd-docs/
+https://cicd-docs.gitbook.io
+https://cicd-docs.hund.io
