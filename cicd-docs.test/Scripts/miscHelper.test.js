@@ -1,4 +1,7 @@
-﻿describe('miscHelper.test', function () {
+﻿/// <reference path="../../js/modules/globalSettings.js" />
+/// <reference path="../../js/modules/miscHelper.js" />
+
+describe('miscHelper.test', function () {
 
     describe("getRandomRGBA", function () {
         let color;

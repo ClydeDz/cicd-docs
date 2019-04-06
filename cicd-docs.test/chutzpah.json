@@ -1,0 +1,13 @@
+﻿{
+  "Framework": "jasmine",
+  "References": [
+    { "Path": "../js/modules/globalSettings.js" },
+    { "Path": "../js/modules/miscHelper.js" },
+    { "Path": "../js/modules/urlHandler.js" }
+  ],
+  "Tests": [
+    { "Path": "Scripts/demo.test.js" },
+    { "Path": "Scripts/miscHelper.test.js" },
+    { "Path": "Scripts/urlHandler.test.js" }
+  ]
+}
