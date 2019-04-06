@@ -6,8 +6,9 @@
     { "Path": "../js/modules/urlHandler.js" }
   ],
   "Tests": [
-    { "Path": "Scripts/demo.test.js" },
-    { "Path": "Scripts/miscHelper.test.js" },
-    { "Path": "Scripts/urlHandler.test.js" }
+    {
+      "Path": "Scripts",
+      "Includes": [ "*.test.js" ]
+    }
   ]
 }

@@ -41,6 +41,7 @@
   <ItemGroup>
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
+    <Content Include="Scripts\anotherdemo.test.js" />
     <Content Include="Scripts\demo.test.js" />
     <Content Include="Scripts\jasmine\boot.js" />
     <Content Include="Scripts\jasmine\console.js" />

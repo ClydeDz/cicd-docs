@@ -1,5 +1,10 @@
-﻿/// <reference path="../../js/modules/globalSettings.js" />
-/// <reference path="../../js/modules/urlHandler.js" />
+﻿describe("Test of time demo test", function () {
+
+    it("Returns true", function () {
+        expect(true).toBe(true);
+    });
+
+});
 
 describe('splitIndividualQueryStringKeys', function () {
     let keyValue;
