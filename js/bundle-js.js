@@ -1134,9 +1134,9 @@ function getUrlVars(window) {
             return [];
         }
         
-        let vars = [], hash;
-        let hashes = splitIndividualQueryStringKeys(window.location.href);
-        for (let i = 0; i < hashes.length; i++) {
+        var vars = [], hash;
+        var hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (var i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
             vars[hash[0]] = hash[1];
@@ -3351,7 +3351,7 @@ function isEmpty(obj) {
 }
 
 function getRandomRGBA() {
-	let o = Math.round, r = Math.random, s = 255;
+	var o = Math.round, r = Math.random, s = 255;
 	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
 }
 

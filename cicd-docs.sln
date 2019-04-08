@@ -24,8 +24,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "cicd-docs", ".", "{4F63E008
 		SlnRelativePath = "..\cicd-docs\"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cicd-docs.test", "cicd-docs.test\cicd-docs.test.csproj", "{FD039786-F6B8-4380-9C06-81656778309E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,10 +34,6 @@ Global
 		{4F63E008-824A-4234-A2E5-DAACA19722D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F63E008-824A-4234-A2E5-DAACA19722D8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F63E008-824A-4234-A2E5-DAACA19722D8}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{FD039786-F6B8-4380-9C06-81656778309E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD039786-F6B8-4380-9C06-81656778309E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD039786-F6B8-4380-9C06-81656778309E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD039786-F6B8-4380-9C06-81656778309E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

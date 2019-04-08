@@ -1,14 +1,9 @@
-﻿/// <reference path="../../js/modules/globalSettings.js" />
-/// <reference path="../../js/modules/miscHelper.js" />
+﻿/// <reference path="../modules/globalSettings.js" />
+/// <reference path="../modules/miscHelper.js" />
 
-describe('miscHelper.test', function () {
-
+describe('miscHelper.test.js', function () {
     describe("getRandomRGBA", function () {
-        let color;
-
-        beforeEach(() => {
-            color = getRandomRGBA();
-        });
+        var color = getRandomRGBA();
 
         it("Returns a color code containing rgba at the start", function () {
             expect(color).toMatch(/rgba/i);
@@ -20,7 +15,7 @@ describe('miscHelper.test', function () {
     });
 
     describe("isEmpty", function () {
-        let testObject = {};
+        var testObject = {};
 
         it("Returns true if the object supplied is an empty object", function () {
             expect(isEmpty(testObject)).toBe(true);
@@ -38,7 +33,7 @@ describe('miscHelper.test', function () {
     });
 
     describe("isDevUrl", function () {
-        let _windowHostname = "clydedz.github.io";
+        var _windowHostname = "clydedz.github.io";
 
         it("Returns true if the object supplied is an empty object", function () {
             expect(isDevUrl(_windowHostname)).toBe("https://clydedz.github.io/cicd-docs/");
