@@ -2,14 +2,28 @@
 //////   Methods to handle URL upload
 ///////////////////////////////////////////
 
-
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
+function getUrlVars(window) {
+    try {
+        if (window === null || (window.location.href === "" || window.location.href === null)) {
+            return [];
+        }
+        
+        var vars = [], hash;
+        var hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    } catch (err) {
+        airbrake.notify({
+            error: err, context: { component: 'getUrlVars()', version: appVersionNumber }
+        });
+        return [];
     }
-    return vars;
+}
+
+function splitIndividualQueryStringKeys(windowUrl) {
+    return windowUrl.slice(windowUrl.indexOf('?') + 1).split('&');
 }

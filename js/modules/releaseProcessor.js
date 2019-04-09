@@ -27,7 +27,9 @@ function getReleaseJson(releaseJsonInput) {
         };
         return _releaseDef;
     } catch (e) {
-        console.log(e);
+        airbrake.notify({
+            error: e, context: { component: 'getReleaseJson()', version: appVersionNumber }
+        });
         return null;
     }
    
@@ -263,7 +265,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
-        item["colorHexCode"] = random_rgba();
+        item["colorHexCode"] = getRandomRGBA();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;

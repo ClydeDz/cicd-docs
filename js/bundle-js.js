@@ -703,9 +703,10 @@ var lineObjectLength = {
 ////////////////////////////////////////
 
 // App constants
-const appVersionNumber = "1.0.1";
+const appVersionNumber = "1.0.2";
 const appName = "CI/CD Docs";
 const appUrl = "https://bit.ly/cicd-docs"; // short for https://clydedz.github.io/cicd-docs/
+const fullAppUrl = "https://clydedz.github.io/cicd-docs/";
 
 // Other constants
 const buildJsonUrlQueryStringKey = "buildjson";
@@ -904,7 +905,7 @@ function goToVisualization(e) {
 function goBackToUploadScreen() {
     uploadScreenView();
     resetBuildReleaseJsonData();
-    let cleanUrl = window.location.hostname == "localhost" ? "/" : "https://clydedz.github.io/cicd-docs/";
+    let cleanUrl = isDevUrl(window.location.hostname);
     window.history.replaceState({}, document.title, cleanUrl); // removes query string from URL
 
     sendInteractionClickData('back to upload screen button','clicked from visualize view');
@@ -988,17 +989,29 @@ function _handleJsonFile(e, type) {
         var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
         if (!e.target.files[0]) {
-            showError("No file detected. Please try uploading a .json file.");
+            let errorMessage = "No file detected. Please try uploading a .json file.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
         if (e.target.files[0].size > 5242880) {
-            showError("The uploaded file exceeds the file size limit of 5MB. Please try uploading a smaller file instead.");
+            let errorMessage = "The uploaded file exceeds the file size limit of 5MB. Please try uploading a smaller file instead.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
         if (fileExtension !== "json") {
-            showError(`${fileExtension} file extension isn't supported at this stage. Please try uploading a .json file instead.`);
+            let errorMessage = `${fileExtension} file extension isn't supported at this stage. Please try uploading a .json file instead.`;
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
 
@@ -1016,7 +1029,11 @@ function _handleJsonFile(e, type) {
                     $("#fileUploadGo").prop('disabled', false);
                 }
             } catch (error) {
-                showError("An error occured while trying to process the JSON file. Could you please check the file once again and try later?");
+                let errorMessage = "An error occured while trying to process the JSON file. Could you please check the file once again and try later?";
+                showError(errorMessage);
+                airbrake.notify({
+                    error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+                });
                 return;
             }
             
@@ -1024,7 +1041,11 @@ function _handleJsonFile(e, type) {
         reader.readAsText(e.target.files[0]);
     }
     catch (error) {
-        showError("An error occured while trying to upload the file. Please try again later.");
+        let errorMessage = "An error occured while trying to upload the file. Please try again later.";
+        showError(errorMessage);
+        airbrake.notify({
+            error: errorMessage, context: { component: '_handleJsonFile()', version: appVersionNumber, severity: 'warning' }
+        });
         return;
     }
     
@@ -1037,7 +1058,11 @@ function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
         let doesReleaseDefinitionExist = releaseDefUrl != "";
 
         if (!doesBuildDefinitionExist && !doesReleaseDefinitionExist) {
-            showError("Please enter the URL for the build and/or release definition.");
+            let errorMessage = "Please enter the URL for the build and/or release definition.";
+            showError(errorMessage);
+            airbrake.notify({
+                error: errorMessage, context: { component: 'startFileUploadFromUrl()', version: appVersionNumber, severity: 'warning' }
+            });
             return;
         }
         else if (doesBuildDefinitionExist && doesReleaseDefinitionExist) {
@@ -1057,7 +1082,11 @@ function startFileUploadFromUrl(buildDefUrl, releaseDefUrl) {
         }      
 
     } catch (e) {
-        showError("An error occured while trying to upload the file. Please try again later.");
+        let errorMessage = "An error occured while trying to upload the file. Please try again later.";
+        showError(errorMessage);
+        airbrake.notify({
+            error: errorMessage, context: { component: 'startFileUploadFromUrl()', version: appVersionNumber, severity: 'warning' }
+        });
         return;
     }
 }
@@ -1077,7 +1106,9 @@ function xhrUpload(urlValue, type, callbackCode) {
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.error("Request Failed: " + err);
+            airbrake.notify({
+                error: err, context: { component: 'xhrUpload()', version: appVersionNumber }
+            });
             xhrUploadCallback(callbackCode);
         });
 }
@@ -1097,16 +1128,30 @@ function xhrUploadCallback(callbackCode) {
 //////   Methods to handle URL upload
 ///////////////////////////////////////////
 
-
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
+function getUrlVars(window) {
+    try {
+        if (window === null || (window.location.href === "" || window.location.href === null)) {
+            return [];
+        }
+        
+        var vars = [], hash;
+        var hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    } catch (err) {
+        airbrake.notify({
+            error: err, context: { component: 'getUrlVars()', version: appVersionNumber }
+        });
+        return [];
     }
-    return vars;
+}
+
+function splitIndividualQueryStringKeys(windowUrl) {
+    return windowUrl.slice(windowUrl.indexOf('?') + 1).split('&');
 }
 //////////////////////////////////
 /////////    Process
@@ -1150,7 +1195,9 @@ function getBuildJson(buildJsonInput) {
         };
         return _buildDef;
     } catch (e) {
-        console.log(e);
+        airbrake.notify({
+            error: e, context: { component: 'getBuildJson()', version: appVersionNumber }
+        });
         return null;
     }
    
@@ -1287,7 +1334,7 @@ function getBuildDefinitionProcess(buildJsonInput) {
         _phasesArray["phaseType"] = currentPhase.target.type;
         _phasesArray["isPhaseAgentful"] = currentPhase.target.type===1;
         _phasesArray["isPhaseAgentless"] = currentPhase.target.type === 2;
-        _phasesArray["colorHexCode"] = random_rgba();
+        _phasesArray["colorHexCode"] = getRandomRGBA();
         _phasesArray["steps"] = [];
 
         // Construct each step within that phase        
@@ -1385,7 +1432,9 @@ function getReleaseJson(releaseJsonInput) {
         };
         return _releaseDef;
     } catch (e) {
-        console.log(e);
+        airbrake.notify({
+            error: e, context: { component: 'getReleaseJson()', version: appVersionNumber }
+        });
         return null;
     }
    
@@ -1621,7 +1670,7 @@ function getReleaseDefinitionEnvironments(releaseJsonInput) {
 
         item["id"] = currentEnv.id;
         item["name"] = currentEnv.name;
-        item["colorHexCode"] = random_rgba();
+        item["colorHexCode"] = getRandomRGBA();
         item["rank"] = currentEnv.rank;
         item["ownerName"] = currentEnv.owner.displayName;
         item["isOwnerHuman"] = isOwnerHuman;
@@ -3294,24 +3343,20 @@ function isEmpty(obj) {
     }
 
 	for (var key in obj) {
-		if (obj.hasOwnProperty(key))
-			return false;
+        if (obj.hasOwnProperty(key)) {
+            return false;
+        }
 	}
 	return true;
 }
 
-function getRandomColor() {
-	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
+function getRandomRGBA() {
+	var o = Math.round, r = Math.random, s = 255;
+	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
 }
 
-function random_rgba() {
-	let o = Math.round, r = Math.random, s = 255;
-	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
+function isDevUrl(windowHostname) {
+    return windowHostname === "localhost" ? "/" : fullAppUrl;
 }
 
 function resetBuildReleaseJsonData() {
@@ -3351,10 +3396,15 @@ function sendEventData(category, action, label) {
         'event_label': label
     });
 }
+var airbrake = new airbrakeJs.Client({
+    projectId: 198883,
+    projectKey: '0e0a1145b6e06ae7a8e2328b4a76875a'
+});
+
 $(document).ready(function () {
    
-    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
-    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+    let buildJsonUrl = sanityCheckUrl(getUrlVars(window)[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars(window)[releaseJsonUrlQueryStringKey]);
 
     footerView();
 
@@ -3364,8 +3414,7 @@ $(document).ready(function () {
     else {
         footerView();
         uploadScreenView();      
-    }
-    
+    }   
 });
 
 $("#siteLogo").click(function () {

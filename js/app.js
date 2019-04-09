@@ -1,7 +1,12 @@
-﻿$(document).ready(function () {
+﻿var airbrake = new airbrakeJs.Client({
+    projectId: 198883,
+    projectKey: '0e0a1145b6e06ae7a8e2328b4a76875a'
+});
+
+$(document).ready(function () {
    
-    let buildJsonUrl = sanityCheckUrl(getUrlVars()[buildJsonUrlQueryStringKey]);
-    let releaseJsonUrl = sanityCheckUrl(getUrlVars()[releaseJsonUrlQueryStringKey]);
+    let buildJsonUrl = sanityCheckUrl(getUrlVars(window)[buildJsonUrlQueryStringKey]);
+    let releaseJsonUrl = sanityCheckUrl(getUrlVars(window)[releaseJsonUrlQueryStringKey]);
 
     footerView();
 
@@ -11,8 +16,7 @@
     else {
         footerView();
         uploadScreenView();      
-    }
-    
+    }   
 });
 
 $("#siteLogo").click(function () {
