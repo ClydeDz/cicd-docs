@@ -8,9 +8,9 @@ function getUrlVars(window) {
             return [];
         }
         
-        let vars = [], hash;
-        let hashes = splitIndividualQueryStringKeys(window.location.href);
-        for (let i = 0; i < hashes.length; i++) {
+        var vars = [], hash;
+        var hashes = splitIndividualQueryStringKeys(window.location.href);
+        for (var i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
             vars[hash[0]] = hash[1];

@@ -16,7 +16,7 @@ function isEmpty(obj) {
 }
 
 function getRandomRGBA() {
-	let o = Math.round, r = Math.random, s = 255;
+	var o = Math.round, r = Math.random, s = 255;
 	return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.28)';
 }
 

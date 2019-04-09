@@ -1,8 +1,26 @@
-﻿describe('urlHandler.test', function () {
+﻿/// <reference path="../modules/globalSettings.js" />
+/// <reference path="../modules/urlHandler.js" />
+
+describe('urlHandler.test.js', function () {
+    describe('splitIndividualQueryStringKeys', function () {
+        var keyValue;
+        var _window = "https://clydedz.github.io/cicd-docs/?buildjson=abc.json&releasejson=xyz.json";
+
+        it("Handles multiple query string keys", function () {
+            keyValue = splitIndividualQueryStringKeys(_window);
+            expect(keyValue.length).toBe(2);
+        });
+
+        it("Handles single query string key", function () {
+            _window = "https://clydedz.github.io/cicd-docs/?buildjson=abc.json";
+            keyValue = splitIndividualQueryStringKeys(_window);
+            expect(keyValue.length).toBe(1);
+        });
+    }); 
 
     describe("getUrlVars", function () {
-        let keyValue;
-        let _window = {
+        var keyValue;
+        var _window = {
             location: {
                 href: "https://clydedz.github.io/cicd-docs/?buildjson=abc.json&releasejson=xyz.json"
             }
@@ -53,22 +71,9 @@
             expect(keyValue).toBe(undefined);
         });
     });
-
-
-    describe('splitIndividualQueryStringKeys', function () {
-        let keyValue;
-        let _window =  "https://clydedz.github.io/cicd-docs/?buildjson=abc.json&releasejson=xyz.json";
-
-        it("Handles multiple query string keys", function () {
-            keyValue = splitIndividualQueryStringKeys(_window);
-            expect(keyValue.length).toBe(2);
-        });
-        
-        it("Handles single query string key", function () {
-            _window = "https://clydedz.github.io/cicd-docs/?buildjson=abc.json";
-            keyValue = splitIndividualQueryStringKeys(_window);
-            expect(keyValue.length).toBe(1);
-        });
-    });
 });
+
+
+
+
 
